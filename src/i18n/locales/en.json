@@ -1,0 +1,34 @@
+{
+  "TopBanner": {
+    "message": "COMPLIMENTARY SHIPPING ON ALL ORDERS • DISCOVER OUR SUMMER GLOW COLLECTION"
+  },
+  "Navbar": {
+    "placeholder": "Search for products, concerns, or brands...",
+    "login": "Login",
+    "register": "Register",
+    "home": "HOME",
+    "allProducts": "ALL PRODUCTS",
+    "aboutUs": "ABOUT US",
+    "contactUs": "CONTACT US",
+    "tipsAndTricks": "TIPS & TRICKS"
+  },
+  "Footer": {
+    "description": "Pioneering the future of clean, clinical skincare through botanical intelligence and sustainable luxury.",
+    "explore": "EXPLORE",
+    "ourStory": "Our Story",
+    "allProducts": "All Products",
+    "aboutUs": "About Us",
+    "tipsAndTricks": "Tips & Tricks",
+    "customerCare": "CUSTOMER CARE",
+    "shippingReturns": "Shipping & Returns",
+    "privacyPolicy": "Privacy Policy",
+    "contactUs": "Contact Us",
+    "reachUs": "Reach Us",
+    "subscribeText": "Subscribe for curated skincare rituals and early access to drops.",
+    "emailPlaceholder": "Email Address",
+    "copyright": "© 2026 ASHPERO SKINCARE. ALL RIGHTS RESERVED.",
+    "terms": "TERMS",
+    "accessibility": "ACCESSIBILITY",
+    "cookies": "COOKIES"
+  }
+}

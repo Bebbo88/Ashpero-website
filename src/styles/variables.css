@@ -1,0 +1,41 @@
+@layer base {
+  :root {
+    --color-brand-mint: #69b578; /* Mint Green */
+    --color-brand-dark: #1F3325;
+    --color-brand-orange: #F26C45;
+    --color-brand-creme: #F5EFEB;
+    --color-brand-text: #E8F3EB;
+    
+    /* Default light mode variables */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --border-color: #e5e7eb;
+    --nav-glass: rgba(255, 255, 255, 0.85);
+  }
+
+  .dark {
+    /* Dark mode variables */
+    --bg-primary: #1F3325;
+    --bg-secondary: #2B4E38;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --border-color: #374151;
+    --nav-glass: rgba(31, 51, 37, 0.85);
+  }
+}
+
+@theme {
+  --color-brand-mint: var(--color-brand-mint);
+  --color-brand-dark: var(--color-brand-dark);
+  --color-brand-orange: var(--color-brand-orange);
+  --color-brand-creme: var(--color-brand-creme);
+  
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border-color: var(--border-color);
+  --color-nav-glass: var(--nav-glass);
+}
