@@ -1,4 +1,31 @@
 {
+  "Hero": {
+    "subtitle": "Science of Radiance",
+    "titleLine1": "Elevate Your",
+    "titleLine2": "Skincare Ritual",
+    "description": "Merging high-performance botanical extracts with advanced dermatological science for a glow that transcends time.",
+    "shopCollection": "SHOP COLLECTION",
+    "theScience": "THE SCIENCE",
+    "vegan": "VEGAN",
+    "customerRating": "CUSTOMER RATING",
+    "hydration": "HYDRATION",
+    "cards": {
+      "brightening": "BRIGHTENING",
+      "vitaminC": "Vitamin C + Niacinamide",
+      "intenseHydration": "INTENSE HYDRATION",
+      "hyaluronicComplex": "Hyaluronic Complex",
+      "cellularRenewal": "CELLULAR RENEWAL",
+      "botanicalRetinoid": "Botanical Retinoid",
+      "liftFirm": "LIFT & FIRM",
+      "peptideEyeCream": "Peptide Eye Cream",
+      "protection": "PROTECTION",
+      "dailySpf": "Daily SPF 50",
+      "repair": "REPAIR",
+      "nightRecovery": "Night Recovery Shield",
+      "bestseller": "BESTSELLER",
+      "new": "NEW"
+    }
+  },
   "TopBanner": {
     "message": "COMPLIMENTARY SHIPPING ON ALL ORDERS • DISCOVER OUR SUMMER GLOW COLLECTION"
   },
@@ -10,7 +37,10 @@
     "allProducts": "ALL PRODUCTS",
     "aboutUs": "ABOUT US",
     "contactUs": "CONTACT US",
-    "tipsAndTricks": "TIPS & TRICKS"
+    "tipsAndTricks": "TIPS & TRICKS",
+    "luxurySkincare": "Luxury Skincare",
+    "naturalIngredients": "Natural Ingredients",
+    "madeInEgypt": "Made in Egypt"
   },
   "Footer": {
     "description": "Pioneering the future of clean, clinical skincare through botanical intelligence and sustainable luxury.",
@@ -30,5 +60,50 @@
     "terms": "TERMS",
     "accessibility": "ACCESSIBILITY",
     "cookies": "COOKIES"
+  },
+  "Bestsellers": {
+    "title": "Featured Bestsellers",
+    "addToCart": "Add to Cart",
+    "categories": {
+      "antiAging": "ANTI-AGING",
+      "hydration": "HYDRATION",
+      "glow": "GLOW",
+      "cleansing": "CLEANSING"
+    },
+    "products": {
+      "retinol": "Retinol Rejuvenation Complex",
+      "hyaluronic": "Hyaluronic Multi-Plump",
+      "goldOil": "24k Gold Radiance Oil",
+      "cleanser": "Camellia Silk Cleanser"
+    }
+  },
+  "Offer": {
+    "label": "SUMMER DEALS",
+    "title": "Unlock 25% Off Your First Wellness Box",
+    "description": "Use code RADIANT25 at checkout. Includes a deluxe travel set and botanical mist.",
+    "cta": "Claim Offer"
+  },
+  "UseItFeelIt": {
+    "title": "USE IT , FEEL IT",
+    "products": {
+      "product1": "Vitamin C Serum",
+      "product2": "Hyaluronic Acid",
+      "product3": "Gold Radiance Oil",
+      "product4": "Silk Cleanser"
+    }
+  },
+  "Heritage": {
+    "titleLine1": "The Ashpero",
+    "titleLine2": "Heritage",
+    "paragraph1": "Founded in the lush foothills of the Alps, Ashpero began with a singular vision: to harness the raw, potent energy of mountain botanicals without compromising on clinical efficacy.",
+    "paragraph2": "Our journey is one of meticulous sourcing and ethical innovation. Every product we create is a testament to our commitment to pure, sustainable luxury that respects both your skin and the earth.",
+    "established": "EST. 2012",
+    "quote": "Nature's secrets, refined by science for your beauty.",
+    "stat1Value": "100%",
+    "stat1Label": "VEGAN",
+    "stat2Value": "Zero",
+    "stat2Label": "SYNTHETICS",
+    "stat3Value": "CR-Free",
+    "stat3Label": "CERTIFIED"
   }
 }
