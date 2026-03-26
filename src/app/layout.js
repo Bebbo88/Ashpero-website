@@ -50,6 +50,7 @@ export default async function RootLayout({ children }) {
       </head>
       <body
         className={`${montserrat.variable} ${playfair.variable} antialiased`}
+        suppressHydrationWarning
       >
         <LangProvider initialLocale={locale} dictionary={dictionary}>
           <ModeProvider>{children}</ModeProvider>
