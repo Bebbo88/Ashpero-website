@@ -46,7 +46,7 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="w-full bg-gradient-to-r from-[#175F4A] to-[#0E3E2F] text-white pt-16 pb-8 border-t border-white/10 mt-20">
+    <footer className="px-10 w-full bg-gradient-to-r from-[#175F4A] to-[#0E3E2F] text-white pt-16 pb-8 border-t border-white/10 ">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           {/* Column 1: Logo & Description */}

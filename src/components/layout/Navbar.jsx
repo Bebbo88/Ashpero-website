@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, Heart, ShoppingBag, Sun, Moon, Globe } from "lucide-react";
+import { Heart, ShoppingBag, Sun, Moon, Globe } from "lucide-react";
 import TopBanner from "./TopBanner";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useMode } from "../../hooks/useMode";
@@ -20,22 +20,11 @@ export default function Navbar() {
   return (
     <>
       <TopBanner />
-      <nav className="w-full sticky top-0 z-50 bg-nav-glass backdrop-blur-md border-b border-border-color transition-colors duration-300">
-        <div className="container mx-auto px-6">
-          {/* Top Row: Logo, Search, Icons, Auth */}
-          <div className="flex items-center justify-between h-20 gap-8">
-            {/* Desktop Logo */}
-            <Link
-              href="/"
-              className="hidden md:flex items-center relative h-20 w-40 bg-transparent cursor-pointer"
-            >
-              <Image
-                src={isDark ? "/assets/logo white.svg" : "/assets/logo.svg"}
-                alt="Ashpero Logo"
-                fill
-              />
-            </Link>
 
+      <nav className="px-10 w-full sticky top-0 z-50 bg-nav-glass backdrop-blur-md border-b border-border-color transition-colors duration-300">
+        <div className="container mx-auto px-6">
+          {/* Top Row: Logo and Slogan on Left, Icons on Right */}
+          <div className="flex items-center justify-between h-20 gap-8">
             {/* Mobile Logo Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -49,16 +38,31 @@ export default function Navbar() {
               />
             </button>
 
-            {/* Search Bar */}
-            <div className="flex-grow max-w-2xl hidden md:flex">
-              <div className="relative w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder={t("Navbar.placeholder")}
-                  className="w-full pl-12 pr-4 py-2.5 bg-bg-secondary text-text-primary rounded-full text-sm outline-none focus:ring-2 focus:ring-brand-mint transition-all"
+            {/* Left: Desktop Logo + Chic Tagline */}
+            <div className="hidden md:flex items-center justify-start gap-4 lg:gap-6">
+              <Link
+                href="/"
+                className="flex items-center relative h-14 w-40 bg-transparent cursor-pointer hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src={isDark ? "/assets/logo white.svg" : "/assets/logo.svg"}
+                  alt="Ashpero Logo"
+                  fill
+                  className="object-contain object-left"
                 />
-              </div>
+              </Link>
+              <div className="w-[1px] h-8 bg-text-primary border-r border-text-primary opacity-20 mx-1 lg:mx-3"></div>
+              <span className="font-playfair italic text-text-primary tracking-[0.2em] text-xs lg:text-sm pt-1 uppercase opacity-80 whitespace-nowrap">
+                {t("Navbar.luxurySkincare")}
+              </span>
+              <div className="w-[1px] h-8 bg-text-primary border-r border-text-primary opacity-20 mx-1 lg:mx-3"></div>
+              <span className="font-playfair italic text-text-primary tracking-[0.2em] text-xs lg:text-sm pt-1 uppercase opacity-80 whitespace-nowrap">
+                {t("Navbar.naturalIngredients")}
+              </span>
+              <div className="w-[1px] h-8 bg-text-primary border-r border-text-primary opacity-20 mx-1 lg:mx-3"></div>
+              <span className="font-playfair italic text-text-primary tracking-[0.2em] text-xs lg:text-sm pt-1 uppercase opacity-80 whitespace-nowrap">
+                {t("Navbar.madeInEgypt")}
+              </span>
             </div>
 
             {/* Icons & Actions */}
@@ -141,21 +145,57 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu Drawer */}
-        <div 
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out bg-bg-secondary border-t ${isMobileMenuOpen ? 'max-h-[500px] border-border-color border-opacity-100 opacity-100' : 'max-h-0 border-opacity-0 opacity-0'}`}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out bg-bg-secondary border-t ${isMobileMenuOpen ? "max-h-[500px] border-border-color border-opacity-100 opacity-100" : "max-h-0 border-opacity-0 opacity-0"}`}
         >
           <div className="px-6 py-4 flex flex-col gap-4">
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50">{t("Navbar.home")}</Link>
-            <Link href="/all-products" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50">{t("Navbar.allProducts")}</Link>
-            <Link href="/about-us" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50">{t("Navbar.aboutUs")}</Link>
-            <Link href="/contact-us" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50">{t("Navbar.contactUs")}</Link>
-            <Link href="/tips-and-tricks" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50">{t("Navbar.tipsAndTricks")}</Link>
-            
+            <Link
+              href="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50"
+            >
+              {t("Navbar.home")}
+            </Link>
+            <Link
+              href="/all-products"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50"
+            >
+              {t("Navbar.allProducts")}
+            </Link>
+            <Link
+              href="/about-us"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50"
+            >
+              {t("Navbar.aboutUs")}
+            </Link>
+            <Link
+              href="/contact-us"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50"
+            >
+              {t("Navbar.contactUs")}
+            </Link>
+            <Link
+              href="/tips-and-tricks"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="py-2 text-text-primary text-sm font-bold border-b border-border-color/50"
+            >
+              {t("Navbar.tipsAndTricks")}
+            </Link>
+
             <div className="flex flex-col gap-3 mt-4">
-              <button onClick={() => setIsMobileMenuOpen(false)} className="w-full cursor-pointer text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full cursor-pointer text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              >
                 {t("Navbar.login")}
               </button>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="w-full cursor-pointer py-3 rounded-full bg-text-primary text-bg-primary text-sm font-semibold hover:opacity-90 transition-opacity">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full cursor-pointer py-3 rounded-full bg-text-primary text-bg-primary text-sm font-semibold hover:opacity-90 transition-opacity"
+              >
                 {t("Navbar.register")}
               </button>
             </div>
