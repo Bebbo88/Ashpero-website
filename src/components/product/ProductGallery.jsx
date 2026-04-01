@@ -1,7 +1,47 @@
-export default function ProductGallery() {
+"use client";
+
+import React, { useState } from "react";
+import Image from "next/image";
+
+export default function ProductGallery({ images, productName }) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   return (
-    <div>
-      {/* Product Gallery Content */}
+    <div className="flex flex-col-reverse md:flex-row gap-4">
+      {/* Thumbnails */}
+      <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto md:max-h-[520px] scrollbar-hide">
+        {images.map((img, idx) => (
+          <button
+            key={idx}
+            onClick={() => setSelectedIndex(idx)}
+            className={`relative shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-200 ${
+              selectedIndex === idx
+                ? "border-brand-mint shadow-[0_0_0_1px_var(--color-brand-mint)]"
+                : "border-transparent hover:border-gray-300 dark:hover:border-gray-600"
+            }`}
+          >
+            <Image
+              src={img}
+              alt={`${productName} ${idx + 1}`}
+              fill
+              className="object-cover"
+              sizes="80px"
+            />
+          </button>
+        ))}
+      </div>
+
+      {/* Main Image */}
+      <div className="relative flex-1 aspect-square md:aspect-[4/5] rounded-2xl overflow-hidden bg-brand-creme dark:bg-white/5 group">
+        <Image
+          src={images[selectedIndex]}
+          alt={productName}
+          fill
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          priority
+        />
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Heart, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
@@ -102,10 +103,14 @@ export default function FeaturedBestsellers() {
               <SwiperSlide key={`${product.id}-${index}`}>
                 <div className="flex flex-col group cursor-pointer">
                   {/* Image Card */}
-                  <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 bg-[#f4f4f5] dark:bg-white/5">
+                  <Link
+                    href={`/product/${product.id}`}
+                    className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 bg-[#f4f4f5] dark:bg-white/5"
+                  >
                     {/* Wishlist Button */}
                     <button
                       onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         toggleWishlist(product.id);
                       }}
@@ -137,21 +142,30 @@ export default function FeaturedBestsellers() {
                     {/* Hover Overlay with Add to Cart */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 z-10" />
                     <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-400 ease-out z-20">
-                      <button className="w-full py-3 rounded-xl bg-white dark:bg-black text-black dark:text-white text-sm font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:bg-brand-orange hover:text-white transition-colors duration-200 cursor-pointer">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          // Add to cart logic
+                        }}
+                        className="w-full py-3 rounded-xl bg-white dark:bg-black text-black dark:text-white text-sm font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:bg-brand-orange hover:text-white transition-colors duration-200 cursor-pointer"
+                      >
                         <ShoppingCart className="w-4 h-4" />
                         {t("Bestsellers.addToCart")}
                       </button>
                     </div>
-                  </div>
+                  </Link>
 
                   {/* Product Info */}
                   <div className="flex flex-col gap-1 px-1">
                     <span className="text-[11px] font-bold tracking-[0.15em] text-gray-400 dark:text-gray-500 uppercase">
                       {t(`Bestsellers.categories.${product.categoryKey}`)}
                     </span>
-                    <h3 className="font-playfair text-lg md:text-xl font-semibold text-text-primary leading-snug line-clamp-1 group-hover:text-brand-orange transition-colors duration-300">
-                      {t(`Bestsellers.products.${product.titleKey}`)}
-                    </h3>
+                    <Link href={`/product/${product.id}`}>
+                      <h3 className="font-playfair text-lg md:text-xl font-semibold text-text-primary leading-snug line-clamp-1 group-hover:text-brand-orange transition-colors duration-300">
+                        {t(`Bestsellers.products.${product.titleKey}`)}
+                      </h3>
+                    </Link>
                     <span className="text-brand-orange font-bold text-base mt-1">
                       {product.price}
                     </span>
