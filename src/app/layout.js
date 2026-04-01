@@ -5,6 +5,8 @@ import { LangProvider } from "../hooks/useLanguage";
 import { ModeProvider } from "../hooks/useMode";
 import SplashScreen from "@/components/layout/SplashScreen";
 import FloatingActions from "@/components/layout/FloatingActions";
+import { CartDrawerProvider } from "@/contexts/CartDrawerContext";
+import CartDrawer from "@/components/cart/CartDrawer";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -56,8 +58,11 @@ export default async function RootLayout({ children }) {
       >
         <LangProvider initialLocale={locale} dictionary={dictionary}>
           <ModeProvider>
-            <SplashScreen>{children}</SplashScreen>
-            <FloatingActions />
+            <CartDrawerProvider>
+              <SplashScreen>{children}</SplashScreen>
+              <FloatingActions />
+              <CartDrawer />
+            </CartDrawerProvider>
           </ModeProvider>
         </LangProvider>
       </body>

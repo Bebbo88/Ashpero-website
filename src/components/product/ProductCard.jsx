@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Heart, ShoppingCart } from "lucide-react";
 
 export default function ProductCard({ product }) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(product.isWishlisted || false);
 
   return (
     <Link
@@ -22,16 +22,13 @@ export default function ProductCard({ product }) {
             e.stopPropagation();
             setIsWishlisted(!isWishlisted);
           }}
-          className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm
-            ${
-              isWishlisted
-                ? "bg-red-500 text-white scale-110"
-                : "bg-white/80 dark:bg-black/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-black/60 hover:scale-110"
-            }`}
+          className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 cursor-pointer shadow-sm bg-white/90 dark:bg-black/40 backdrop-blur-sm hover:scale-110 hover:bg-white dark:hover:bg-black/60"
         >
           <Heart
-            className={`w-3.5 h-3.5 transition-all duration-300 ${
-              isWishlisted ? "fill-white" : ""
+            className={`w-4 h-4 transition-colors duration-300 ${
+              isWishlisted 
+                ? "fill-red-500 text-red-500" 
+                : "text-gray-400 dark:text-gray-300 hover:text-red-400 dark:hover:text-red-400"
             }`}
           />
         </button>

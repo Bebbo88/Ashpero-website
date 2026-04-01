@@ -333,5 +333,20 @@
     "ctaTitle": "Ready to Transform Your Skin?",
     "ctaDesc": "Reach out to our skincare experts to find the perfect ritual for you.",
     "ctaButton": "Contact Us Now"
+  },
+  "Wishlist": {
+    "personalSelection": "Personal Selection",
+    "title": "Your Wishlist",
+    "description": "Curate your personal journey to radiant skin. Your saved essentials are ready when you are.",
+    "continueExploring": "Continue Exploring",
+    "discoverMore": "Discover more products to complete your ritual.",
+    "browseCatalog": "Browse Catalog",
+    "discoverMoreEssentials": "DISCOVER MORE ESSENTIALS"
+  },
+  "CartDrawer": {
+    "title": "Your Cart",
+    "checkout": "CHECKOUT",
+    "subtotal": "Subtotal",
+    "shippingTaxes": "Shipping & taxes calculated at checkout."
   }
 }
