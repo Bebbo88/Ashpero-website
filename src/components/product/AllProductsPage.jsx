@@ -217,7 +217,7 @@ export default function AllProductsPage() {
   return (
     <section className="w-full bg-bg-primary min-h-screen">
       {/* Hero Header */}
-      <div className="w-full bg-gradient-to-r from-[#69b578] via-[#2B4E38] to-[#1F3325] py-8 md:py-12">
+      <div className="w-full bg-gradient-to-r from-[#69b578] via-[#2B4E38] to-[#1F3325] pt-12 pb-8 md:pt-16 md:pb-12">
         <div className="container mx-auto px-6 lg:px-10">
           <p className="font-sans text-[11px] font-bold tracking-[0.3em] uppercase text-white/60 mb-2">
             {t("AllProducts.subtitle")}
