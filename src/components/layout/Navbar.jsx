@@ -108,9 +108,9 @@ export default function Navbar() {
 
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 hidden sm:block"></div>
 
-                <button className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative">
+                <Link href="/wishlist" className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative flex items-center justify-center">
                   <Heart className="w-4 h-4 lg:w-5 lg:h-5" />
-                </button>
+                </Link>
               </div>
 
               <div className="hidden lg:flex items-center gap-4">
