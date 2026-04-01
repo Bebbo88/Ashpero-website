@@ -336,7 +336,7 @@
   },
   "Wishlist": {
     "personalSelection": "مختاراتك الشخصية",
-    "title": "قائمة أمنياتك",
+    "title": "قائمة المفضلة",
     "description": "نسقي رحلتك الشخصية نحو بشرة نضرة. أساسياتك المحفوظة جاهزة عندما تكونين كذلك.",
     "continueExploring": "مواصلة الاستكشاف",
     "discoverMore": "اكتشفي المزيد من المنتجات لإكمال روتينك.",
@@ -381,6 +381,73 @@
         "title": "نظرة عميقة في فيتامين سي",
         "description": "كل ما تحتاجين معرفته عن الأكسدة وأفضل وقت في اليوم للتطبيق لتعظيم التفتيح."
       }
+    }
+  },
+  "Checkout": {
+    "title": "إتمام الطلب",
+    "contactInfo": "معلومات الاتصال",
+    "fullName": "الاسم الكامل",
+    "fullNameHolder": "إيفيلين هاربر",
+    "email": "البريد الإلكتروني",
+    "emailHolder": "evelyn@domain.com",
+    "phone": "رقم الهاتف",
+    "phoneHolder": "01000000000",
+    "altPhone": "رقم هاتف بديل (اختياري)",
+    "altPhoneHolder": "01000000000",
+    "shippingAddress": "عنوان الشحن",
+    "address1": "العنوان الاول",
+    "address1Holder": "اسم الشارع أو صندوق البريد",
+    "address2": "العنوان ثانياً (اختياري)",
+    "address2Holder": "الشقة الجناح الوحدة",
+    "city": "المدينة",
+    "cityHolder": "القاهرة",
+    "state": "المحافظة",
+    "stateHolder": "القاهرة",
+    "postal": "الرمز البريدي",
+    "postalHolder": "10001",
+    "specialInstructions": "تعليمات خاصة",
+    "orderNotes": "ملاحظات الطلب",
+    "orderNotesHolder": "أضف ملاحظة شخصية أو تعليمات التوصيل...",
+    "orderSummary": "ملخص الطلب",
+    "promoPlaceholder": "رمز الخصم",
+    "apply": "تطبيق",
+    "subtotal": "المجموع الفرعي",
+    "shipping": "الشحن",
+    "free": "مجاني",
+    "total": "المجموع",
+    "continue": "متابعة الشحن  ←",
+    "secureCheckout": "دفع آمن بتقنية تشفير 256-bit SSL",
+    "paymentMethod": "طريقة الدفع",
+    "creditCard": "بطاقة ائتمانية / خصم",
+    "cashOnDelivery": "الدفع نقداً عند الاستلام",
+    "securePaymob": "بوابات الدفع مؤمنة عبر Paymob"
+  },
+  "Status": {
+    "failed": {
+      "title": "فشلت عملية الدفع",
+      "subtitle": "لم يتم قبول الدفع. يرجى المحاولة مرة أخرى أو استخدام طريقة دفع مختلفة.",
+      "retryBtn": "إعادة المحاولة",
+      "backToCart": "العودة إلى السلة",
+      "orderSummary": "ملخص الطلب",
+      "referenceNo": "رقم المرجع",
+      "subtotal": "المجموع الفرعي",
+      "processingFee": "رسوم المعالجة",
+      "totalAmount": "المجموع الكلي",
+      "helpLine": "تحتاج مساعدة؟ تواصل مع مركز المساعدة",
+      "helpCenter": "مركز المساعدة"
+    },
+    "success": {
+      "title": "شكراً لشرائك.",
+      "subtitle": "تم تأكيد طلبك.",
+      "orderNumber": "رقم الطلب",
+      "estDelivery": "تاريخ التوصيل المتوقع",
+      "deliveryDays": "٣-٥ أيام عمل",
+      "status": "الحالة",
+      "processing": "قيد التجهيز",
+      "continueShoppingBtn": "متابعة التسوق",
+      "trackOrderBtn": "تتبع حالة الطلب",
+      "questionsLine": "لديك استفسار؟ راسلنا على support@ashpero.com",
+      "supportEmail": "support@ashpero.com"
     }
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, Heart } from "lucide-react"; // Using native Lucide for Cart, custom SVGs for others
@@ -44,6 +44,63 @@ const DoctorBotIcon = ({ className }) => (
 export default function FloatingActions() {
   const { t } = useLanguage();
   const { openCart } = useCartDrawer();
+  const [bottomOffset, setBottomOffset] = useState(0);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const updatePosition = () => {
+      const footer = document.querySelector('footer');
+      const navbar = document.querySelector('nav') || document.querySelector('header');
+      const floatingElement = document.getElementById('floating-actions-container');
+
+      if (footer && floatingElement) {
+        const footerRect = footer.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        let newOffset = 0;
+        
+        if (footerRect.top < windowHeight) {
+          // Push buttons up safely
+          newOffset = windowHeight - footerRect.top;
+        }
+
+        // Cap the offset to prevent overlapping the navbar
+        if (navbar) {
+          const navbarBottom = navbar.getBoundingClientRect().bottom;
+          const elementHeight = floatingElement.offsetHeight;
+          
+          // Container normally sits around 40px (on desktop) from the bottom.
+          // The maximum allowable offset is: Viewport - NavbarBottom - ElementHeight - DistanceFromBottom
+          const maxOffset = Math.max(0, windowHeight - navbarBottom - elementHeight - 40 - 20); // 20px extra padding
+          
+          if (newOffset > maxOffset) {
+            newOffset = maxOffset;
+          }
+        }
+
+        setBottomOffset(newOffset);
+      }
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      // Throttle function using requestAnimationFrame to prevent layout thrashing and maintain 60fps
+      if (!ticking) {
+        window.requestAnimationFrame(updatePosition);
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    updatePosition(); // initial check
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   // Staggering animation variants for the buttons when they enter
   const containerVariants = {
@@ -66,9 +123,11 @@ export default function FloatingActions() {
 
   return (
     <motion.div
+      id="floating-actions-container"
       variants={containerVariants}
       initial="hidden"
       animate="show"
+      style={{ transform: `translateY(-${bottomOffset}px)` }}
       className="fixed bottom-6 end-6 md:bottom-10 md:end-10 z-[150] flex flex-col gap-4 items-center"
     >
       {/* 1. The Cart Button (Moved from Navbar) */}
