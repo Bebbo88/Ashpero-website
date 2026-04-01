@@ -29,7 +29,7 @@ export default function Wishlist() {
   ]);
 
   return (
-    <div className="min-h-screen bg-bg-primary pt-12 pb-24 px-6 md:px-10 lg:px-20 transition-colors duration-300">
+    <div className="min-h-screen bg-bg-primary pt-12 md:pt-16 pb-24 px-6 md:px-10 lg:px-20 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}

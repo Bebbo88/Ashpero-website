@@ -348,5 +348,39 @@
     "checkout": "CHECKOUT",
     "subtotal": "Subtotal",
     "shippingTaxes": "Shipping & taxes calculated at checkout."
+  },
+  "TipsAndTricks": {
+    "subtitle": "THE JOURNAL",
+    "title": "Tips & Tricks",
+    "description": "Elevate your daily skincare ritual with curated expert guidance, scientific insights, and indulgent routines designed for your unique glow.",
+    "playVideo": "Play Video",
+    "items": {
+      "item1": {
+        "category": "SKINCARE RITUALS",
+        "title": "The Evening Ritual",
+        "description": "A step-by-step guide to winding down your skin after a long day. Focus on double cleansing and overnight moisturizers."
+      },
+      "item2": {
+        "title": "Hydration 101",
+        "description": "Why molecular weight matters in your serum selection."
+      },
+      "item3": {
+        "title": "Summer Glow",
+        "description": "Protective layers that breathe even in the highest humidity."
+      },
+      "item4": {
+        "title": "Natural Actives",
+        "description": "Revealing the power of cold-pressed botanical oils."
+      },
+      "item5": {
+        "title": "The Minimalist",
+        "description": "Why three steps is often better than ten."
+      },
+      "item6": {
+        "category": "EXPERT INSIGHTS",
+        "title": "Vitamin C Deep Dive",
+        "description": "Everything you need to know about oxidization and the best time of day for application to maximize brightness."
+      }
+    }
   }
 }

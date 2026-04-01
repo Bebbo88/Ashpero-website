@@ -23,7 +23,8 @@ export default function Navbar() {
     { href: "/tips-and-tricks", labelKey: "Navbar.tipsAndTricks" },
   ];
 
-  const isActive = (href) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   const toggleLang = () => {
     setLanguage(locale === "en" ? "ar" : "en");
@@ -103,12 +104,16 @@ export default function Navbar() {
                   onClick={toggleLang}
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors flex items-center font-bold text-xs lg:text-sm"
                 >
-                  <Globe className="w-4 h-4 lg:w-5 lg:h-5 mr-1" /> {locale.toUpperCase()}
+                  <Globe className="w-4 h-4 lg:w-5 lg:h-5 mr-1" />{" "}
+                  {locale.toUpperCase()}
                 </button>
 
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 hidden sm:block"></div>
 
-                <Link href="/wishlist" className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative flex items-center justify-center">
+                <Link
+                  href="/wishlist"
+                  className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative flex items-center justify-center"
+                >
                   <Heart className="w-4 h-4 lg:w-5 lg:h-5" />
                 </Link>
               </div>
@@ -116,9 +121,6 @@ export default function Navbar() {
               <div className="hidden lg:flex items-center gap-4">
                 <button className="cursor-pointer text-sm font-semibold text-text-primary hover:text-brand-mint transition-colors">
                   {t("Navbar.login")}
-                </button>
-                <button className="cursor-pointer px-5 py-2 rounded-full border border-text-primary text-sm font-semibold text-text-primary hover:bg-text-primary hover:text-bg-primary transition-all">
-                  {t("Navbar.register")}
                 </button>
               </div>
             </div>
@@ -189,12 +191,6 @@ export default function Navbar() {
                 className="w-full cursor-pointer text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
                 {t("Navbar.login")}
-              </button>
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full cursor-pointer py-3 rounded-full bg-text-primary text-bg-primary text-sm font-semibold hover:opacity-90 transition-opacity"
-              >
-                {t("Navbar.register")}
               </button>
             </div>
           </div>
