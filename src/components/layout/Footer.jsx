@@ -164,21 +164,84 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-white/20 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[11px] font-semibold text-white/60 tracking-wider uppercase text-center md:text-left rtl:md:text-right">
-            {t("Footer.copyright")}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8">
-            <p className="text-[11px] font-semibold text-white/60 tracking-widest uppercase transition-colors">
-              {t("Footer.terms")}
+        {/* Bottom Bar with Payment Badges */}
+        <div className="border-t border-white/20 pt-8 mt-4 flex flex-col xl:flex-row justify-between items-center gap-8">
+          <div className="flex flex-col md:flex-row items-center gap-6 xl:gap-8">
+            <p className="text-[11px] font-semibold text-white/60 tracking-wider uppercase text-center md:text-left rtl:md:text-right">
+              {t("Footer.copyright")}
             </p>
-            <p className="text-[11px] font-semibold text-white/60 tracking-widest uppercase transition-colors">
-              {t("Footer.accessibility")}
-            </p>
-            <p className="text-[11px] font-semibold text-white/60 tracking-widest uppercase transition-colors">
-              {t("Footer.cookies")}
-            </p>
+            <div className="flex flex-wrap items-center justify-center gap-6"></div>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <span className="text-[9px] font-bold text-white/50 tracking-[0.2em] uppercase shrink-0">
+              {t("Checkout.securePaymob") || "SECURED VIA PAYMOB"}
+            </span>
+            <div className="flex items-center flex-wrap justify-center gap-2">
+              <Image
+                src="/assets/visa.png"
+                alt="Visa"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
+              />
+              <Image
+                src="/assets/master.png"
+                alt="Mastercard"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
+              />
+              <Image
+                src="/assets/meeza.png"
+                alt="Meeza"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
+              />
+              <Image
+                src="/assets/fawry.png"
+                alt="Fawry"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
+              />
+              <Image
+                src="/assets/aman.jfif"
+                alt="Aman"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform object-center"
+              />
+              <Image
+                src="/assets/vodacash.png"
+                alt="Vodafone Cash"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
+              />
+              <Image
+                src="/assets/orangecash.png"
+                alt="Orange Cash"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
+              />
+              <Image
+                src="/assets/e&money.png"
+                alt="E& Money"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
+              />
+              <Image
+                src="/assets/wepay.png"
+                alt="WE Pay"
+                width={80}
+                height={48}
+                className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -382,5 +382,72 @@
         "description": "Everything you need to know about oxidization and the best time of day for application to maximize brightness."
       }
     }
+  },
+  "Checkout": {
+    "title": "Complete Order",
+    "contactInfo": "Contact Information",
+    "fullName": "FULL NAME",
+    "fullNameHolder": "Evelyn Harper",
+    "email": "EMAIL ADDRESS",
+    "emailHolder": "evelyn@domain.com",
+    "phone": "PHONE",
+    "phoneHolder": "+1 (555) 000-0000",
+    "altPhone": "ALTERNATIVE PHONE (OPTIONAL)",
+    "altPhoneHolder": "+1 (555) 000-0000",
+    "shippingAddress": "Shipping Address",
+    "address1": "ADDRESS LINE 1",
+    "address1Holder": "Street address or P.O. Box",
+    "address2": "ADDRESS LINE 2 (OPTIONAL)",
+    "address2Holder": "Apartment, suite, unit, etc.",
+    "city": "CITY",
+    "cityHolder": "New York",
+    "state": "STATE / PROVINCE",
+    "stateHolder": "NY",
+    "postal": "POSTAL CODE",
+    "postalHolder": "10001",
+    "specialInstructions": "Special Instructions",
+    "orderNotes": "ORDER NOTES",
+    "orderNotesHolder": "Add a personal note or delivery instructions...",
+    "orderSummary": "Order Summary",
+    "promoPlaceholder": "Promo code",
+    "apply": "APPLY",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "free": "Free",
+    "total": "Total",
+    "continue": "CONTINUE TO SHIPPING →",
+    "secureCheckout": "Secure Checkout - 256-bit SSL encryption",
+    "paymentMethod": "Payment Method",
+    "creditCard": "Credit/Debit Card",
+    "cashOnDelivery": "Cash on Delivery",
+    "securePaymob": "Secured via Paymob"
+  },
+  "Status": {
+    "failed": {
+      "title": "Payment Failed",
+      "subtitle": "Payment request failed. Please try again or use a different payment method.",
+      "retryBtn": "RETRY PAYMENT",
+      "backToCart": "BACK TO CART",
+      "orderSummary": "ORDER SUMMARY",
+      "referenceNo": "Reference No.",
+      "subtotal": "Subtotal",
+      "processingFee": "Processing Fee",
+      "totalAmount": "Total Amount",
+      "helpLine": "Need help? Contact our Help Center",
+      "helpCenter": "Help Center"
+    },
+    "success": {
+      "title": "Thank you for your purchase.",
+      "subtitle": "Your order is confirmed.",
+      "orderNumber": "ORDER NUMBER",
+      "estDelivery": "EST. DELIVERY",
+      "deliveryDays": "3-5 Business Days",
+      "status": "STATUS",
+      "processing": "Processing",
+      "continueShoppingBtn": "CONTINUE SHOPPING",
+      "trackOrderBtn": "Track Order Status",
+      "questionsLine": "Any questions? Contact us at support@ashpero.com",
+      "supportEmail": "support@ashpero.com"
+    }
   }
 }
