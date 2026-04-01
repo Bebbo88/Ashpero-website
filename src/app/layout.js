@@ -3,6 +3,8 @@ import { Montserrat, Playfair_Display } from "next/font/google";
 import { getDictionary } from "../i18n/dictionaries";
 import { LangProvider } from "../hooks/useLanguage";
 import { ModeProvider } from "../hooks/useMode";
+import SplashScreen from "@/components/layout/SplashScreen";
+import FloatingActions from "@/components/layout/FloatingActions";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -53,7 +55,10 @@ export default async function RootLayout({ children }) {
         suppressHydrationWarning
       >
         <LangProvider initialLocale={locale} dictionary={dictionary}>
-          <ModeProvider>{children}</ModeProvider>
+          <ModeProvider>
+            <SplashScreen>{children}</SplashScreen>
+            <FloatingActions />
+          </ModeProvider>
         </LangProvider>
       </body>
     </html>

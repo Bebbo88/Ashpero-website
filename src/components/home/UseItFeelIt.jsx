@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useLanguage } from "../../hooks/useLanguage";
 
 const products = [
@@ -28,8 +29,9 @@ export default function UseItFeelIt() {
         {/* 4 Product Photos Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {products.map((product) => (
-            <div
+            <Link
               key={product.id}
+              href={`/product/${product.id}`}
               className="relative aspect-[3/5] rounded-2xl overflow-hidden group cursor-pointer"
             >
               {/* Product Image */}
@@ -50,7 +52,7 @@ export default function UseItFeelIt() {
                   {t(`UseItFeelIt.products.${product.nameKey}`)}
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

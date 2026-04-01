@@ -105,5 +105,233 @@
     "stat2Label": "SYNTHETICS",
     "stat3Value": "CR-Free",
     "stat3Label": "CERTIFIED"
+  },
+  "AllProducts": {
+    "subtitle": "ASHPERO COLLECTION",
+    "title": "The Collection",
+    "description": "Shop cleanly crafted skincare powered by fine botanicals and scientific precision for visible results.",
+    "productCount": "products",
+    "sortBy": "Sort by",
+    "sort": {
+      "featured": "Featured",
+      "priceLow": "Price: Low to High",
+      "priceHigh": "Price: High to Low",
+      "newest": "Newest"
+    },
+    "noResults": "No products found",
+    "noResultsDesc": "Try adjusting your filters to find what you're looking for.",
+    "filters": {
+      "title": "Filters",
+      "clearAll": "Clear All",
+      "skinConcern": {
+        "title": "Skin Concern",
+        "options": {
+          "acne": "Acne & Blemishes",
+          "aging": "Anti-Aging",
+          "dryness": "Dryness & Dehydration",
+          "darkSpots": "Dark Spots & Pigmentation",
+          "sensitivity": "Sensitivity & Redness"
+        }
+      },
+      "productType": {
+        "title": "Product Type",
+        "options": {
+          "serums": "Serums",
+          "moisturizers": "Moisturizers",
+          "cleansers": "Cleansers",
+          "masks": "Face Masks",
+          "oils": "Facial Oils",
+          "spf": "Sun Protection"
+        }
+      },
+      "skinType": {
+        "title": "Skin Type",
+        "options": {
+          "oily": "Oily",
+          "dry": "Dry",
+          "combination": "Combination",
+          "normal": "Normal",
+          "sensitive": "Sensitive"
+        }
+      },
+      "priceRange": {
+        "title": "Price Range",
+        "options": {
+          "under30": "Under $30",
+          "from30to60": "$30 – $60",
+          "from60to100": "$60 – $100",
+          "over100": "Over $100"
+        }
+      }
+    },
+    "categories": {
+      "antiAging": "ANTI-AGING",
+      "hydration": "HYDRATION",
+      "glow": "GLOW",
+      "cleansing": "CLEANSING"
+    },
+    "products": {
+      "retinol": "Luminous Serum",
+      "hyaluronic": "Botanical Elixir",
+      "goldOil": "24k Gold Radiance Oil",
+      "cleanser": "Camellia Silk Cleanser",
+      "retinolNight": "The Ritual Set",
+      "vitaminCSerum": "Oxygen Purifier",
+      "moisturizer": "Dewy Rose Milk",
+      "foamCleanser": "Velvet Foam Cleanser"
+    }
+  },
+  "ProductDetails": {
+    "home": "Home",
+    "allProducts": "All Products",
+    "addToCart": "Add to Cart",
+    "freeShipping": "Free Shipping",
+    "easyReturns": "30-Day Returns",
+    "authentic": "100% Authentic",
+    "ingredients": "Ingredients",
+    "howToUse": "How to Use",
+    "shippingInfo": "Shipping & Returns",
+    "shippingDesc": "Free standard shipping on orders over $50. Returns accepted within 30 days of purchase in original packaging.",
+    "share": "Share",
+    "categories": {
+      "antiAging": "ANTI-AGING",
+      "hydration": "HYDRATION",
+      "glow": "GLOW",
+      "cleansing": "CLEANSING"
+    },
+    "products": {
+      "retinol": "Luminous Serum",
+      "hyaluronic": "Botanical Elixir",
+      "goldOil": "24k Gold Radiance Oil",
+      "cleanser": "Camellia Silk Cleanser",
+      "retinolNight": "The Ritual Set",
+      "vitaminCSerum": "Oxygen Purifier",
+      "moisturizer": "Dewy Rose Milk",
+      "foamCleanser": "Velvet Foam Cleanser"
+    },
+    "descriptions": {
+      "retinolDesc": "A high-potency serum that restores skin elasticity and youthfulness. Formulated with pure plant-derived collagen and botanical extracts to firm and revitalize your complexion.",
+      "hyaluronicDesc": "Intense hydration complex for plump, dewy skin. Dual-weight hyaluronic acid penetrates deep to lock in moisture.",
+      "goldOilDesc": "Infused with 24k gold flakes, this oil provides an instant radiant glow while nourishing with precious botanical oils.",
+      "cleanserDesc": "A gentle yet effective camellia-based cleanser that removes impurities without stripping your skin's natural moisture barrier.",
+      "retinolNightDesc": "The complete night ritual set for cellular renewal. Includes our signature night shield and recovery complex.",
+      "vitaminCDesc": "Breathe life into tired skin. This oxygenating formula with stabilized Vitamin C brightens and protects against environmental stressors.",
+      "moisturizerDesc": "Lightweight rose-infused milk that provides 24-hour hydration and a soft, velvety finish.",
+      "foamCleanserDesc": "An ultra-soft foaming cleanser that purifies pores while soothing sensitive skin with botanical extracts."
+    },
+    "ingredientsData": {
+      "retinolIngredients": "Water (Aqua), Glycerin, Retinol, Hyaluronic Acid, Vitamin E, Green Tea Extract, Botanical Peptides.",
+      "hyaluronicIngredients": "Sodium Hyaluronate, Snow Mushroom Extract, Panthenol, Rosewater, Aloe Barbadensis Leaf Juice.",
+      "goldOilIngredients": "Squalane, Jojoba Oil, 24k Gold Flakes, Rosehip Oil, Argan Oil, Vitamin E.",
+      "cleanserIngredients": "Camellia Sinensis Leaf Water, Lauryl Glucoside, Glycerin, Chamomile Extract, Sea Buckthorn Oil.",
+      "retinolNightIngredients": "Retinol, Niacinamide, Shea Butter, Ceramides, Evening Primrose Oil.",
+      "vitaminCIngredients": "Ascorbic Acid (Vitamin C), Ferulic Acid, Vitamin E, Oxygenating Complex, Citrus Extract.",
+      "moisturizerIngredients": "Rose Flower Water, Squalane, Niacinamide, Glycerin, Sodium Hyaluronate.",
+      "foamCleanserIngredients": "Witch Hazel, Lavender Water, Decyl Glucoside, Calendula Extract, Panthenol."
+    },
+    "howToUseData": {
+      "retinolHowToUse": "Apply 2-3 drops to clean, dry skin in the evening. Follow with moisturizer.",
+      "hyaluronicHowToUse": "Apply morning and night to damp skin before oils or creams.",
+      "goldOilHowToUse": "Massage 2 drops into skin as the last step of your routine, or mix with foundation for a glowy finish.",
+      "cleanserHowToUse": "Massage onto damp skin in circular motions, then rinse with lukewarm water.",
+      "retinolNightHowToUse": "Use nightly as the final step of your skincare ritual.",
+      "vitaminCHowToUse": "Apply every morning after cleansing to protect and brighten.",
+      "moisturizerHowToUse": "Smooth over face and neck morning and night after serums.",
+      "foamCleanserHowToUse": "Lather between palms and gently massage onto face. Rinse thoroughly."
+    },
+    "reviews": {
+      "title": "Customer Reviews",
+      "reviewCount": "reviews",
+      "addReview": "Add Your Review",
+      "yourName": "Your Name",
+      "namePlaceholder": "Enter your name",
+      "yourRating": "Rating",
+      "yourReview": "Your Review",
+      "reviewPlaceholder": "Share your experience...",
+      "submit": "Submit Review"
+    }
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for has evaporated like mist.",
+    "returnHome": "Return to Home",
+    "digit4": "4",
+    "digit0": "0"
+  },
+  "ContactUs": {
+    "title": "Contact Us",
+    "subtitle": "Get In Touch",
+    "description": "We are here to help. Reach out to us for any inquiries about our products, your order, or just to say hello.",
+    "addressTitle": "Headquarters",
+    "address": "123 Botanical Avenue, Skin Care District, Cairo, Egypt",
+    "phoneTitle": "Phone",
+    "phone": "+20 100 123 4567",
+    "emailTitle": "Email",
+    "email": "hello@ashpero.com",
+    "socialsTitle": "Follow Us",
+    "formTitle": "Send us a message",
+    "formName": "Full Name",
+    "formNamePlaceholder": "Enter your full name",
+    "formEmail": "Email Address",
+    "formEmailPlaceholder": "Enter your email address",
+    "formSubject": "Subject",
+    "formSubjectPlaceholder": "What is this about?",
+    "formMessage": "Message",
+    "formMessagePlaceholder": "Write your message here...",
+    "formSubmit": "Send Message",
+    "formSending": "Sending..."
+  },
+  "AboutUs": {
+    "title": "About Us",
+    "heroTitle": "Crafting Pure Radience",
+    "heroSubtitle": "Our Journey to Clean Beauty",
+    "heroDesc": "At Ashpero, we believe that true luxury lies in the purity of nature intelligently blended with modern science.",
+    "timelineTitle": "Our Roadmap",
+    "timelineSubtitle": "A History of Innovation",
+    "events": {
+      "year2012": {
+        "year": "2012",
+        "title": "The Inception",
+        "description": "Founded with a mission to bring pure, botanical skincare to the world, starting with our signature oil."
+      },
+      "year2015": {
+        "year": "2015",
+        "title": "Clinical Trials",
+        "description": "Partnered with top dermatologists to prove the efficacy of our organic formulations."
+      },
+      "year2018": {
+        "year": "2018",
+        "title": "Global Expansion",
+        "description": "Opened flagship stores across major cities, bringing Ashpero to international markets."
+      },
+      "year2023": {
+        "year": "2023",
+        "title": "Sustainable Future",
+        "description": "Achieved 100% recyclable packaging and zero-carbon footprint manufacturing."
+      }
+    },
+    "faqTitle": "Frequently Asked Questions",
+    "faqSubtitle": "Everything you need to know about Ashpero",
+    "faqs": {
+      "q1": {
+        "question": "Are your products cruelty-free and vegan?",
+        "answer": "Yes, we are 100% cruelty-free and vegan. We never test on animals and never use animal-derived ingredients."
+      },
+      "q2": {
+        "question": "Where are Ashpero products made?",
+        "answer": "All our products are cleanly crafted and manufactured in our dedicated facilities in Egypt under strict quality control."
+      },
+      "q3": {
+        "question": "Are your products safe for sensitive skin?",
+        "answer": "Absolutely. Our formulations are free from harsh chemicals, synthetic fragrances, and artificial dyes, making them ideal for sensitive skin."
+      },
+      "q4": {
+        "question": "Do you ship internationally?",
+        "answer": "Yes, we ship to over 50 countries worldwide. Shipping times and costs vary depending on the destination."
+      }
+    },
+    "ctaTitle": "Ready to Transform Your Skin?",
+    "ctaDesc": "Reach out to our skincare experts to find the perfect ritual for you.",
+    "ctaButton": "Contact Us Now"
   }
 }
