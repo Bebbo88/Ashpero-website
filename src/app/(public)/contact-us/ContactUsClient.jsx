@@ -3,13 +3,14 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
-
-const MapPin = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>);
-const Phone = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>);
-const Mail = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>);
-const Instagram = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>);
-const Facebook = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>);
-const Twitter = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>);
+import {
+  MapPinIcon,
+  PhoneIcon,
+  MailIcon,
+  InstagramIcon,
+  FacebookIcon,
+  TwitterIcon,
+} from "@/svgs/ContactUsClient.svgs";
 
 export default function ContactUsPage() {
   const { t } = useLanguage();
@@ -69,7 +70,7 @@ export default function ContactUsPage() {
               {/* Address */}
               <div className="flex items-start gap-5 mb-8 group">
                 <div className="w-14 h-14 bg-brand-mint/10 text-brand-mint rounded-full flex items-center justify-center shrink-0 group-hover:bg-brand-mint group-hover:text-white transition-colors duration-300">
-                  <MapPin className="w-6 h-6" />
+                  <MapPinIcon className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-text-primary mb-2 font-playfair">{t("ContactUs.addressTitle")}</h3>
@@ -80,7 +81,7 @@ export default function ContactUsPage() {
               {/* Phone */}
               <div className="flex items-start gap-5 mb-8 group">
                 <div className="w-14 h-14 bg-brand-mint/10 text-brand-mint rounded-full flex items-center justify-center shrink-0 group-hover:bg-brand-mint group-hover:text-white transition-colors duration-300">
-                  <Phone className="w-6 h-6" />
+                  <PhoneIcon className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-text-primary mb-2 font-playfair">{t("ContactUs.phoneTitle")}</h3>
@@ -91,7 +92,7 @@ export default function ContactUsPage() {
               {/* Email */}
               <div className="flex items-start gap-5 group">
                 <div className="w-14 h-14 bg-brand-mint/10 text-brand-mint rounded-full flex items-center justify-center shrink-0 group-hover:bg-brand-mint group-hover:text-white transition-colors duration-300">
-                  <Mail className="w-6 h-6" />
+                  <MailIcon className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-text-primary mb-2 font-playfair">{t("ContactUs.emailTitle")}</h3>
@@ -105,13 +106,13 @@ export default function ContactUsPage() {
               <h3 className="text-2xl font-bold text-brand-dark dark:text-brand-creme mb-6 font-playfair">{t("ContactUs.socialsTitle")}</h3>
               <div className="flex gap-4">
                 <a href="#" className="w-14 h-14 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95">
-                  <Instagram className="w-6 h-6" />
+                  <InstagramIcon className="w-6 h-6" />
                 </a>
                 <a href="#" className="w-14 h-14 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95">
-                  <Facebook className="w-6 h-6" />
+                  <FacebookIcon className="w-6 h-6" />
                 </a>
                 <a href="#" className="w-14 h-14 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95">
-                  <Twitter className="w-6 h-6" />
+                  <TwitterIcon className="w-6 h-6" />
                 </a>
               </div>
             </div>

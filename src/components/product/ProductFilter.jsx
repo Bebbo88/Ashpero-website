@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useLanguage } from "../../hooks/useLanguage";
+import { CheckIcon } from "@/svgs/ProductFilter.svgs";
+import animationStyles from "@/animations/ProductFilter.animations.module.css";
 
 const FILTER_SECTIONS = [
   {
@@ -140,19 +142,7 @@ export default function ProductFilter({
                           }`}
                       >
                         {isChecked && (
-                          <svg
-                            className="w-2.5 h-2.5 text-white"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
+                          <CheckIcon className="w-2.5 h-2.5 text-white" />
                         )}
                       </div>
                       <input
@@ -195,7 +185,9 @@ export default function ProductFilter({
             onClick={onMobileClose}
           />
           {/* Slide Panel */}
-          <div className="absolute left-0 top-0 bottom-0 w-[300px] max-w-[85vw] bg-bg-primary shadow-2xl p-6 overflow-y-auto animate-slideInLeft">
+          <div
+            className={`absolute left-0 top-0 bottom-0 w-[300px] max-w-[85vw] bg-bg-primary shadow-2xl p-6 overflow-y-auto ${animationStyles.animateSlideInLeft}`}
+          >
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-sans text-sm font-bold tracking-[0.2em] uppercase text-text-primary">
                 {t("AllProducts.filters.title")}
@@ -251,19 +243,7 @@ export default function ProductFilter({
                                 }`}
                             >
                               {isChecked && (
-                                <svg
-                                  className="w-2.5 h-2.5 text-white"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                  strokeWidth="3"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
+                                <CheckIcon className="w-2.5 h-2.5 text-white" />
                               )}
                             </div>
                             <input
