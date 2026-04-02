@@ -1,9 +1,12 @@
 import { useMemo } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { HERO_BACKGROUND_SLIDES, HERO_CARDS_DATA } from "./HeroSection.data";
+import { useBestSellersQuery, useSiteContentQuery } from "@/features/home/queries";
+import { mapHeroBackgroundSlides, mapHeroCards } from "@/features/home/mappers";
 
 export function useHeroSectionLogic() {
   const { t, locale } = useLanguage();
+  const bestSellersQuery = useBestSellersQuery(12);
+  const contentQuery = useSiteContentQuery();
 
   const heroStats = useMemo(
     () => [
@@ -14,11 +17,22 @@ export function useHeroSectionLogic() {
     [t],
   );
 
+  const heroCards = useMemo(
+    () => mapHeroCards(bestSellersQuery.data || [], locale),
+    [bestSellersQuery.data, locale],
+  );
+
+  const backgroundSlides = useMemo(
+    () => mapHeroBackgroundSlides(contentQuery.data || {}),
+    [contentQuery.data],
+  );
+
   return {
     t,
     isArabic: locale === "ar",
-    heroCards: HERO_CARDS_DATA,
-    backgroundSlides: HERO_BACKGROUND_SLIDES,
+    heroCards,
+    backgroundSlides,
     heroStats,
+    isLoading: bestSellersQuery.isLoading || contentQuery.isLoading,
   };
 }

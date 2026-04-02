@@ -13,7 +13,16 @@ import "swiper/css/pagination";
 
 import styles from "@/animations/FeaturedBestsellers.animations.module.css";
 
-export function FeaturedBestsellersUI({ t, isArabic, products, wishlist, toggleWishlist }) {
+export function FeaturedBestsellersUI({
+  t,
+  isArabic,
+  products,
+  wishlist,
+  toggleWishlist,
+  isLoading,
+  isError,
+  errorMessage,
+}) {
   return (
     <section className={`${styles.root} w-full py-20 md:py-28 bg-bg-primary overflow-hidden`}>
       <div className="container mx-auto px-6 lg:px-10">
@@ -23,7 +32,29 @@ export function FeaturedBestsellersUI({ t, isArabic, products, wishlist, toggleW
         </div>
 
         <div className="relative group/carousel">
-          <Swiper modules={[Navigation, Pagination]} spaceBetween={24} slidesPerView={1} grabCursor navigation={{ nextEl: ".bs-next", prevEl: ".bs-prev" }} pagination={{ clickable: true, el: ".bs-pagination" }} dir={isArabic ? "rtl" : "ltr"} breakpoints={{ 480: { slidesPerView: 2, spaceBetween: 20 }, 768: { slidesPerView: 3, spaceBetween: 24 }, 1280: { slidesPerView: 4, spaceBetween: 28 } }} className="w-full bestsellers-swiper">
+          {isError ? (
+            <div className="rounded-2xl border border-red-200 bg-red-50/80 p-8 text-center">
+              <p className="text-sm font-semibold text-red-700">
+                Failed to load best sellers.
+              </p>
+              <p className="mt-2 text-xs text-red-600">
+                {errorMessage || "Check API URL, backend status, and CORS origins."}
+              </p>
+            </div>
+          ) : null}
+
+          {!isLoading && !isError && products.length === 0 ? (
+            <div className="rounded-2xl border border-border-color bg-bg-secondary/70 p-8 text-center">
+              <p className="text-sm font-semibold text-text-primary">
+                No best seller products found yet.
+              </p>
+              <p className="mt-2 text-xs text-text-secondary">
+                Mark products as best seller from dashboard, then refresh.
+              </p>
+            </div>
+          ) : null}
+
+          <Swiper modules={[Navigation, Pagination]} spaceBetween={24} slidesPerView={1} grabCursor navigation={{ nextEl: ".bs-next", prevEl: ".bs-prev" }} pagination={{ clickable: true, el: ".bs-pagination" }} dir={isArabic ? "rtl" : "ltr"} breakpoints={{ 480: { slidesPerView: 2, spaceBetween: 20 }, 768: { slidesPerView: 3, spaceBetween: 24 }, 1280: { slidesPerView: 4, spaceBetween: 28 } }} className={`w-full bestsellers-swiper ${products.length === 0 || isError ? "hidden" : ""}`}>
             {products.map((product, index) => {
               const isWishlisted = wishlist.includes(product.id);
               return (
@@ -35,7 +66,7 @@ export function FeaturedBestsellersUI({ t, isArabic, products, wishlist, toggleW
                       </button>
 
                       <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
-                        <Image src={product.image} alt={t(`Bestsellers.products.${product.titleKey}`)} fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw" />
+                        <Image src={product.image} alt={product.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw" />
                       </div>
 
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 z-10" />
@@ -48,9 +79,9 @@ export function FeaturedBestsellersUI({ t, isArabic, products, wishlist, toggleW
                     </Link>
 
                     <div className="flex flex-col gap-1 px-1">
-                      <span className="text-[11px] font-bold tracking-[0.15em] text-gray-400 dark:text-gray-500 uppercase">{t(`Bestsellers.categories.${product.categoryKey}`)}</span>
+                      <span className="text-[11px] font-bold tracking-[0.15em] text-gray-400 dark:text-gray-500 uppercase">{product.category}</span>
                       <Link href={`/product/${product.id}`}>
-                        <h3 className="font-playfair text-lg md:text-xl font-semibold text-text-primary leading-snug line-clamp-1 group-hover:text-brand-orange transition-colors duration-300">{t(`Bestsellers.products.${product.titleKey}`)}</h3>
+                        <h3 className="font-playfair text-lg md:text-xl font-semibold text-text-primary leading-snug line-clamp-1 group-hover:text-brand-orange transition-colors duration-300">{product.title}</h3>
                       </Link>
                       <span className="text-brand-orange font-bold text-base mt-1">{product.price}</span>
                     </div>
@@ -69,6 +100,11 @@ export function FeaturedBestsellersUI({ t, isArabic, products, wishlist, toggleW
 
           <div className="bs-pagination flex items-center justify-center gap-2 mt-10" />
         </div>
+        {isLoading ? (
+          <p className="mt-5 text-center text-xs text-text-secondary">
+            Syncing best sellers...
+          </p>
+        ) : null}
       </div>
     </section>
   );
