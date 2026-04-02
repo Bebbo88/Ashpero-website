@@ -1,0 +1,16 @@
+.root :global(.bs-pagination .swiper-pagination-bullet) {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-primary);
+  opacity: 0.15;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.root :global(.bs-pagination .swiper-pagination-bullet-active) {
+  opacity: 1;
+  background: var(--color-brand-orange);
+  width: 28px;
+  border-radius: 6px;
+}

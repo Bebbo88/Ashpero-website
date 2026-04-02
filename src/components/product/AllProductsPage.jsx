@@ -373,20 +373,6 @@ export default function AllProductsPage() {
         </div>
       </div>
 
-      {/* Mobile filter slide-in animation */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-          @keyframes slideInLeft {
-            from { transform: translateX(-100%); }
-            to   { transform: translateX(0); }
-          }
-          .animate-slideInLeft {
-            animation: slideInLeft 0.3s ease-out forwards;
-          }
-        `,
-        }}
-      />
     </section>
   );
 }
