@@ -3,6 +3,7 @@ import { Montserrat, Playfair_Display } from "next/font/google";
 import { getDictionary } from "../i18n/dictionaries";
 import { LangProvider } from "../hooks/useLanguage";
 import { ModeProvider } from "../hooks/useMode";
+import AuthSessionProvider from "@/components/providers/AuthSessionProvider";
 import SplashScreen from "@/components/layout/SplashScreen";
 import FloatingActions from "@/components/layout/FloatingActions";
 import { CartDrawerProvider } from "@/contexts/CartDrawerContext";
@@ -57,13 +58,15 @@ export default async function RootLayout({ children }) {
         suppressHydrationWarning
       >
         <LangProvider initialLocale={locale} dictionary={dictionary}>
-          <ModeProvider>
-            <CartDrawerProvider>
-              <SplashScreen>{children}</SplashScreen>
-              <FloatingActions />
-              <CartDrawer />
-            </CartDrawerProvider>
-          </ModeProvider>
+          <AuthSessionProvider>
+            <ModeProvider>
+              <CartDrawerProvider>
+                <SplashScreen>{children}</SplashScreen>
+                <FloatingActions />
+                <CartDrawer />
+              </CartDrawerProvider>
+            </ModeProvider>
+          </AuthSessionProvider>
         </LangProvider>
       </body>
     </html>
