@@ -4,6 +4,8 @@ import { getDictionary } from "../i18n/dictionaries";
 import { LangProvider } from "../hooks/useLanguage";
 import { ModeProvider } from "../hooks/useMode";
 import AuthSessionProvider from "@/components/providers/AuthSessionProvider";
+import ReduxProvider from "@/components/providers/ReduxProvider";
+import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 import SplashScreen from "@/components/layout/SplashScreen";
 import FloatingActions from "@/components/layout/FloatingActions";
 import { CartDrawerProvider } from "@/contexts/CartDrawerContext";
@@ -58,15 +60,19 @@ export default async function RootLayout({ children }) {
         suppressHydrationWarning
       >
         <LangProvider initialLocale={locale} dictionary={dictionary}>
-          <AuthSessionProvider>
-            <ModeProvider>
-              <CartDrawerProvider>
-                <SplashScreen>{children}</SplashScreen>
-                <FloatingActions />
-                <CartDrawer />
-              </CartDrawerProvider>
-            </ModeProvider>
-          </AuthSessionProvider>
+          <ReduxProvider>
+            <ReactQueryProvider>
+              <AuthSessionProvider>
+                <ModeProvider>
+                  <CartDrawerProvider>
+                    <SplashScreen>{children}</SplashScreen>
+                    <FloatingActions />
+                    <CartDrawer />
+                  </CartDrawerProvider>
+                </ModeProvider>
+              </AuthSessionProvider>
+            </ReactQueryProvider>
+          </ReduxProvider>
         </LangProvider>
       </body>
     </html>

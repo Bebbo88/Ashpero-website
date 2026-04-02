@@ -1,20 +1,35 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { BESTSELLER_PRODUCTS } from "./FeaturedBestsellers.data";
+import { useBestSellersQuery } from "@/features/home/queries";
+import { mapBestSellerProducts } from "@/features/home/mappers";
 
 export function useFeaturedBestsellersLogic() {
   const { t, locale } = useLanguage();
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlistIds, setWishlistIds] = useState([]);
+  const bestSellersQuery = useBestSellersQuery(12);
 
-  const toggleWishlist = (id) => {
-    setWishlist((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]));
+  const products = useMemo(
+    () => mapBestSellerProducts(bestSellersQuery.data || [], locale),
+    [bestSellersQuery.data, locale],
+  );
+
+  const toggleWishlistById = (id) => {
+    const targetId = String(id);
+    setWishlistIds((prev) =>
+      prev.includes(targetId)
+        ? prev.filter((itemId) => itemId !== targetId)
+        : [...prev, targetId],
+    );
   };
 
   return {
     t,
     isArabic: locale === "ar",
-    products: BESTSELLER_PRODUCTS,
-    wishlist,
-    toggleWishlist,
+    products,
+    wishlist: wishlistIds,
+    toggleWishlist: toggleWishlistById,
+    isLoading: bestSellersQuery.isLoading,
+    isError: bestSellersQuery.isError,
+    errorMessage: bestSellersQuery.error?.message || "",
   };
 }

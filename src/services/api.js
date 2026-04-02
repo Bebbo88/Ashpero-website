@@ -1,2 +1,1 @@
-// API client setup
-export const api = {};
+export { apiClient as api } from "@/services/http/axiosClient";

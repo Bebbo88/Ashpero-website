@@ -17,6 +17,12 @@
   bottom: -40px !important;
 }
 
+@media (max-width: 640px) {
+  .root :global(.hero-swiper .swiper-pagination) {
+    bottom: -28px !important;
+  }
+}
+
 .fadeInUp {
   animation: fade-in-up 0.8s ease-out forwards;
 }

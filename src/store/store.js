@@ -1,6 +1,9 @@
-// Redux store setup
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
+import homeUiReducer from "@/store/slices/homeUiSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    homeUi: homeUiReducer,
+  },
+  devTools: process.env.NODE_ENV !== "production",
 });

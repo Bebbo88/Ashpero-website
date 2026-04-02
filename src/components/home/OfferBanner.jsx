@@ -1,19 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import { useLanguage } from "../../hooks/useLanguage";
+import { useSiteContentQuery } from "@/features/home/queries";
+import { mapPrimaryBannerImage } from "@/features/home/mappers";
 
 export default function OfferBanner() {
   const { t } = useLanguage();
+  const contentQuery = useSiteContentQuery();
+
+  const bannerImage = useMemo(
+    () => mapPrimaryBannerImage(contentQuery.data || {}),
+    [contentQuery.data],
+  );
 
   return (
     <section className="w-full px-6 lg:px-10 py-10">
       <div className="relative w-full rounded-3xl overflow-hidden min-h-[320px] md:min-h-[380px] flex items-center">
-        {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/assets/background.jpg"
+            src={bannerImage}
             alt="Offer Background"
             fill
             className="object-cover"
@@ -22,7 +29,6 @@ export default function OfferBanner() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        {/* Content */}
         <div className="relative z-10 px-8 md:px-14 lg:px-20 py-12 max-w-2xl">
           <span className="text-brand-orange font-bold tracking-[0.2em] text-xs uppercase mb-4 block">
             {t("Offer.label")}
