@@ -449,5 +449,39 @@
       "questionsLine": "Any questions? Contact us at support@ashpero.com",
       "supportEmail": "support@ashpero.com"
     }
+  },
+  "Offers": {
+    "exclusive": "LIMITED TIME EXCLUSIVE",
+    "titleLine1": "The Winter Radiance",
+    "titleLine2": "Sale - Up to 30% Off",
+    "description": "Embrace the season with our curated collection of restoring formulas, now available at special pricing.",
+    "shopBtn": "SHOP THE COLLECTION",
+    "sectionTitle": "Seasonal Curations",
+    "sectionDesc": "Discover luxurious formulas tailored to suit your needs.",
+    "filterBtn": "Filter +",
+    "viewAll": "VIEW ALL OFFERS",
+    "showingText": "Showing 4 of 24 products",
+    "products": {
+      "prod1": {
+        "title": "Luminous Face Oil",
+        "desc": "Restoring hydration for dewy skin",
+        "badge": "Sale"
+      },
+      "prod2": {
+        "title": "Revitalizing Eye Cream",
+        "desc": "Anti-fatigue complex",
+        "badge": "Sale"
+      },
+      "prod3": {
+        "title": "Silky Cleansing Balm",
+        "desc": "Effortless makeup removing",
+        "badge": "Sale"
+      },
+      "prod4": {
+        "title": "Midnight Recovery Treatment",
+        "desc": "Overnight cellular repair",
+        "badge": "Sale"
+      }
+    }
   }
 }
