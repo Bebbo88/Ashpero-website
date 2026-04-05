@@ -15,6 +15,13 @@ export default function ProductCard({ product }) {
     >
       {/* Image Card */}
       <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-[#f4f4f5] dark:bg-white/5">
+        {/* Badge */}
+        {product.badge && (
+          <div className="absolute top-3 left-3 z-30 px-2 py-0.5 bg-white text-[10px] font-bold uppercase tracking-wider text-black shadow-sm">
+            {product.badge}
+          </div>
+        )}
+
         {/* Wishlist Button */}
         <button
           onClick={(e) => {
@@ -52,7 +59,7 @@ export default function ProductCard({ product }) {
               e.preventDefault();
               e.stopPropagation();
             }}
-            className="w-full py-2.5 rounded-xl bg-white dark:bg-black text-black dark:text-white text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:bg-brand-orange hover:text-white transition-colors duration-200 cursor-pointer"
+            className="w-full py-2.5 rounded-xl bg-white dark:bg-black text-black dark:text-white text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:bg-[#8EF1BC] hover:text-black transition-colors duration-200 cursor-pointer"
           >
             <ShoppingCart className="w-3.5 h-3.5" />
             Add to Cart
@@ -61,16 +68,30 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Product Info */}
-      <div className="flex flex-col gap-0.5 px-1">
+      <div className="flex flex-col gap-0.5 px-1 pb-2">
+        {product.category && (
         <span className="text-[10px] font-bold tracking-[0.15em] text-gray-400 dark:text-gray-500 uppercase">
           {product.category}
         </span>
-        <h3 className="font-serif text-sm md:text-base font-semibold text-text-primary leading-snug line-clamp-1 group-hover:text-brand-orange transition-colors duration-300">
+        )}
+        <h3 className="font-serif text-sm md:text-base font-semibold text-text-primary leading-snug line-clamp-1 hover:text-[#8EF1BC] transition-colors duration-300">
           {product.title}
         </h3>
-        <span className="text-brand-orange font-bold text-sm mt-0.5">
-          {product.price}
-        </span>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="text-[#8EF1BC] font-bold text-sm">
+            {product.price}
+          </span>
+          {product.oldPrice && (
+            <span className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm line-through">
+              {product.oldPrice}
+            </span>
+          )}
+        </div>
+        {product.description && (
+          <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 mt-1">
+            {product.description}
+          </p>
+        )}
       </div>
     </Link>
   );
