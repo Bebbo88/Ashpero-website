@@ -6,12 +6,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, Heart } from "lucide-react"; // Using native Lucide for Cart, custom SVGs for others
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCartDrawer } from "@/contexts/CartDrawerContext";
+import { useAppSelector } from "@/store/hooks";
 import { WhatsAppIcon, DoctorBotIcon } from "@/svgs/FloatingActions.svgs";
 
 export default function FloatingActions() {
   const { t } = useLanguage();
   const { openCart } = useCartDrawer();
+  const cartItems = useAppSelector((state) => state.cart.items || []);
   const [bottomOffset, setBottomOffset] = useState(0);
+
+  const cartCount = cartItems.reduce(
+    (count, item) => count + Number(item.quantity || 0),
+    0,
+  );
 
   useEffect(() => {
     let ticking = false;
@@ -108,7 +115,7 @@ export default function FloatingActions() {
           <ShoppingCart className="w-6 h-6" />
           {/* Cart Badge */}
           <span className="absolute -top-1 -end-1 w-5 h-5 bg-brand-orange text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-bg-primary shadow-sm group-hover:border-brand-orange transition-colors">
-            2
+            {cartCount}
           </span>
         </button>
       </motion.div>

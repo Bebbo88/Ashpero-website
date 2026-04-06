@@ -28,11 +28,16 @@ export function ProductInfoUI({
   sizeOptions,
   quantity,
   selectedSize,
+  displayPrice,
   isWishlisted,
   openAccordion,
   accordions,
   setSelectedSize,
-  setIsWishlisted,
+  shareLinks,
+  shareToast,
+  handleShareClick,
+  handleAddToCart,
+  handleToggleWishlist,
   decrementQty,
   incrementQty,
   toggleAccordion,
@@ -54,20 +59,28 @@ export function ProductInfoUI({
         <span className="text-text-primary font-medium">{product.title}</span>
       </nav>
 
-      <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-mint">{product.category}</span>
+      <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-mint">
+        {product.category}
+      </span>
 
       <h1 className="font-serif text-3xl md:text-4xl font-semibold text-text-primary leading-tight -mt-3">
         {product.title}
       </h1>
 
       <div className="flex items-center gap-4 -mt-2">
-        <span className="text-2xl font-bold text-brand-orange">{product.price}</span>
+        <span className="text-2xl font-bold text-brand-orange">
+          {displayPrice}
+        </span>
         {product.originalPrice ? (
-          <span className="text-lg text-text-secondary line-through">{product.originalPrice}</span>
+          <span className="text-lg text-text-secondary line-through">
+            {product.originalPrice}
+          </span>
         ) : null}
       </div>
 
-      <p className="text-sm text-text-secondary leading-relaxed">{product.description}</p>
+      <p className="text-sm text-text-secondary leading-relaxed">
+        {product.description}
+      </p>
 
       <div className="flex items-center gap-3 mt-2">
         {BENEFITS.map((benefit, idx) => (
@@ -75,7 +88,7 @@ export function ProductInfoUI({
             key={benefit}
             className={`w-12 h-12 rounded-full flex items-center justify-center text-[8px] font-bold tracking-tighter text-white shadow-sm ${
               idx === 0
-                ? "bg-[#1F3325]"
+                ? "bg-[#5EBC70]"
                 : idx === 1
                   ? "bg-[#5EBC86]"
                   : idx === 2
@@ -90,7 +103,9 @@ export function ProductInfoUI({
 
       {sizeOptions.length > 0 ? (
         <div className="flex flex-col gap-3 mt-2">
-          <span className="text-xs font-bold tracking-wider uppercase text-text-secondary">Select Size</span>
+          <span className="text-xs font-bold tracking-wider uppercase text-text-secondary">
+            {t("ProductDetails.selectSize")}
+          </span>
           <div className="flex flex-wrap gap-2">
             {sizeOptions.map((size) => (
               <button
@@ -128,13 +143,16 @@ export function ProductInfoUI({
           </button>
         </div>
 
-        <button className="flex-1 flex items-center justify-center gap-3 px-8 py-3.5 rounded-xl bg-brand-dark dark:bg-brand-mint text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-brand-dark/20 dark:shadow-brand-mint/20">
+        <button
+          onClick={handleAddToCart}
+          className="flex-1 flex items-center justify-center gap-3 px-8 py-3.5 rounded-xl bg-brand-dark dark:bg-brand-mint text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-brand-dark/20 dark:shadow-brand-mint/20"
+        >
           <ShoppingCart className="w-4 h-4" />
           {t("ProductDetails.addToCart")}
         </button>
 
         <button
-          onClick={() => setIsWishlisted((prev) => !prev)}
+          onClick={handleToggleWishlist}
           className={`w-12 h-12 shrink-0 rounded-xl border flex items-center justify-center transition-all duration-300 cursor-pointer ${
             isWishlisted
               ? "bg-red-500 border-red-500 text-white"
@@ -178,7 +196,23 @@ export function ProductInfoUI({
             </button>
             {openAccordion === accordionItem.key ? (
               <div className="pb-4 -mt-1">
-                <p className="text-sm text-text-secondary leading-relaxed">{accordionItem.content}</p>
+                {Array.isArray(accordionItem.points) &&
+                accordionItem.points.length > 0 ? (
+                  <ul className="space-y-1.5 ps-5 list-disc marker:text-brand-orange">
+                    {accordionItem.points.map((point, index) => (
+                      <li
+                        key={`${accordionItem.key}-point-${index}`}
+                        className="text-sm text-text-secondary leading-relaxed"
+                      >
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-text-secondary leading-relaxed">
+                    {accordionItem.content}
+                  </p>
+                )}
               </div>
             ) : null}
           </div>
@@ -192,31 +226,49 @@ export function ProductInfoUI({
         </span>
         <div className="flex items-center gap-3">
           <a
-            href="#"
+            href={shareLinks.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleShareClick("facebook")}
             className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-[#1877F2] transition-colors"
           >
             <FacebookIcon className="w-4 h-4 transition-colors group-hover:text-[#1877F2]" />
           </a>
           <a
-            href="#"
+            href={shareLinks.x}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleShareClick("x")}
             className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-[#1DA1F2] transition-colors"
           >
             <XIcon className="w-4 h-4 transition-colors group-hover:text-[#1DA1F2]" />
           </a>
           <a
-            href="#"
+            href={shareLinks.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleShareClick("instagram")}
             className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-[#E4405F] transition-colors"
           >
             <InstagramIcon className="w-4 h-4 transition-colors group-hover:text-[#E4405F]" />
           </a>
           <a
-            href="#"
+            href={shareLinks.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleShareClick("tiktok")}
             className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-brand-mint transition-colors"
           >
             <TikTokIcon className="w-4 h-4 transition-colors group-hover:text-brand-mint" />
           </a>
         </div>
       </div>
+
+      {shareToast?.visible ? (
+        <div className="fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-full border border-border-color bg-white/90 px-4 py-2 text-xs font-semibold text-text-primary shadow-lg backdrop-blur-md">
+          {shareToast.message}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Sun, Moon, Globe, ChevronDown, X } from "lucide-react";
+import { Heart, Sun, Moon, Globe, ChevronDown, X, User, LogOut } from "lucide-react";
 import TopBanner from "./TopBanner";
 import {
   GoogleIcon,
@@ -154,21 +154,20 @@ export function NavbarUI({
                     </span>
                     <button
                       onClick={logout}
-                      className="cursor-pointer text-sm font-semibold text-text-primary border border-text-primary/50 rounded-full px-4 py-2 hover:bg-brand-mint/10 hover:border-brand-mint hover:text-brand-mint transition-colors"
+                      className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-text-primary hover:text-brand-orange"
+                      title="Logout"
                     >
-                      Logout
+                      <LogOut className="w-4 h-4 lg:w-5 lg:h-5" />
                     </button>
                   </div>
                 ) : (
                   <button
                     onClick={toggleAuthMenu}
                     disabled={isAuthLoading}
-                    className="cursor-pointer text-sm font-semibold text-text-primary border border-text-primary/50 rounded-full px-4 py-2 hover:bg-brand-mint/10 hover:border-brand-mint hover:text-brand-mint transition-colors inline-flex items-center gap-1 disabled:opacity-60"
+                    className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-text-primary hover:text-brand-orange disabled:opacity-60 flex items-center justify-center"
+                    title={t("Navbar.login")}
                   >
-                    {isAuthLoading ? "Loading..." : t("Navbar.login")}
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform ${isAuthMenuOpen ? "rotate-180" : ""}`}
-                    />
+                    <User className="w-4 h-4 lg:w-5 lg:h-5" />
                   </button>
                 )}
               </div>
@@ -237,9 +236,9 @@ export function NavbarUI({
                       closeMobileMenu();
                       logout();
                     }}
-                    className="w-full cursor-pointer text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    className="w-full cursor-pointer flex items-center justify-center gap-2 text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   >
-                    Logout
+                    <LogOut className="w-4 h-4" />
                   </button>
                 </>
               ) : (
@@ -249,9 +248,9 @@ export function NavbarUI({
                     toggleAuthMenu();
                   }}
                   disabled={isAuthLoading}
-                  className="w-full cursor-pointer text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors disabled:opacity-60"
+                  className="w-full cursor-pointer flex items-center justify-center gap-2 text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors disabled:opacity-60"
                 >
-                  {isAuthLoading ? "Loading..." : t("Navbar.login")}
+                  <User className="w-4 h-4" />
                 </button>
               )}
             </div>

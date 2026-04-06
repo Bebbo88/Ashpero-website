@@ -6,34 +6,11 @@ import { useLanguage } from "../../hooks/useLanguage";
 import { CheckIcon } from "@/svgs/ProductFilter.svgs";
 import animationStyles from "@/animations/ProductFilter.animations.module.css";
 
-const FILTER_SECTIONS = [
-  {
-    key: "category",
-    titleFallback: "Category",
-    options: ["antiAging", "hydration", "glow", "cleansing"],
-    optionLabels: {
-      antiAging: "Anti-Aging",
-      hydration: "Hydration",
-      glow: "Glow",
-      cleansing: "Cleansing",
-    },
-  },
-  {
-    key: "skinConcern",
-    options: ["acne", "aging", "dryness", "darkSpots", "sensitivity"],
-  },
-  {
-    key: "productType",
-    options: ["serums", "moisturizers", "cleansers", "masks", "oils", "spf"],
-  },
-  {
-    key: "skinType",
-    options: ["oily", "dry", "combination", "normal", "sensitive"],
-  },
-  {
-    key: "priceRange",
-    options: ["under30", "from30to60", "from60to100", "over100"],
-  },
+const DEFAULT_FILTER_SECTIONS = [
+  { key: "category", titleFallback: "Category", options: [] },
+  { key: "productType", options: [] },
+  { key: "skinType", options: [] },
+  { key: "priceRange", options: ["under30", "from30to60", "from60to100", "over100"] },
 ];
 
 export default function ProductFilter({
@@ -42,13 +19,14 @@ export default function ProductFilter({
   onClearAll,
   isMobileOpen,
   onMobileClose,
+  filterSections = DEFAULT_FILTER_SECTIONS,
+  resolveOptionLabel,
 }) {
   const { t } = useLanguage();
   const [expandedSections, setExpandedSections] = useState({
     category: true,
-    skinConcern: true,
     productType: true,
-    skinType: false,
+    skinType: true,
     priceRange: false,
   });
 
@@ -61,6 +39,10 @@ export default function ProductFilter({
   };
 
   const getOptionLabel = (section, option) => {
+    if (typeof resolveOptionLabel === "function") {
+      return resolveOptionLabel(section, option);
+    }
+
     const key = `AllProducts.filters.${section.key}.options.${option}`;
     const translated = t(key);
     return translated === key
@@ -104,7 +86,7 @@ export default function ProductFilter({
 
       {/* Filter Sections */}
       <div className="flex flex-col divide-y divide-border-color">
-        {FILTER_SECTIONS.map((section) => (
+        {filterSections.map((section) => (
           <div key={section.key} className="py-5 first:pt-0">
             {/* Section Header */}
             <button
@@ -208,7 +190,7 @@ export default function ProductFilter({
               </button>
             )}
             <div className="flex flex-col divide-y divide-border-color">
-              {FILTER_SECTIONS.map((section) => (
+              {filterSections.map((section) => (
                 <div key={section.key} className="py-5 first:pt-0">
                   <button
                     onClick={() => toggleSection(section.key)}

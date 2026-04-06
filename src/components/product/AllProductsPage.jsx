@@ -1,101 +1,20 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { SlidersHorizontal, ChevronDown, Grid2X2, Grid3X3 } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import {
+  SlidersHorizontal,
+  ChevronDown,
+  Grid2X2,
+  Grid3X3,
+  Search,
+} from "lucide-react";
 import ProductCard from "./ProductCard";
 import ProductFilter from "./ProductFilter";
+import EmptyState from "@/components/ui/EmptyState";
 import { useLanguage } from "../../hooks/useLanguage";
-
-const ALL_PRODUCTS = [
-  {
-    id: 1,
-    image: "/assets/photo1.jpeg",
-    categoryKey: "antiAging",
-    titleKey: "retinol",
-    price: "$84.00",
-    priceNum: 84,
-    skinConcern: ["aging"],
-    productType: ["serums"],
-    skinType: ["normal", "dry"],
-  },
-  {
-    id: 2,
-    image: "/assets/photo2.jpeg",
-    categoryKey: "hydration",
-    titleKey: "hyaluronic",
-    price: "$62.00",
-    priceNum: 62,
-    skinConcern: ["dryness"],
-    productType: ["serums"],
-    skinType: ["dry", "combination"],
-  },
-  {
-    id: 3,
-    image: "/assets/photo3.jpeg",
-    categoryKey: "glow",
-    titleKey: "goldOil",
-    price: "$120.00",
-    priceNum: 120,
-    skinConcern: ["darkSpots"],
-    productType: ["oils"],
-    skinType: ["normal", "dry"],
-  },
-  {
-    id: 4,
-    image: "/assets/photo4.jpeg",
-    categoryKey: "cleansing",
-    titleKey: "cleanser",
-    price: "$45.00",
-    priceNum: 45,
-    skinConcern: ["acne", "sensitivity"],
-    productType: ["cleansers"],
-    skinType: ["oily", "combination", "sensitive"],
-  },
-  {
-    id: 5,
-    image: "/assets/photo1.jpeg",
-    categoryKey: "antiAging",
-    titleKey: "retinolNight",
-    price: "$92.00",
-    priceNum: 92,
-    skinConcern: ["aging"],
-    productType: ["moisturizers"],
-    skinType: ["normal", "dry"],
-  },
-  {
-    id: 6,
-    image: "/assets/photo3.jpeg",
-    categoryKey: "glow",
-    titleKey: "vitaminCSerum",
-    price: "$78.00",
-    priceNum: 78,
-    skinConcern: ["darkSpots", "aging"],
-    productType: ["serums"],
-    skinType: ["normal", "oily", "combination"],
-  },
-  {
-    id: 7,
-    image: "/assets/photo2.jpeg",
-    categoryKey: "hydration",
-    titleKey: "moisturizer",
-    price: "$56.00",
-    priceNum: 56,
-    skinConcern: ["dryness"],
-    productType: ["moisturizers"],
-    skinType: ["dry", "normal"],
-  },
-  {
-    id: 8,
-    image: "/assets/photo4.jpeg",
-    categoryKey: "cleansing",
-    titleKey: "foamCleanser",
-    price: "$38.00",
-    priceNum: 38,
-    skinConcern: ["acne"],
-    productType: ["cleansers"],
-    skinType: ["oily", "combination"],
-  },
-];
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { mapAllProducts } from "@/features/product/mappers";
+import { useProductsQuery } from "@/features/product/queries";
 
 const SORT_OPTIONS = [
   { key: "featured", labelKey: "featured" },
@@ -103,6 +22,8 @@ const SORT_OPTIONS = [
   { key: "priceHigh", labelKey: "priceHigh" },
   { key: "newest", labelKey: "newest" },
 ];
+
+const PRICE_RANGE_OPTIONS = ["under30", "from30to60", "from60to100", "over100"];
 
 const priceRangeCheck = (priceNum, range) => {
   switch (range) {
@@ -119,19 +40,167 @@ const priceRangeCheck = (priceNum, range) => {
   }
 };
 
+const normalizeList = (values = []) =>
+  values
+    .map((value) => String(value || "").trim())
+    .filter(Boolean)
+    .filter(
+      (value, index, list) =>
+        list.findIndex((entry) => entry.toLowerCase() === value.toLowerCase()) ===
+        index,
+    );
+
+function normalizeCategoryTranslationKey(category) {
+  const compact = String(category || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ");
+
+  if (!compact) {
+    return "";
+  }
+
+  const tokens = compact.split(" ").filter(Boolean);
+  if (tokens.length === 0) {
+    return "";
+  }
+
+  if (tokens.join("") === "antiaging") {
+    return "antiAging";
+  }
+
+  return tokens
+    .map((token, index) =>
+      index === 0 ? token : `${token.charAt(0).toUpperCase()}${token.slice(1)}`,
+    )
+    .join("");
+}
+
+function formatTokenLabel(token) {
+  return String(token || "")
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+    .join(" ");
+}
+
+function getPriceRangeLabel(range, locale) {
+  if (locale === "ar") {
+    if (range === "under30") return "أقل من 30 EGP";
+    if (range === "from30to60") return "30 إلى 60 EGP";
+    if (range === "from60to100") return "60 إلى 100 EGP";
+    if (range === "over100") return "أكثر من 100 EGP";
+  }
+
+  if (range === "under30") return "Under 30 EGP";
+  if (range === "from30to60") return "30 - 60 EGP";
+  if (range === "from60to100") return "60 - 100 EGP";
+  return "Over 100 EGP";
+}
+
 export default function AllProductsPage() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [filters, setFilters] = useState({
     category: [],
-    skinConcern: [],
     productType: [],
     skinType: [],
     priceRange: [],
   });
   const [sortBy, setSortBy] = useState("featured");
+  const [searchInput, setSearchInput] = useState("");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [gridCols, setGridCols] = useState(4);
+
+  const debouncedSearch = useDebouncedValue(searchInput.trim(), 450);
+
+  const facetsQuery = useProductsQuery({ isActive: true });
+
+  const productsQuery = useProductsQuery({
+    isActive: true,
+    search: debouncedSearch || undefined,
+    category: filters.category.length > 0 ? filters.category.join(",") : undefined,
+    productType:
+      filters.productType.length > 0 ? filters.productType.join(",") : undefined,
+    skinType: filters.skinType.length > 0 ? filters.skinType.join(",") : undefined,
+  });
+
+  const products = useMemo(
+    () => mapAllProducts(productsQuery.data, locale),
+    [locale, productsQuery.data],
+  );
+
+  const facetsProducts = useMemo(
+    () => mapAllProducts(facetsQuery.data, locale),
+    [facetsQuery.data, locale],
+  );
+
+  const categoryOptions = useMemo(
+    () => normalizeList(facetsProducts.map((product) => product.categoryRaw)),
+    [facetsProducts],
+  );
+  const productTypeOptions = useMemo(
+    () =>
+      normalizeList(
+        facetsProducts.flatMap((product) =>
+          Array.isArray(product.productType) ? product.productType : [],
+        ),
+      ),
+    [facetsProducts],
+  );
+  const skinTypeOptions = useMemo(
+    () =>
+      normalizeList(
+        facetsProducts.flatMap((product) =>
+          Array.isArray(product.skinType) ? product.skinType : [],
+        ),
+      ),
+    [facetsProducts],
+  );
+
+  const filterSections = useMemo(
+    () => [
+      { key: "category", options: categoryOptions },
+      { key: "productType", options: productTypeOptions },
+      { key: "skinType", options: skinTypeOptions },
+      { key: "priceRange", options: PRICE_RANGE_OPTIONS },
+    ],
+    [categoryOptions, productTypeOptions, skinTypeOptions],
+  );
+
+  const resolveCategoryLabel = (categoryValue) => {
+    const normalizedKey = normalizeCategoryTranslationKey(categoryValue);
+
+    if (normalizedKey) {
+      const translationKey = `AllProducts.categories.${normalizedKey}`;
+      const translated = t(translationKey);
+
+      if (translated !== translationKey) {
+        return translated;
+      }
+    }
+
+    return categoryValue;
+  };
+
+  const resolveFilterOptionLabel = (section, option) => {
+    if (section.key === "category") {
+      return resolveCategoryLabel(option);
+    }
+
+    if (section.key === "priceRange") {
+      return getPriceRangeLabel(option, locale);
+    }
+
+    const translationKey = `AllProducts.filters.${section.key}.options.${option}`;
+    const translated = t(translationKey);
+
+    if (translated !== translationKey) {
+      return translated;
+    }
+
+    return formatTokenLabel(option);
+  };
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -140,7 +209,6 @@ export default function AllProductsPage() {
   const clearAllFilters = () => {
     setFilters({
       category: [],
-      skinConcern: [],
       productType: [],
       skinType: [],
       priceRange: [],
@@ -148,75 +216,57 @@ export default function AllProductsPage() {
   };
 
   const filteredProducts = useMemo(() => {
-    let result = ALL_PRODUCTS.filter((product) => {
-      // Filter by category
-      if (
-        filters.category.length > 0 &&
-        !filters.category.includes(product.categoryKey)
-      )
-        return false;
-      // Filter by skin concern
-      if (
-        filters.skinConcern.length > 0 &&
-        !filters.skinConcern.some((f) => product.skinConcern.includes(f))
-      )
-        return false;
-      // Filter by product type
-      if (
-        filters.productType.length > 0 &&
-        !filters.productType.some((f) => product.productType.includes(f))
-      )
-        return false;
-      // Filter by skin type
-      if (
-        filters.skinType.length > 0 &&
-        !filters.skinType.some((f) => product.skinType.includes(f))
-      )
-        return false;
-      // Filter by price range
+    let result = products.filter((product) => {
       if (
         filters.priceRange.length > 0 &&
-        !filters.priceRange.some((r) => priceRangeCheck(product.priceNum, r))
-      )
+        !filters.priceRange.some((range) =>
+          priceRangeCheck(Number(product.priceValue || 0), range),
+        )
+      ) {
         return false;
+      }
+
       return true;
     });
 
-    // Sort
     switch (sortBy) {
       case "priceLow":
-        result.sort((a, b) => a.priceNum - b.priceNum);
+        result = [...result].sort((a, b) => a.priceValue - b.priceValue);
         break;
       case "priceHigh":
-        result.sort((a, b) => b.priceNum - a.priceNum);
+        result = [...result].sort((a, b) => b.priceValue - a.priceValue);
         break;
       case "newest":
-        result.sort((a, b) => b.id - a.id);
+        result = [...result].sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+        );
         break;
       default:
         break;
     }
 
-    return result;
-  }, [filters, sortBy]);
-
-  // Map product data to display format
-  const displayProducts = filteredProducts.map((p) => ({
-    id: p.id,
-    image: p.image,
-    category: t(`AllProducts.categories.${p.categoryKey}`),
-    title: t(`AllProducts.products.${p.titleKey}`),
-    price: p.price,
-  }));
+    return result.map((product) => ({
+      id: product.id,
+      image: product.image,
+      category: resolveCategoryLabel(product.categoryRaw),
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      priceNum: product.priceValue,
+    }));
+  }, [filters.priceRange, products, sortBy]);
 
   const activeFilterCount = Object.values(filters).reduce(
     (count, arr) => count + arr.length,
     0,
   );
 
+  const isLoading = productsQuery.isLoading || facetsQuery.isLoading;
+  const isError = productsQuery.isError || facetsQuery.isError;
+  const errorMessage = productsQuery.error?.message || facetsQuery.error?.message || "";
+
   return (
     <section className="w-full bg-bg-primary min-h-screen">
-      {/* Hero Header */}
       <div className="w-full bg-gradient-to-r from-[#69b578] via-[#2B4E38] to-[#1F3325] pt-12 pb-8 md:pt-16 md:pb-12">
         <div className="container mx-auto px-6 lg:px-10">
           <p className="font-sans text-[11px] font-bold tracking-[0.3em] uppercase text-white/60 mb-2">
@@ -231,11 +281,8 @@ export default function AllProductsPage() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-6 lg:px-10 py-10 md:py-14">
-        {/* Toolbar */}
         <div className="flex items-center justify-between mb-8 pb-6 border-b border-border-color">
-          {/* Left: Mobile filter toggle + result count */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsMobileFilterOpen(true)}
@@ -250,32 +297,35 @@ export default function AllProductsPage() {
               )}
             </button>
             <span className="text-sm text-text-secondary">
-              {displayProducts.length} {t("AllProducts.productCount")}
+              {filteredProducts.length} {t("AllProducts.productCount")}
             </span>
           </div>
 
-          {/* Right: Sort + Grid toggle */}
           <div className="flex items-center gap-4">
-            {/* Sort Dropdown */}
+            <div className="relative hidden md:block">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
+              <input
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                placeholder={locale === "ar" ? "ابحث عن منتج..." : "Search products..."}
+                className="w-52 lg:w-64 rounded-lg border border-border-color bg-bg-primary py-2 ps-9 pe-3 text-sm text-text-primary outline-none focus:border-brand-orange"
+              />
+            </div>
+
             <div className="relative">
               <button
                 onClick={() => setIsSortOpen(!isSortOpen)}
                 className="flex items-center gap-2 text-sm font-medium text-text-primary hover:text-brand-orange transition-colors cursor-pointer"
               >
                 {t("AllProducts.sortBy")}:{" "}
-                <span className="font-semibold">
-                  {t(`AllProducts.sort.${sortBy}`)}
-                </span>
+                <span className="font-semibold">{t(`AllProducts.sort.${sortBy}`)}</span>
                 <ChevronDown
                   className={`w-4 h-4 transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`}
                 />
               </button>
               {isSortOpen && (
                 <>
-                  <div
-                    className="fixed inset-0 z-30"
-                    onClick={() => setIsSortOpen(false)}
-                  />
+                  <div className="fixed inset-0 z-30" onClick={() => setIsSortOpen(false)} />
                   <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-48 bg-bg-primary border border-border-color rounded-xl shadow-xl z-40 overflow-hidden">
                     {SORT_OPTIONS.map((opt) => (
                       <button
@@ -284,12 +334,11 @@ export default function AllProductsPage() {
                           setSortBy(opt.key);
                           setIsSortOpen(false);
                         }}
-                        className={`w-full text-left rtl:text-right px-4 py-3 text-sm transition-colors cursor-pointer
-                          ${
-                            sortBy === opt.key
-                              ? "bg-brand-creme dark:bg-brand-dark/30 text-brand-orange font-semibold"
-                              : "text-text-primary hover:bg-gray-50 dark:hover:bg-white/5"
-                          }`}
+                        className={`w-full text-left rtl:text-right px-4 py-3 text-sm transition-colors cursor-pointer ${
+                          sortBy === opt.key
+                            ? "bg-brand-creme dark:bg-brand-dark/30 text-brand-orange font-semibold"
+                            : "text-text-primary hover:bg-gray-50 dark:hover:bg-white/5"
+                        }`}
                       >
                         {t(`AllProducts.sort.${opt.labelKey}`)}
                       </button>
@@ -299,7 +348,6 @@ export default function AllProductsPage() {
               )}
             </div>
 
-            {/* Grid Toggle */}
             <div className="hidden md:flex items-center gap-1 border border-border-color rounded-lg p-0.5">
               <button
                 onClick={() => setGridCols(3)}
@@ -325,54 +373,64 @@ export default function AllProductsPage() {
           </div>
         </div>
 
-        {/* Layout: Filter Sidebar + Product Grid */}
         <div className="flex gap-10 lg:gap-14">
-          {/* Filter Sidebar */}
           <ProductFilter
             filters={filters}
             onFilterChange={handleFilterChange}
             onClearAll={clearAllFilters}
             isMobileOpen={isMobileFilterOpen}
             onMobileClose={() => setIsMobileFilterOpen(false)}
+            filterSections={filterSections}
+            resolveOptionLabel={resolveFilterOptionLabel}
           />
 
-          {/* Product Grid */}
           <div className="flex-1">
-            {displayProducts.length > 0 ? (
+            {isLoading ? (
+              <div className="text-sm text-text-secondary py-12 text-center">
+                Loading products...
+              </div>
+            ) : null}
+
+            {isError ? (
+              <div className="rounded-2xl border border-red-200 bg-red-50/80 p-8 text-center">
+                <p className="text-sm font-semibold text-red-700">
+                  Failed to load products.
+                </p>
+                <p className="mt-2 text-xs text-red-600">
+                  {errorMessage || "Check API URL, backend status, and CORS origins."}
+                </p>
+              </div>
+            ) : null}
+
+            {!isLoading && !isError && filteredProducts.length > 0 ? (
               <div
                 className={`grid gap-x-5 gap-y-10 grid-cols-2 ${
-                  gridCols === 3
-                    ? "md:grid-cols-2 lg:grid-cols-3"
-                    : "md:grid-cols-3 lg:grid-cols-4"
+                  gridCols === 3 ? "md:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-4"
                 }`}
               >
-                {displayProducts.map((product) => (
+                {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div className="w-20 h-20 rounded-full bg-brand-creme dark:bg-brand-dark/20 flex items-center justify-center mb-6">
-                  <SlidersHorizontal className="w-8 h-8 text-text-secondary" />
-                </div>
-                <h3 className="font-serif text-xl font-medium text-text-primary mb-2">
-                  {t("AllProducts.noResults")}
-                </h3>
-                <p className="text-sm text-text-secondary max-w-sm">
-                  {t("AllProducts.noResultsDesc")}
-                </p>
-                <button
-                  onClick={clearAllFilters}
-                  className="mt-6 px-6 py-2.5 rounded-full bg-brand-dark dark:bg-brand-mint text-white text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
-                >
-                  {t("AllProducts.filters.clearAll")}
-                </button>
-              </div>
-            )}
+            ) : null}
+
+            {!isLoading && !isError && filteredProducts.length === 0 ? (
+              <EmptyState
+                title={t("AllProducts.noResults")}
+                description={t("AllProducts.noResultsDesc")}
+                actionButton={
+                  <button
+                    onClick={clearAllFilters}
+                    className="px-6 py-2.5 rounded-full bg-brand-dark dark:bg-brand-mint text-white text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+                  >
+                    {t("AllProducts.filters.clearAll")}
+                  </button>
+                }
+              />
+            ) : null}
           </div>
         </div>
       </div>
-
     </section>
   );
 }
