@@ -35,6 +35,7 @@
     "register": "Register",
     "home": "HOME",
     "allProducts": "ALL PRODUCTS",
+    "allOffers": "Discover Our Offers",
     "aboutUs": "ABOUT US",
     "contactUs": "CONTACT US",
     "tipsAndTricks": "TIPS & TRICKS",
@@ -123,6 +124,9 @@
     "filters": {
       "title": "Filters",
       "clearAll": "Clear All",
+      "category": {
+        "title": "Category"
+      },
       "skinConcern": {
         "title": "Skin Concern",
         "options": {
@@ -136,6 +140,7 @@
       "productType": {
         "title": "Product Type",
         "options": {
+          "serum": "Serum",
           "serums": "Serums",
           "moisturizers": "Moisturizers",
           "cleansers": "Cleansers",
@@ -219,6 +224,7 @@
       "moisturizerDesc": "Lightweight rose-infused milk that provides 24-hour hydration and a soft, velvety finish.",
       "foamCleanserDesc": "An ultra-soft foaming cleanser that purifies pores while soothing sensitive skin with botanical extracts."
     },
+    "selectSize": "Select Size",
     "ingredientsData": {
       "retinolIngredients": "Water (Aqua), Glycerin, Retinol, Hyaluronic Acid, Vitamin E, Green Tea Extract, Botanical Peptides.",
       "hyaluronicIngredients": "Sodium Hyaluronate, Snow Mushroom Extract, Panthenol, Rosewater, Aloe Barbadensis Leaf Juice.",
@@ -341,13 +347,17 @@
     "continueExploring": "Continue Exploring",
     "discoverMore": "Discover more products to complete your ritual.",
     "browseCatalog": "Browse Catalog",
-    "discoverMoreEssentials": "DISCOVER MORE ESSENTIALS"
+    "discoverMoreEssentials": "DISCOVER MORE ESSENTIALS",
+    "emptyTitle": "Your Wishlist is Empty",
+    "emptyDesc": "You haven't saved any products yet. Start exploring and save your favorites."
   },
   "CartDrawer": {
     "title": "Your Cart",
     "checkout": "CHECKOUT",
     "subtotal": "Subtotal",
-    "shippingTaxes": "Shipping & taxes calculated at checkout."
+    "shippingTaxes": "Shipping & taxes calculated at checkout.",
+    "emptyTitle": "Your Cart is Empty",
+    "emptyDesc": "You haven't added any items yet. Discover our collection and treat yourself."
   },
   "TipsAndTricks": {
     "subtitle": "THE JOURNAL",
@@ -483,5 +493,9 @@
         "badge": "Sale"
       }
     }
+  },
+  "EmptyState": {
+    "title": "No Data Available",
+    "description": "We couldn't find anything here. Please check back later or try exploring other areas."
   }
 }

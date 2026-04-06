@@ -7,6 +7,7 @@ import { useMode } from "@/hooks/useMode";
 const NAV_LINKS = [
   { href: "/", labelKey: "Navbar.home" },
   { href: "/all-products", labelKey: "Navbar.allProducts" },
+  { href: "/offers", labelKey: "Navbar.allOffers" },
   { href: "/about-us", labelKey: "Navbar.aboutUs" },
   { href: "/contact-us", labelKey: "Navbar.contactUs" },
   { href: "/tips-and-tricks", labelKey: "Navbar.tipsAndTricks" },

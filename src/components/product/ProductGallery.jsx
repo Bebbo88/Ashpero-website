@@ -7,7 +7,7 @@ export default function ProductGallery({ images, productName }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-4">
+    <div className="flex flex-col-reverse md:flex-row gap-4 lg:items-start">
       {/* Thumbnails */}
       <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto md:max-h-[520px] scrollbar-hide">
         {images.map((img, idx) => (
@@ -32,7 +32,7 @@ export default function ProductGallery({ images, productName }) {
       </div>
 
       {/* Main Image */}
-      <div className="relative flex-1 aspect-square md:aspect-[4/5] rounded-2xl overflow-hidden bg-brand-creme dark:bg-white/5 group">
+      <div className="relative w-full flex-1 aspect-square md:aspect-[4/5] max-h-[440px] md:max-h-[560px] rounded-2xl overflow-hidden bg-brand-creme dark:bg-white/5 group">
         <Image
           src={images[selectedIndex]}
           alt={productName}

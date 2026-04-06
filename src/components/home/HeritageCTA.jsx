@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useLanguage } from "../../hooks/useLanguage";
 
 export default function HeritageCTA() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const isArabic = locale === "ar";
 
   const stats = [
     { valueKey: "stat1Value", labelKey: "stat1Label" },
@@ -14,9 +15,9 @@ export default function HeritageCTA() {
   ];
 
   return (
-    <section className="w-full bg-bg-primary py-16 md:py-20">
+    <section className="w-full bg-bg-primary py-8 md:py-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-14 items-center">
           {/* Left: Photo with overlay card */}
           <div className="relative mx-auto w-full max-w-[420px] md:max-w-none">
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
@@ -31,7 +32,9 @@ export default function HeritageCTA() {
           </div>
 
           {/* Right: Heritage Content */}
-          <div className="flex flex-col pt-2 md:pt-0 text-center md:text-left">
+          <div
+            className={`flex flex-col pt-2 md:pt-0 text-center md:text-start ${isArabic ? "md:text-right" : ""}`}
+          >
             <h2 className="font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-[42px] text-text-primary leading-tight mb-6 md:mb-8">
               <span className="block md:inline">
                 {t("Heritage.titleLine1")}
@@ -54,7 +57,7 @@ export default function HeritageCTA() {
               {stats.map((stat, i) => (
                 <div
                   key={i}
-                  className="flex flex-col items-center md:items-start min-w-0"
+                  className={`flex flex-col items-center min-w-0 ${isArabic ? "md:items-end" : "md:items-start"}`}
                 >
                   <span className="text-brand-orange font-bold text-xl md:text-2xl mb-1">
                     {t(`Heritage.${stat.valueKey}`)}

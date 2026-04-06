@@ -37,6 +37,7 @@ export function mapBestSellerProducts(products = [], locale = "en") {
     category: getLocalizedValue(product, locale, "category", "category", "category") || "Skincare",
     title: getLocalizedValue(product, locale, "name_en", "name_ar", "name") || "Product",
     price: formatPrice(product?.price, locale),
+    priceNum: Number(product?.price) || 0,
   }));
 }
 

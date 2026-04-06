@@ -1,25 +1,21 @@
 import { useMemo } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { PRODUCTS_DB } from "./ProductDetailsPage.data";
+import { mapProductDetails } from "@/features/product/mappers";
+import { useProductDetailsQuery } from "@/features/product/queries";
 
 export function useProductDetailsPageLogic(productId) {
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
+  const productQuery = useProductDetailsQuery(productId);
 
   const product = useMemo(() => {
-    const rawProduct = PRODUCTS_DB[productId] || PRODUCTS_DB[1];
+    return mapProductDetails(productQuery.data, locale);
+  }, [productQuery.data, locale]);
 
-    return {
-      id: rawProduct.id,
-      images: rawProduct.images,
-      category: t(`ProductDetails.categories.${rawProduct.categoryKey}`),
-      title: t(`ProductDetails.products.${rawProduct.titleKey}`),
-      price: rawProduct.price,
-      description: t(`ProductDetails.descriptions.${rawProduct.descriptionKey}`),
-      sizes: rawProduct.sizes || [],
-      ingredients: t(`ProductDetails.ingredientsData.${rawProduct.ingredientsKey}`),
-      howToUse: t(`ProductDetails.howToUseData.${rawProduct.howToUseKey}`),
-    };
-  }, [productId, t]);
-
-  return { product };
+  return {
+    productId,
+    product,
+    isLoading: productQuery.isLoading,
+    isError: productQuery.isError,
+    errorMessage: productQuery.error?.message || "",
+  };
 }

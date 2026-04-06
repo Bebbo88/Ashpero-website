@@ -4,8 +4,40 @@ import React from "react";
 import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";
 import ProductReviews from "./ProductReviews";
+import EmptyState from "@/components/ui/EmptyState";
 
-export function ProductDetailsPageUI({ product }) {
+export function ProductDetailsPageUI({
+  productId,
+  product,
+  isLoading,
+  isError,
+  errorMessage,
+}) {
+  if (isLoading) {
+    return (
+      <section className="w-full bg-bg-primary min-h-screen py-8 md:py-14">
+        <div className="container mx-auto px-6 lg:px-10">
+          <div className="py-16 text-center text-sm text-text-secondary">
+            Loading product details...
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (isError || !product) {
+    return (
+      <section className="w-full bg-bg-primary min-h-screen py-8 md:py-14">
+        <div className="container mx-auto px-6 lg:px-10">
+          <EmptyState
+            title="Product not found"
+            description={errorMessage || "We could not load this product right now."}
+          />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="w-full bg-bg-primary min-h-screen py-8 md:py-14">
       <div className="container mx-auto px-6 lg:px-10">
@@ -14,7 +46,7 @@ export function ProductDetailsPageUI({ product }) {
           <ProductInfo product={product} />
         </div>
 
-        <ProductReviews />
+        <ProductReviews productId={product.id || productId} />
       </div>
     </section>
   );
