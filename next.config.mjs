@@ -5,6 +5,7 @@ const nextConfig = {
     dangerouslyAllowLocalIP: true,
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    domains: ["res.cloudinary.com", "cloudinary.com"],
     remotePatterns: [
       // local
       {
@@ -27,10 +28,15 @@ const nextConfig = {
         pathname: "/uploads/**",
       },
 
-      // ✅ أهم إضافة
+      // ✅ Cloudinary
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.cloudinary.com",
         pathname: "/**",
       },
 
@@ -38,14 +44,17 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "platform-lookaside.fbsbx.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "pbs.twimg.com",
+        pathname: "/**",
       },
     ],
   },
