@@ -64,7 +64,7 @@ export default function NotFound() {
         >
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-brand-dark dark:bg-brand-mint text-white tracking-wide font-semibold text-sm hover:scale-105 active:scale-95 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.12)] cursor-pointer"
+            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-brand-dark dark:bg-brand-mint text-white tracking-wide font-semibold text-sm hover:scale-105 active:scale-95 transition-all shadow-soft cursor-pointer"
           >
             {t("NotFound.returnHome")}
           </Link>

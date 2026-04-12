@@ -79,7 +79,7 @@ export function FeaturedBestsellersUI({
                   <div className="flex flex-col group cursor-pointer">
                     <Link
                       href={buildProductPath(product.id, product.title)}
-                      className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 bg-[#f4f4f5] dark:bg-white/5"
+                      className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 bg-surface-muted dark:bg-white/5"
                     >
                       <button
                         onClick={(event) => {
@@ -112,7 +112,7 @@ export function FeaturedBestsellersUI({
                             event.stopPropagation();
                             addToCart(product);
                           }}
-                          className="w-full py-3 rounded-xl bg-white dark:bg-black text-black dark:text-white text-sm font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:bg-brand-orange hover:text-white transition-colors duration-200 cursor-pointer"
+                          className="w-full py-3 rounded-xl bg-white dark:bg-black text-black dark:text-white text-sm font-bold tracking-wide flex items-center justify-center gap-2 shadow-soft hover:bg-brand-orange hover:text-white transition-colors duration-200 cursor-pointer"
                         >
                           <ShoppingCart className="w-4 h-4" />
                           {t("Bestsellers.addToCart")}
@@ -139,10 +139,10 @@ export function FeaturedBestsellersUI({
             })}
           </Swiper>
 
-          <button className="bs-prev absolute top-[35%] -translate-y-1/2 left-0 md:-left-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-[0_2px_12px_rgba(0,0,0,0.15)] flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 hover:shadow-[0_6px_25px_rgba(249,115,22,0.35)] cursor-pointer border border-gray-200 dark:border-gray-700">
+          <button className="bs-prev absolute top-[35%] -translate-y-1/2 left-0 md:-left-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 hover:shadow-orange cursor-pointer border border-gray-200 dark:border-gray-700">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <button className="bs-next absolute top-[35%] -translate-y-1/2 right-0 md:-right-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-[0_2px_12px_rgba(0,0,0,0.15)] flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 hover:shadow-[0_6px_25px_rgba(249,115,22,0.35)] cursor-pointer border border-gray-200 dark:border-gray-700">
+          <button className="bs-next absolute top-[35%] -translate-y-1/2 right-0 md:-right-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 hover:shadow-orange cursor-pointer border border-gray-200 dark:border-gray-700">
             <ChevronRight className="w-5 h-5" />
           </button>
 

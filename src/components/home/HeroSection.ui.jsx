@@ -12,14 +12,18 @@ import "swiper/css/pagination";
 import styles from "@/animations/HeroSection.animations.module.css";
 
 export function HeroSectionUI({ backgroundSlides }) {
+  const canLoop = backgroundSlides.length > 1;
+
   return (
     <section className={`${styles.root} relative w-full h-[77dvh]  `}>
       <div className="absolute inset-0 z-0">
         <Swiper
           modules={[Autoplay]}
-          loop
-          speed={15000}
-          autoplay={{ delay: 0, disableOnInteraction: false }}
+          loop={canLoop}
+          speed={700}
+          autoplay={
+            canLoop ? { delay: 5000, disableOnInteraction: false } : false
+          }
           allowTouchMove={false}
           className="h-full w-full"
         >
@@ -59,7 +63,7 @@ export function HeroSectionUI({ backgroundSlides }) {
                 >
                   <div className="relative w-full h-[65%] rounded-xl overflow-hidden mb-4 bg-white/5 shadow-inner">
                     {card.badge ? (
-                      <div className="absolute top-3 right-3 bg-brand-mint text-[#0F3120] text-[10px] font-bold px-3 py-1 rounded-full z-20 shadow-md">
+                      <div className="absolute top-3 right-3 bg-brand-mint text-hero-badge-text text-[10px] font-bold px-3 py-1 rounded-full z-20 shadow-md">
                         {card.badge}
                       </div>
                     ) : null}
@@ -73,7 +77,7 @@ export function HeroSectionUI({ backgroundSlides }) {
                   </div>
 
                   <div className="flex flex-col gap-1 text-white px-2 mb-2 w-full text-left">
-                    <span className="text-[10px] font-bold tracking-widest text-[#B2C4D6] uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-hero-category-muted uppercase">
                       {card.category}
                     </span>
                     <div className="flex justify-between items-end gap-2 mt-1 w-full">

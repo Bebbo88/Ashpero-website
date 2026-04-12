@@ -57,7 +57,7 @@ export default function ProductCard({ product }) {
       className="flex flex-col group cursor-pointer"
     >
       {/* Image Card */}
-      <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-[#f4f4f5] dark:bg-white/5">
+      <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-muted dark:bg-white/5">
         {/* Badge */}
         {product.badge && (
           <div className="absolute top-3 left-3 z-30 px-2 py-0.5 bg-white text-[10px] font-bold uppercase tracking-wider text-black shadow-sm">
@@ -95,7 +95,7 @@ export default function ProductCard({ product }) {
         <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-400 ease-out z-20">
           <button
             onClick={handleAddToCart}
-            className="w-full py-2.5 rounded-xl bg-white dark:bg-black text-black dark:text-white text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:bg-[#8EF1BC] hover:text-black transition-colors duration-200 cursor-pointer"
+            className="w-full py-2.5 rounded-xl bg-white dark:bg-black text-black dark:text-white text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-soft hover:bg-brand-accent hover:text-black transition-colors duration-200 cursor-pointer"
           >
             <ShoppingCart className="w-3.5 h-3.5" />
             {t("ProductDetails.addToCart")}
@@ -110,11 +110,11 @@ export default function ProductCard({ product }) {
           {product.category}
         </span>
         )}
-        <h3 className="font-serif text-sm md:text-base font-semibold text-text-primary leading-snug line-clamp-1 hover:text-[#8EF1BC] transition-colors duration-300">
+        <h3 className="font-serif text-sm md:text-base font-semibold text-text-primary leading-snug line-clamp-1 hover:text-brand-accent transition-colors duration-300">
           {product.title}
         </h3>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-[#8EF1BC] font-bold text-sm">
+          <span className="text-brand-accent font-bold text-sm">
             {product.price}
           </span>
           {product.oldPrice && (

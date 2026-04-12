@@ -1,58 +1,259 @@
 @import "tailwindcss";
 
-/* ──────────────────────────────────────────────────
-   CSS Custom Properties for Light / Dark modes.
-   MUST be outside @layer so @theme can resolve them.
-   ────────────────────────────────────────────────── */
-
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --border-color: #e5e7eb;
-  --nav-glass: rgba(255, 255, 255, 0.85);
+  --ds-brand-primary: #0c6d6d;
+  --ds-brand-accent: #69b578;
+  --ds-brand-dark: #1f3325;
+  --ds-brand-orange: #157c7c;
+  --ds-brand-creme: #f5efeb;
+  --ds-brand-text: #e8f3eb;
+
+  --ds-bg-primary: #ffffff;
+  --ds-bg-secondary: #f9fafb;
+  --ds-text-primary: #111827;
+  --ds-text-secondary: #4b5563;
+  --ds-border-color: #e5e7eb;
+  --ds-nav-glass: rgba(255, 255, 255, 0.85);
+
+  --ds-surface-muted: #f4f4f5;
+  --ds-footer-gradient-start: #175f4a;
+  --ds-footer-gradient-end: #0e3e2f;
+  --ds-newsletter-input-bg: #b2c4d6;
+  --ds-newsletter-placeholder: #506a5b;
+  --ds-footer-button-hover: #de5c38;
+
+  --ds-social-whatsapp: #25d366;
+  --ds-social-whatsapp-hover: #1ebe5a;
+  --ds-social-facebook: #1877f2;
+  --ds-social-x: #1da1f2;
+  --ds-social-instagram: #e4405f;
+
+  --ds-benefit-1: #5ebc70;
+  --ds-benefit-2: #5ebc86;
+  --ds-benefit-3: #69b578;
+  --ds-benefit-4: #7ee8b0;
+
+  --ds-hero-badge-text: #0f3120;
+  --ds-hero-category-muted: #b2c4d6;
+  --ds-swiper-bullet: rgba(255, 255, 255, 0.5);
+
+  --ds-status-error: #9b2c2c;
+  --ds-status-error-hover: #7b2222;
+  --ds-status-success: #15803d;
+  --ds-status-success-soft: #dcfce7;
+  --ds-status-error-soft: #fef2f2;
+  --ds-input-placeholder: #6b7280;
+
+  --ds-auth-google-text: #1f1f1f;
+  --ds-auth-google-border: #d9d9d9;
+  --ds-auth-google-border-hover: #c3c3c3;
+  --ds-auth-google-red: #ea4335;
+  --ds-auth-google-green: #34a853;
+  --ds-auth-google-blue: #4a90e2;
+  --ds-auth-google-yellow: #fbbc05;
+  --ds-auth-facebook-bg: #eef4ff;
+  --ds-auth-facebook-text: #0f3e9a;
+  --ds-auth-facebook-border: #c8d9ff;
+  --ds-auth-facebook-border-hover: #a8c4ff;
+  --ds-auth-facebook-hover-bg: #e6eeff;
+  --ds-auth-twitter-bg: #f2f4f8;
+  --ds-auth-twitter-text: #0f1419;
+  --ds-auth-twitter-border: #d5dbe5;
+  --ds-auth-twitter-border-hover: #bdc8d6;
+  --ds-auth-twitter-hover-bg: #edf1f7;
+
+  --ds-auth-modal-border: #d9e1ea;
+  --ds-auth-modal-surface-start: #ffffff;
+  --ds-auth-modal-surface-end: #f4f8fc;
+  --ds-auth-modal-close-border: #d4dee8;
+  --ds-auth-modal-close-text: #3d5568;
+  --ds-auth-modal-title: #0d2a1c;
+  --ds-auth-modal-fallback-bg: #f5f7fa;
+  --ds-auth-modal-fallback-border: #d8dfe8;
+  --ds-auth-modal-empty-bg: #f8fafd;
+
+  --ds-shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --ds-shadow-soft-sm: 0 2px 12px rgba(0, 0, 0, 0.15);
+  --ds-shadow-brand-primary: 0 8px 30px rgba(12, 109, 109, 0.3);
+  --ds-shadow-brand-primary-strong: 0 8px 30px rgba(12, 109, 109, 0.5);
+  --ds-shadow-whatsapp: 0 8px 20px rgba(37, 211, 102, 0.3);
+  --ds-shadow-orange: 0 6px 25px rgba(242, 108, 69, 0.35);
+  --ds-shadow-auth-modal: 0 30px 90px rgba(4, 28, 44, 0.22);
+  --ds-shadow-card: 0 8px 30px rgba(0, 0, 0, 0.04);
+  --ds-shadow-card-subtle: 0 4px 30px rgba(0, 0, 0, 0.03);
+  --ds-shadow-faq-open: 0 8px 30px rgba(0, 0, 0, 0.05);
+  --ds-shadow-video:
+    20px 30px 60px rgba(0, 0, 0, 0.5),
+    8px 12px 20px rgba(0, 0, 0, 0.3),
+    2px 4px 8px rgba(0, 0, 0, 0.2);
+  --ds-shadow-loading-drop: 0 2px 4px rgba(12, 109, 109, 0.4);
+  --ds-shadow-loading-bottle:
+    inset -5px -5px 15px rgba(0, 0, 0, 0.06),
+    inset 5px 5px 15px rgba(255, 255, 255, 0.7),
+    0 15px 30px rgba(0, 0, 0, 0.15);
+  --ds-loading-highlight: rgba(255, 255, 255, 0.5);
+
+  --ds-video-depth-rgb: 0, 0, 0;
 }
 
 .dark {
-  --bg-primary: #1F3325;
-  --bg-secondary: #2B4E38;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --border-color: #374151;
-  --nav-glass: rgba(31, 51, 37, 0.85);
+  --ds-bg-primary: #1f3325;
+  --ds-bg-secondary: #2b4e38;
+  --ds-text-primary: #f9fafb;
+  --ds-text-secondary: #d1d5db;
+  --ds-border-color: #374151;
+  --ds-nav-glass: rgba(31, 51, 37, 0.85);
+  --ds-input-placeholder: #9ca3af;
 }
-
-/* ──────────────────────────────────────────────────
-   Tailwind v4 Theme Token Registration
-   ────────────────────────────────────────────────── */
 
 @theme {
-  --font-sans: var(--font-montserrat), sans-serif;
-  --font-serif: var(--font-playfair), serif;
+  --font-sans: var(--font-montserrat-source), sans-serif;
+  --font-serif: var(--font-playfair-source), serif;
+  --font-montserrat: var(--font-montserrat-source), sans-serif;
+  --font-playfair: var(--font-playfair-source), serif;
 
-  --color-brand-mint: #69b578;
-  --color-brand-dark: #1F3325;
-  --color-brand-orange: #F26C45;
-  --color-brand-creme: #F5EFEB;
-  --color-brand-text: #E8F3EB;
+  --color-brand-primary: var(--ds-brand-primary);
+  --color-brand-mint: var(--ds-brand-primary);
+  --color-brand-accent: var(--ds-brand-accent);
+  --color-brand-dark: var(--ds-brand-dark);
+  --color-brand-orange: var(--ds-brand-orange);
+  --color-brand-creme: var(--ds-brand-creme);
+  --color-brand-text: var(--ds-brand-text);
 
-  --color-bg-primary: var(--bg-primary);
-  --color-bg-secondary: var(--bg-secondary);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-border-color: var(--border-color);
-  --color-nav-glass: var(--nav-glass);
+  --color-bg-primary: var(--ds-bg-primary);
+  --color-bg-secondary: var(--ds-bg-secondary);
+  --color-text-primary: var(--ds-text-primary);
+  --color-text-secondary: var(--ds-text-secondary);
+  --color-border-color: var(--ds-border-color);
+  --color-nav-glass: var(--ds-nav-glass);
+
+  --color-surface-muted: var(--ds-surface-muted);
+  --color-footer-gradient-start: var(--ds-footer-gradient-start);
+  --color-footer-gradient-end: var(--ds-footer-gradient-end);
+  --color-newsletter-input: var(--ds-newsletter-input-bg);
+  --color-newsletter-placeholder: var(--ds-newsletter-placeholder);
+  --color-footer-button-hover: var(--ds-footer-button-hover);
+
+  --color-social-whatsapp: var(--ds-social-whatsapp);
+  --color-social-whatsapp-hover: var(--ds-social-whatsapp-hover);
+  --color-social-facebook: var(--ds-social-facebook);
+  --color-social-x: var(--ds-social-x);
+  --color-social-instagram: var(--ds-social-instagram);
+
+  --color-benefit-1: var(--ds-benefit-1);
+  --color-benefit-2: var(--ds-benefit-2);
+  --color-benefit-3: var(--ds-benefit-3);
+  --color-benefit-4: var(--ds-benefit-4);
+  --color-hero-badge-text: var(--ds-hero-badge-text);
+  --color-hero-category-muted: var(--ds-hero-category-muted);
+
+  --color-status-error: var(--ds-status-error);
+  --color-status-error-hover: var(--ds-status-error-hover);
+  --color-status-success: var(--ds-status-success);
+  --color-status-success-soft: var(--ds-status-success-soft);
+  --color-status-error-soft: var(--ds-status-error-soft);
+
+  --color-auth-google-text: var(--ds-auth-google-text);
+  --color-auth-google-border: var(--ds-auth-google-border);
+  --color-auth-google-border-hover: var(--ds-auth-google-border-hover);
+  --color-auth-google-red: var(--ds-auth-google-red);
+  --color-auth-google-green: var(--ds-auth-google-green);
+  --color-auth-google-blue: var(--ds-auth-google-blue);
+  --color-auth-google-yellow: var(--ds-auth-google-yellow);
+  --color-auth-facebook-bg: var(--ds-auth-facebook-bg);
+  --color-auth-facebook-text: var(--ds-auth-facebook-text);
+  --color-auth-facebook-border: var(--ds-auth-facebook-border);
+  --color-auth-facebook-border-hover: var(--ds-auth-facebook-border-hover);
+  --color-auth-facebook-hover-bg: var(--ds-auth-facebook-hover-bg);
+  --color-auth-twitter-bg: var(--ds-auth-twitter-bg);
+  --color-auth-twitter-text: var(--ds-auth-twitter-text);
+  --color-auth-twitter-border: var(--ds-auth-twitter-border);
+  --color-auth-twitter-border-hover: var(--ds-auth-twitter-border-hover);
+  --color-auth-twitter-hover-bg: var(--ds-auth-twitter-hover-bg);
+
+  --color-auth-modal-border: var(--ds-auth-modal-border);
+  --color-auth-modal-close-border: var(--ds-auth-modal-close-border);
+  --color-auth-modal-close-text: var(--ds-auth-modal-close-text);
+  --color-auth-modal-title: var(--ds-auth-modal-title);
+  --color-auth-modal-fallback-bg: var(--ds-auth-modal-fallback-bg);
+  --color-auth-modal-fallback-border: var(--ds-auth-modal-fallback-border);
+  --color-auth-modal-empty-bg: var(--ds-auth-modal-empty-bg);
+
+  --shadow-soft: var(--ds-shadow-soft);
+  --shadow-soft-sm: var(--ds-shadow-soft-sm);
+  --shadow-brand-primary: var(--ds-shadow-brand-primary);
+  --shadow-brand-primary-strong: var(--ds-shadow-brand-primary-strong);
+  --shadow-whatsapp: var(--ds-shadow-whatsapp);
+  --shadow-orange: var(--ds-shadow-orange);
+  --shadow-auth-modal: var(--ds-shadow-auth-modal);
+  --shadow-card: var(--ds-shadow-card);
+  --shadow-card-subtle: var(--ds-shadow-card-subtle);
+  --shadow-faq-open: var(--ds-shadow-faq-open);
+  --shadow-video: var(--ds-shadow-video);
+  --shadow-loading-drop: var(--ds-shadow-loading-drop);
+  --shadow-loading-bottle: var(--ds-shadow-loading-bottle);
 }
-
-/* ──────────────────────────────────────────────────
-   Base Styles
-   ────────────────────────────────────────────────── */
 
 @layer base {
   body {
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-primary);
+    background-color: var(--ds-bg-primary);
+    color: var(--ds-text-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  input,
+  textarea {
+    color: var(--ds-text-primary);
+    caret-color: var(--ds-text-primary);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--ds-input-placeholder);
+    opacity: 1;
+  }
+}
+
+@layer components {
+  .auth-modal-surface {
+    background-image: linear-gradient(
+      145deg,
+      var(--ds-auth-modal-surface-start) 0%,
+      var(--ds-auth-modal-surface-end) 100%
+    );
+  }
+
+  .footer-gradient {
+    background-image: linear-gradient(
+      to right,
+      var(--ds-footer-gradient-start),
+      var(--ds-footer-gradient-end)
+    );
+  }
+
+  .all-products-hero-gradient {
+    background-image: linear-gradient(
+      to right,
+      var(--ds-brand-accent),
+      var(--ds-bg-secondary),
+      var(--ds-brand-dark)
+    );
+  }
+
+  .loading-drop-shape {
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: var(--ds-shadow-loading-drop);
+  }
+
+  .loading-neck-shadow {
+    box-shadow: inset 0 2px 4px var(--ds-loading-highlight);
+  }
+
+  .loading-bottle-shadow {
+    box-shadow: var(--ds-shadow-loading-bottle);
+  }
+
+  .video-card-shadow {
+    box-shadow: var(--ds-shadow-video);
   }
 }

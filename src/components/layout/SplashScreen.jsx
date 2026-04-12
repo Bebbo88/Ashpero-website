@@ -71,6 +71,7 @@ export default function SplashScreen({ children }) {
                   src={isDark ? "/assets/logo white.svg" : "/assets/logo.svg"}
                   alt="Ashpero Logo"
                   fill
+                  sizes="(max-width: 768px) 256px, 320px"
                   className="object-contain"
                   priority
                 />
@@ -87,3 +88,5 @@ export default function SplashScreen({ children }) {
     </>
   );
 }
+
+

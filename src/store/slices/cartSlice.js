@@ -55,7 +55,7 @@ function normalizeItem(payload = {}) {
 }
 
 const initialState = {
-  items: loadFromStorage(),
+  items: [],
 };
 
 const cartSlice = createSlice({

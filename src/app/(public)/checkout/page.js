@@ -4,13 +4,20 @@ import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Lock, CreditCard, Banknote } from "lucide-react";
+import {
+  Lock,
+  CreditCard,
+  Banknote,
+  ShoppingBag,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearCart } from "@/store/slices/cartSlice";
 import { createOrder } from "@/services/orderService";
+import { applyCoupon } from "@/services/couponService";
 import EmptyState from "@/components/ui/EmptyState";
-import { ShoppingBag } from "lucide-react";
 
 const initialForm = {
   customerName: "",
@@ -35,6 +42,11 @@ export default function CheckoutPage() {
   const [form, setForm] = useState(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [promoCode, setPromoCode] = useState("");
+  const [promoStatus, setPromoStatus] = useState("idle");
+  const [promoMessage, setPromoMessage] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [appliedPromoCode, setAppliedPromoCode] = useState("");
 
   const subtotal = useMemo(
     () =>
@@ -56,11 +68,90 @@ export default function CheckoutPage() {
     [locale],
   );
 
-  const totalLabel = currencyFormatter.format(subtotal);
+  const effectiveDiscount = useMemo(
+    () => Math.min(Math.max(Number(discountAmount || 0), 0), subtotal),
+    [discountAmount, subtotal],
+  );
+
+  const finalTotal = useMemo(
+    () => Math.max(subtotal - effectiveDiscount, 0),
+    [subtotal, effectiveDiscount],
+  );
+
+  const subtotalLabel = currencyFormatter.format(subtotal);
+  const discountLabel = currencyFormatter.format(effectiveDiscount);
+  const totalLabel = currencyFormatter.format(finalTotal);
 
   const handleFieldChange = (event) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePromoInputChange = (event) => {
+    const nextValue = String(event.target.value || "").toUpperCase();
+    setPromoCode(nextValue);
+
+    if (promoStatus !== "idle") {
+      setPromoStatus("idle");
+      setPromoMessage("");
+    }
+
+    if (appliedPromoCode && nextValue.trim() !== appliedPromoCode) {
+      setAppliedPromoCode("");
+      setDiscountAmount(0);
+    }
+  };
+
+  const handleApplyPromo = async () => {
+    const normalizedCode = promoCode.trim().toUpperCase();
+
+    if (!normalizedCode) {
+      setPromoStatus("error");
+      setPromoMessage(
+        locale === "ar"
+          ? "\u0645\u0646 \u0641\u0636\u0644\u0643 \u0627\u062f\u062e\u0644 \u0643\u0648\u062f \u0627\u0644\u062e\u0635\u0645."
+          : "Please enter a promo code.",
+      );
+      return;
+    }
+
+    if (subtotal <= 0) {
+      return;
+    }
+
+    setPromoStatus("applying");
+    setPromoMessage("");
+
+    try {
+      const result = await applyCoupon({
+        code: normalizedCode,
+        orderTotal: subtotal,
+      });
+
+      const nextDiscount = Math.min(
+        Math.max(Number(result.discount || 0), 0),
+        subtotal,
+      );
+
+      setDiscountAmount(nextDiscount);
+      setAppliedPromoCode(normalizedCode);
+      setPromoStatus("success");
+      setPromoMessage(
+        locale === "ar"
+          ? "\u062a\u0645 \u062a\u0637\u0628\u064a\u0642 \u0643\u0648\u062f \u0627\u0644\u062e\u0635\u0645 \u0628\u0646\u062c\u0627\u062d."
+          : "Promo code applied successfully.",
+      );
+    } catch (error) {
+      setDiscountAmount(0);
+      setAppliedPromoCode("");
+      setPromoStatus("error");
+      setPromoMessage(
+        error?.message ||
+          (locale === "ar"
+            ? "\u0627\u0644\u0643\u0648\u062f \u063a\u064a\u0631 \u0635\u062d\u064a\u062d \u0623\u0648 \u0645\u0646\u062a\u0647\u064a \u0627\u0644\u0635\u0644\u0627\u062d\u064a\u0629."
+            : "Invalid or expired promo code."),
+      );
+    }
   };
 
   const canSubmit =
@@ -303,7 +394,7 @@ export default function CheckoutPage() {
               </section>
 
               {submitError ? (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <div className="rounded-xl border border-status-error/25 bg-status-error-soft px-4 py-3 text-sm text-status-error">
                   {submitError}
                 </div>
               ) : null}
@@ -319,7 +410,7 @@ export default function CheckoutPage() {
           </div>
 
           <div className="lg:w-[420px] xl:w-[480px]">
-            <div className="bg-bg-primary p-6 md:p-8 rounded-3xl border border-border-color shadow-[0_8px_30px_rgb(0,0,0,0.04)] sticky top-24">
+            <div className="bg-bg-primary p-6 md:p-8 rounded-3xl border border-border-color shadow-card sticky top-24">
               <h3 className="font-playfair text-2xl font-bold text-text-primary mb-8">
                 {t("Checkout.orderSummary")}
               </h3>
@@ -330,11 +421,12 @@ export default function CheckoutPage() {
                     key={`${item.productId}-${item.size || "default"}`}
                     className="flex items-center gap-4"
                   >
-                    <div className="relative w-16 h-16 bg-gray-100 rounded-lg shrink-0">
+                    <div className="relative w-16 h-16 bg-surface-muted rounded-lg shrink-0">
                       <Image
                         src={item.image}
                         alt={item.title}
                         fill
+                        sizes="64px"
                         className="object-cover rounded-lg"
                       />
                       <span className="absolute -top-2 -right-2 w-5 h-5 bg-brand-mint text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
@@ -361,15 +453,66 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
+              <div className="mb-6">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={promoCode}
+                    onChange={handlePromoInputChange}
+                    placeholder={t("Checkout.promoPlaceholder")}
+                    className="flex-1 px-4 py-3 bg-bg-primary border border-border-color rounded-xl text-sm text-text-primary uppercase tracking-wide focus:outline-none focus:border-brand-mint"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyPromo}
+                    disabled={promoStatus === "applying"}
+                    className="px-4 py-3 rounded-xl bg-brand-mint text-white text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-all disabled:opacity-60"
+                  >
+                    {promoStatus === "applying"
+                      ? locale === "ar"
+                        ? "\u062c\u0627\u0631\u064a..."
+                        : "Applying..."
+                      : t("Checkout.apply")}
+                  </button>
+                </div>
+
+                {promoStatus === "success" ? (
+                  <div className="mt-2 flex items-center gap-1.5 text-xs text-status-success">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>
+                      {promoMessage}
+                      {appliedPromoCode ? ` (${appliedPromoCode})` : ""}
+                    </span>
+                  </div>
+                ) : null}
+
+                {promoStatus === "error" ? (
+                  <div className="mt-2 flex items-center gap-1.5 text-xs text-status-error">
+                    <XCircle className="w-4 h-4" />
+                    <span>{promoMessage}</span>
+                  </div>
+                ) : null}
+              </div>
+
               <div className="flex flex-col gap-4 py-6 border-y border-border-color mb-6">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-text-secondary">
                     {t("Checkout.subtotal")}
                   </span>
                   <span className="font-semibold text-text-primary">
-                    {totalLabel}
+                    {subtotalLabel}
                   </span>
                 </div>
+                {effectiveDiscount > 0 ? (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-text-secondary">
+                      {locale === "ar" ? "\u0627\u0644\u062e\u0635\u0645" : "Discount"}
+                    </span>
+                    <span className="font-semibold text-status-success">
+                      - {discountLabel}
+                    </span>
+                  </div>
+                ) : null}
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-text-secondary">
                     {t("Checkout.shipping")}
@@ -402,3 +545,6 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+
+

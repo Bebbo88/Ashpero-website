@@ -104,7 +104,7 @@ export default function AboutUsPage() {
                 <div className="absolute w-4 h-4 bg-brand-mint rounded-full -start-[41px] rtl:-start-auto rtl:-end-[41px] top-1.5 border-4 border-bg-secondary shadow-sm shadow-brand-mint/20 z-10 box-content"></div>
                 
                 {/* Box Content */}
-                <div className="bg-bg-primary p-6 md:p-8 rounded-3xl border border-border-color shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-none transition-transform hover:-translate-y-1">
+                <div className="bg-bg-primary p-6 md:p-8 rounded-3xl border border-border-color shadow-card-subtle dark:shadow-none transition-transform hover:-translate-y-1">
                   <span className="text-brand-orange text-lg md:text-xl font-serif font-bold block mb-2">{item.year}</span>
                   <h4 className="text-xl md:text-2xl font-playfair font-bold text-brand-dark dark:text-brand-mint mb-3">{item.title}</h4>
                   <p className="text-text-secondary leading-relaxed text-sm md:text-base">{item.desc}</p>
@@ -138,7 +138,7 @@ export default function AboutUsPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`bg-bg-secondary border border-border-color rounded-2xl overflow-hidden transition-all duration-300 ${openFaqIndex === index ? 'shadow-[0_8px_30px_rgba(0,0,0,0.05)] border-brand-mint/30' : 'hover:border-text-primary/10 hover:shadow-sm'}`}
+                className={`bg-bg-secondary border border-border-color rounded-2xl overflow-hidden transition-all duration-300 ${openFaqIndex === index ? 'shadow-faq-open border-brand-mint/30' : 'hover:border-text-primary/10 hover:shadow-sm'}`}
               >
                 <button
                   onClick={() => toggleFaq(index)}
@@ -207,7 +207,7 @@ export default function AboutUsPage() {
           >
             <Link
               href="/contact-us"
-              className="inline-flex items-center gap-3 px-8 md:px-10 py-4 bg-brand-mint text-white font-bold tracking-wide rounded-full hover:bg-white hover:text-brand-dark transition-all hover:scale-105 active:scale-95 shadow-[0_8px_30px_rgba(105,181,120,0.3)]"
+              className="inline-flex items-center gap-3 px-8 md:px-10 py-4 bg-brand-mint text-white font-bold tracking-wide rounded-full hover:bg-white hover:text-brand-dark transition-all hover:scale-105 active:scale-95 shadow-brand-primary"
             >
               {t("AboutUs.ctaButton")}
               {/* If language is arabic, arrow flips correctly */}

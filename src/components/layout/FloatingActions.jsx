@@ -8,12 +8,14 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useCartDrawer } from "@/contexts/CartDrawerContext";
 import { useAppSelector } from "@/store/hooks";
 import { WhatsAppIcon, DoctorBotIcon } from "@/svgs/FloatingActions.svgs";
+import AIChatBox from "./AIChatBox";
 
 export default function FloatingActions() {
   const { t } = useLanguage();
   const { openCart } = useCartDrawer();
   const cartItems = useAppSelector((state) => state.cart.items || []);
   const [bottomOffset, setBottomOffset] = useState(0);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const cartCount = cartItems.reduce(
     (count, item) => count + Number(item.quantity || 0),
@@ -126,7 +128,7 @@ export default function FloatingActions() {
           href="https://wa.me/201001234567" // Placeholder number
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_8px_20px_rgba(37,211,102,0.3)] hover:bg-[#1EBE5A] transition-all hover:scale-110 active:scale-95"
+          className="flex items-center justify-center w-14 h-14 bg-social-whatsapp text-white rounded-full shadow-whatsapp hover:bg-social-whatsapp-hover transition-all hover:scale-110 active:scale-95"
           aria-label="Contact us on WhatsApp"
         >
           <WhatsAppIcon className="w-7 h-7" />
@@ -136,12 +138,8 @@ export default function FloatingActions() {
       {/* 3. AI Agent (Doctor Bot) */}
       <motion.div variants={itemVariants}>
         <button
-          onClick={() =>
-            alert(
-              "AI Skincare Doctor initiating...\n(This will open the AI Chat window)",
-            )
-          }
-          className="relative flex items-center cursor-pointer justify-center w-16 h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-[0_8px_30px_rgba(105,181,120,0.5)] border-2 border-white/20 hover:shadow-[0_8px_30px_rgba(105,181,120,0.8)] transition-all hover:scale-110 active:scale-95 group"
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          className="relative flex items-center cursor-pointer justify-center w-16 h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95 group"
           aria-label="Consult AI Skincare Doctor"
         >
           {/* Cool floating/bobbing animation specifically for the bot to make it feel alive */}
@@ -149,12 +147,16 @@ export default function FloatingActions() {
             animate={{ y: [-2, 2, -2] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            <DoctorBotIcon className="w-8 h-8 group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all" />
+            <DoctorBotIcon className="w-8 h-8 group-hover:drop-shadow-md transition-all" />
           </motion.div>
           {/* Active status indicator dot */}
           <span className="absolute bottom-1 end-1 w-3.5 h-3.5 bg-green-400 border-2 border-brand-dark rounded-full"></span>
         </button>
       </motion.div>
+
+      <AnimatePresence>
+        {isChatOpen && <AIChatBox onClose={() => setIsChatOpen(false)} />}
+      </AnimatePresence>
     </motion.div>
   );
 }

@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { Montserrat, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import { getDictionary } from "../i18n/dictionaries";
 import { LangProvider } from "../hooks/useLanguage";
 import { ModeProvider } from "../hooks/useMode";
@@ -14,20 +15,41 @@ import "./globals.css";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-montserrat",
+  variable: "--font-montserrat-source",
   display: "swap",
+  preload: false,
 });
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-playfair-source",
   display: "swap",
+  preload: false,
 });
 
 export const metadata = {
   title: "Ashpero",
   description: "Ashpero skin care products",
+  icons: {
+    icon: "/assets/logo.svg",
+    shortcut: "/assets/logo.svg",
+    apple: "/assets/logo.svg",
+  },
 };
+
+const THEME_INIT_SCRIPT = `
+  try {
+    if (
+      localStorage.getItem("theme") === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  } catch (_) {}
+`;
 
 export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
@@ -41,19 +63,9 @@ export default async function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT_SCRIPT}
+        </Script>
       </head>
       <body
         className={`${montserrat.variable} ${playfair.variable} antialiased`}
@@ -78,3 +90,5 @@ export default async function RootLayout({ children }) {
     </html>
   );
 }
+
+

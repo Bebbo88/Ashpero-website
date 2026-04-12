@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import Image from "next/image";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useSiteContentQuery } from "@/features/home/queries";
-import { mapPrimaryBannerImage } from "@/features/home/mappers";
+import { mapHomeOfferBannerImage } from "@/features/home/mappers";
 import Link from "next/link";
 
 export default function OfferBanner() {
@@ -12,7 +12,7 @@ export default function OfferBanner() {
   const contentQuery = useSiteContentQuery();
 
   const bannerImage = useMemo(
-    () => mapPrimaryBannerImage(contentQuery.data || {}),
+    () => mapHomeOfferBannerImage(contentQuery.data || {}),
     [contentQuery.data],
   );
 

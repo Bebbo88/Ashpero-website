@@ -65,7 +65,7 @@ export default function ContactUsPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex flex-col space-y-8"
           >
-            <div className="bg-bg-secondary p-8 rounded-3xl border border-border-color shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-shadow">
+            <div className="bg-bg-secondary p-8 rounded-3xl border border-border-color shadow-card dark:shadow-none transition-shadow">
               
               {/* Address */}
               <div className="flex items-start gap-5 mb-8 group">
@@ -124,7 +124,7 @@ export default function ContactUsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="bg-bg-secondary p-8 md:p-12 rounded-3xl border border-border-color shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none">
+            <div className="bg-bg-secondary p-8 md:p-12 rounded-3xl border border-border-color shadow-card dark:shadow-none">
               <h2 className="text-3xl font-playfair font-bold text-text-primary mb-8">{t("ContactUs.formTitle")}</h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
