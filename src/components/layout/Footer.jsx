@@ -15,7 +15,7 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="px-10 w-full bg-gradient-to-r from-[#175F4A] to-[#0E3E2F] text-white pt-16 pb-8 border-t border-white/10 ">
+    <footer className="px-10 w-full footer-gradient text-white pt-16 pb-8 border-t border-white/10 ">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           {/* Column 1: Logo & Description */}
@@ -25,6 +25,7 @@ export default function Footer() {
                 src="/assets/logo white.svg"
                 alt="Ashpero Logo"
                 fill
+                sizes="192px"
                 className="object-contain object-left rtl:object-right"
               />
             </Link>
@@ -121,11 +122,11 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder={t("Footer.emailPlaceholder")}
-                className="w-full bg-[#B2C4D6] text-brand-dark rounded-l-md px-4 py-3 text-sm focus:outline-none placeholder:text-[#506a5b] rtl:rounded-l-none rtl:rounded-r-md transition-all font-medium"
+                className="w-full bg-newsletter-input text-brand-dark rounded-l-md px-4 py-3 text-sm focus:outline-none placeholder:text-newsletter-placeholder rtl:rounded-l-none rtl:rounded-r-md transition-all font-medium"
               />
               <button
                 type="button"
-                className="bg-brand-orange hover:bg-[#DE5C38] transition-colors rounded-r-md px-4 py-3 flex items-center justify-center cursor-pointer rtl:rounded-r-none rtl:rounded-l-md shrink-0 border border-brand-orange"
+                className="bg-brand-orange hover:bg-footer-button-hover transition-colors rounded-r-md px-4 py-3 flex items-center justify-center cursor-pointer rtl:rounded-r-none rtl:rounded-l-md shrink-0 border border-brand-orange"
               >
                 <Send className="w-5 h-5 text-white transform rtl:-scale-x-100" />
               </button>
@@ -217,3 +218,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+

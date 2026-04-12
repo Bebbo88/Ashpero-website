@@ -25,6 +25,7 @@ export default function Loading() {
             src="/assets/dropper.svg"
             alt="Loading dropper"
             fill
+            sizes="32px"
             className="object-contain object-bottom"
             priority
           />
@@ -43,21 +44,17 @@ export default function Loading() {
             ease: "easeIn",
             delay: 1.25, // Synchronized with the bottom of the dropper's bob
           }}
-          className="absolute top-12 z-20 w-2 h-3 bg-brand-mint"
-          style={{
-            borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%", // Teardrop shape
-            boxShadow: "0 2px 4px rgba(105, 181, 120, 0.4)",
-          }}
+          className="absolute top-12 z-20 w-2 h-3 bg-brand-mint loading-drop-shape"
         />
 
         {/* Bottle Neck & Cap Base (3D Native CSS) */}
         <div className="absolute bottom-24 z-20 flex flex-col items-center">
           <div className="w-6 h-1.5 bg-white/60 dark:bg-white/20 border border-white/70 rounded-full shadow-sm mb-[-2px] z-30"></div>
-          <div className="w-5 h-4 bg-white/30 dark:bg-white/10 backdrop-blur-sm border-x border-white/50 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] z-20"></div>
+          <div className="w-5 h-4 bg-white/30 dark:bg-white/10 backdrop-blur-sm border-x border-white/50 loading-neck-shadow z-20"></div>
         </div>
 
         {/* CSS 3D Glass Bottle Base */}
-        <div className="absolute bottom-0 z-40 w-16 h-24 bg-white/20 dark:bg-white/5 backdrop-blur-md border-[1.5px] border-white/50 dark:border-white/20 rounded-b-[1.25rem] rounded-t-2xl overflow-hidden shadow-[inset_-5px_-5px_15px_rgba(0,0,0,0.06),_inset_5px_5px_15px_rgba(255,255,255,0.7),_0_15px_30px_rgba(0,0,0,0.15)] flex flex-col justify-end">
+        <div className="absolute bottom-0 z-40 w-16 h-24 bg-white/20 dark:bg-white/5 backdrop-blur-md border-[1.5px] border-white/50 dark:border-white/20 rounded-b-[1.25rem] rounded-t-2xl overflow-hidden loading-bottle-shadow flex flex-col justify-end">
           
           {/* 3D Glass Highlights */}
           <div className="absolute top-1 right-1.5 w-[3px] h-[90%] bg-gradient-to-b from-white/70 to-transparent rounded-full opacity-60 pointer-events-none z-50 mix-blend-overlay"></div>
@@ -117,3 +114,5 @@ export default function Loading() {
     </div>
   );
 }
+
+

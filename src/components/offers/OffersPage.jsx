@@ -8,7 +8,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useSiteContentQuery } from "@/features/home/queries";
-import { mapPrimaryBannerImage } from "@/features/home/mappers";
+import { mapOffersPageBannerImage } from "@/features/home/mappers";
 import { mapOfferProducts } from "@/features/offer/mappers";
 import { useOffersQuery } from "@/features/offer/queries";
 
@@ -43,7 +43,7 @@ export default function OffersPage() {
   );
 
   const headerImage = useMemo(
-    () => mapPrimaryBannerImage(siteContentQuery.data),
+    () => mapOffersPageBannerImage(siteContentQuery.data),
     [siteContentQuery.data],
   );
 

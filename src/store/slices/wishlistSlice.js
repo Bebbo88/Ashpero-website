@@ -50,7 +50,7 @@ function normalizeItem(payload = {}) {
 }
 
 const initialState = {
-  items: loadFromStorage(),
+  items: [],
 };
 
 const wishlistSlice = createSlice({

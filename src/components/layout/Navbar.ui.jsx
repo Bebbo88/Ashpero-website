@@ -13,11 +13,11 @@ import {
 
 const providerStyles = {
   google:
-    "bg-white text-[#1f1f1f] border-[#d9d9d9] hover:border-[#c3c3c3] hover:shadow-sm",
+    "bg-white text-auth-google-text border-auth-google-border hover:border-auth-google-border-hover hover:shadow-sm",
   facebook:
-    "bg-[#EEF4FF] text-[#0F3E9A] border-[#C8D9FF] hover:border-[#A8C4FF] hover:bg-[#E6EEFF]",
+    "bg-auth-facebook-bg text-auth-facebook-text border-auth-facebook-border hover:border-auth-facebook-border-hover hover:bg-auth-facebook-hover-bg",
   twitter:
-    "bg-[#F2F4F8] text-[#0F1419] border-[#D5DBE5] hover:border-[#BDC8D6] hover:bg-[#EDF1F7]",
+    "bg-auth-twitter-bg text-auth-twitter-text border-auth-twitter-border hover:border-auth-twitter-border-hover hover:bg-auth-twitter-hover-bg",
 };
 
 const providerIconMap = {
@@ -65,6 +65,8 @@ export function NavbarUI({
                 alt="Ashpero Mobile Logo"
                 fill
                 className="object-contain object-left"
+                priority
+                sizes="96px"
               />
             </button>
 
@@ -78,6 +80,8 @@ export function NavbarUI({
                   alt="Ashpero Logo"
                   fill
                   className="object-contain object-left"
+                  priority
+                  sizes="160px"
                 />
               </Link>
 
@@ -267,10 +271,10 @@ export function NavbarUI({
             onClick={closeAuthMenu}
           />
 
-          <div className="relative w-full max-w-md rounded-3xl border border-[#D9E1EA] bg-[linear-gradient(145deg,#FFFFFF_0%,#F4F8FC_100%)] backdrop-blur-2xl shadow-[0_30px_90px_rgba(4,28,44,0.22)] p-6 md:p-7">
+          <div className="relative w-full max-w-md rounded-3xl border border-auth-modal-border auth-modal-surface backdrop-blur-2xl shadow-auth-modal p-6 md:p-7">
             <button
               onClick={closeAuthMenu}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full border border-[#D4DEE8] text-[#3D5568] hover:bg-white flex items-center justify-center cursor-pointer"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full border border-auth-modal-close-border text-auth-modal-close-text hover:bg-white flex items-center justify-center cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -278,7 +282,7 @@ export function NavbarUI({
             <p className="text-[11px] tracking-[0.25em] font-bold uppercase text-text-secondary mb-2">
               Ashpero Account
             </p>
-            <h3 className="font-playfair text-2xl md:text-3xl text-[#0D2A1C] mb-2">
+            <h3 className="font-playfair text-2xl md:text-3xl text-auth-modal-title mb-2">
               Continue To Login
             </h3>
             <p className="text-sm text-text-secondary mb-6">
@@ -296,7 +300,7 @@ export function NavbarUI({
                       onClick={() => loginWithProvider(provider.id)}
                       className={`w-full py-3.5 px-4 rounded-xl border text-sm font-semibold transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer ${
                         providerStyles[provider.id] ||
-                        "bg-[#F5F7FA] text-[#0D2A1C] border-[#D8DFE8]"
+                        "bg-auth-modal-fallback-bg text-auth-modal-title border-auth-modal-fallback-border"
                       }`}
                     >
                       {ProviderIcon ? (
@@ -307,7 +311,7 @@ export function NavbarUI({
                   );
                 })
               ) : (
-                <div className="rounded-xl border border-[#D8DFE8] bg-[#F8FAFD] p-4 text-sm text-text-secondary">
+                <div className="rounded-xl border border-auth-modal-fallback-border bg-auth-modal-empty-bg p-4 text-sm text-text-secondary">
                   No providers configured yet. Add provider keys in `.env`.
                 </div>
               )}

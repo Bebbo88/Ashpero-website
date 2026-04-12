@@ -88,12 +88,12 @@ export function ProductInfoUI({
             key={benefit}
             className={`w-12 h-12 rounded-full flex items-center justify-center text-[8px] font-bold tracking-tighter text-white shadow-sm ${
               idx === 0
-                ? "bg-[#5EBC70]"
+                ? "bg-benefit-1"
                 : idx === 1
-                  ? "bg-[#5EBC86]"
+                  ? "bg-benefit-2"
                   : idx === 2
-                    ? "bg-[#69b578]"
-                    : "bg-[#7EE8B0]"
+                    ? "bg-benefit-3"
+                    : "bg-benefit-4"
             }`}
           >
             {benefit}
@@ -230,27 +230,27 @@ export function ProductInfoUI({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => handleShareClick("facebook")}
-            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-[#1877F2] transition-colors"
+            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-social-facebook transition-colors"
           >
-            <FacebookIcon className="w-4 h-4 transition-colors group-hover:text-[#1877F2]" />
+            <FacebookIcon className="w-4 h-4 transition-colors group-hover:text-social-facebook" />
           </a>
           <a
             href={shareLinks.x}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => handleShareClick("x")}
-            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-[#1DA1F2] transition-colors"
+            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-social-x transition-colors"
           >
-            <XIcon className="w-4 h-4 transition-colors group-hover:text-[#1DA1F2]" />
+            <XIcon className="w-4 h-4 transition-colors group-hover:text-social-x" />
           </a>
           <a
             href={shareLinks.instagram}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => handleShareClick("instagram")}
-            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-[#E4405F] transition-colors"
+            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-social-instagram transition-colors"
           >
-            <InstagramIcon className="w-4 h-4 transition-colors group-hover:text-[#E4405F]" />
+            <InstagramIcon className="w-4 h-4 transition-colors group-hover:text-social-instagram" />
           </a>
           <a
             href={shareLinks.tiktok}

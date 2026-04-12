@@ -62,13 +62,34 @@ export function mapHeroBackgroundSlides(content = {}) {
   return [{ id: "hero-fallback", image: "/assets/background.jpg" }];
 }
 
-export function mapPrimaryBannerImage(content = {}) {
-  const spotlightImages = Array.isArray(content.spotlightImages)
-    ? content.spotlightImages
-    : [];
-  const banners = Array.isArray(content.banners) ? content.banners : [];
-  const latestSpotlight = spotlightImages[spotlightImages.length - 1] || "";
-  const latestBanner = banners[banners.length - 1] || "";
-  const selectedBanner = latestSpotlight || latestBanner || "";
+function getLatestImagePath(items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return "";
+  }
+
+  return items[items.length - 1] || "";
+}
+
+export function mapHomeOfferBannerImage(content = {}) {
+  const selectedBanner =
+    getLatestImagePath(content.banners) ||
+    getLatestImagePath(content.spotlightImages) ||
+    getLatestImagePath(content.heroImages) ||
+    "";
+
   return toAbsoluteAssetUrl(selectedBanner) || "/assets/background.jpg";
+}
+
+export function mapOffersPageBannerImage(content = {}) {
+  const selectedBanner =
+    getLatestImagePath(content.spotlightImages) ||
+    getLatestImagePath(content.banners) ||
+    getLatestImagePath(content.heroImages) ||
+    "";
+
+  return toAbsoluteAssetUrl(selectedBanner) || "/assets/background.jpg";
+}
+
+export function mapPrimaryBannerImage(content = {}) {
+  return mapOffersPageBannerImage(content);
 }
