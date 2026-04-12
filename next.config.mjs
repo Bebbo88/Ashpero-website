@@ -2,10 +2,14 @@
 const nextConfig = {
   reactCompiler: true,
   images: {
-    loader: "custom",
-    loaderFile: "./src/lib/cloudinaryImageLoader.js",
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    domains: [
+      "res.cloudinary.com",
+      "lh3.googleusercontent.com",
+      "platform-lookaside.fbsbx.com",
+      "pbs.twimg.com",
+    ],
     remotePatterns: [
       {
         protocol: "https",
