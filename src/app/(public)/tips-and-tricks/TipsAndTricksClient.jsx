@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +18,16 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
   const activeItem = useSelector((state) => state.tips.activeTipItem);
 
   const isRtl = locale === "ar";
+  const handleOpenTipCard = useCallback(
+    (item) => {
+      dispatch(setActiveTipItem(item));
+    },
+    [dispatch],
+  );
+
+  const handleCloseModal = useCallback(() => {
+    dispatch(clearActiveTipItem());
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen bg-bg-secondary pb-24">
@@ -55,6 +65,10 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
                 <div
                   key={row.id}
                   className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-7 lg:gap-8 lg:items-stretch"
+                  style={{
+                    contentVisibility: "auto",
+                    containIntrinsicSize: "1px 780px",
+                  }}
                 >
                   {/* Video Block */}
                   <div
@@ -78,10 +92,8 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
                       >
                         <SmallCard
                           item={item}
-                          imageLoading={
-                            rowIdx === 0 && cardIdx < 2 ? "eager" : "lazy"
-                          }
-                          onClick={() => dispatch(setActiveTipItem(item))}
+                          imageLoading={rowIdx === 0 && cardIdx === 0 ? "eager" : "lazy"}
+                          onOpen={handleOpenTipCard}
                           index={rowIdx + cardIdx + 1}
                         />
                       </div>
@@ -102,7 +114,7 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[300] flex items-center justify-center p-4 md:p-6 bg-black/50 backdrop-blur-md"
-            onClick={() => dispatch(clearActiveTipItem())}
+            onClick={handleCloseModal}
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -121,7 +133,7 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
                   alt={activeItem.title}
                 />
                 <button
-                  onClick={() => dispatch(clearActiveTipItem())}
+                  onClick={handleCloseModal}
                   className={`absolute top-4 ${isRtl ? "left-4" : "right-4"} md:top-6 ${
                     isRtl ? "left-6" : "right-6"
                   } w-10 h-10 bg-black/40 hover:bg-black/70 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-colors cursor-pointer z-10`}
