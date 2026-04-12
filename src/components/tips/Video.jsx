@@ -1,30 +1,140 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Play, Pause } from "lucide-react";
 
-export default function VideoCard({ item, index }) {
-  const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+const LAZY_LOAD_ROOT_MARGIN = "320px 0px";
+const IN_VIEW_THRESHOLD = 0.2;
 
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+function VideoCard({ item, index }) {
+  const containerRef = useRef(null);
+  const videoRef = useRef(null);
+  const playRequestedRef = useRef(false);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+
+  const videoSource = item?.video?.src || item?.video || "";
+  const posterSource = item?.video?.poster || item?.cards?.[0]?.image || "";
+
+  useEffect(() => {
+    setIsPlaying(false);
+    setShouldLoadVideo(false);
+    playRequestedRef.current = false;
+  }, [videoSource]);
+
+  useEffect(() => {
+    const target = containerRef.current;
+    if (!target) {
+      return undefined;
     }
-  };
+
+    if (typeof IntersectionObserver === "undefined") {
+      setShouldLoadVideo(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) {
+          return;
+        }
+
+        if (entry.isIntersecting) {
+          setShouldLoadVideo(true);
+          observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        rootMargin: LAZY_LOAD_ROOT_MARGIN,
+        threshold: IN_VIEW_THRESHOLD,
+      },
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [videoSource]);
+
+  useEffect(() => {
+    const target = containerRef.current;
+    if (!target || typeof IntersectionObserver === "undefined") {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting && videoRef.current && !videoRef.current.paused) {
+          videoRef.current.pause();
+          setIsPlaying(false);
+        }
+      },
+      {
+        root: null,
+        threshold: 0.1,
+      },
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const togglePlay = useCallback(async () => {
+    const videoElement = videoRef.current;
+
+    if (!videoElement) {
+      return;
+    }
+
+    if (!shouldLoadVideo) {
+      playRequestedRef.current = true;
+      setShouldLoadVideo(true);
+      return;
+    }
+
+    if (isPlaying) {
+      videoElement.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    try {
+      await videoElement.play();
+      setIsPlaying(true);
+    } catch (_error) {
+      setIsPlaying(false);
+    }
+  }, [isPlaying, shouldLoadVideo]);
+
+  const handleCanPlay = useCallback(async () => {
+    if (!playRequestedRef.current || !videoRef.current) {
+      return;
+    }
+
+    playRequestedRef.current = false;
+
+    try {
+      await videoRef.current.play();
+      setIsPlaying(true);
+    } catch (_error) {
+      setIsPlaying(false);
+    }
+  }, []);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
+      ref={containerRef}
+      initial={{ opacity: 0, scale: 0.98 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-50px" }}
+      viewport={{ once: true, amount: 0.2 }}
       transition={{
-        delay: index !== undefined ? index * 0.1 : 0,
-        duration: 0.6,
+        delay: index !== undefined ? index * 0.08 : 0,
+        duration: 0.45,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
       className="group w-full h-full flex flex-col bg-bg-primary rounded-xl md:rounded-[24px] overflow-hidden shadow-card border border-border-color hover:shadow-[var(--ds-shadow-brand-primary)] hover:border-brand-mint/50 transition-all duration-500"
@@ -32,29 +142,34 @@ export default function VideoCard({ item, index }) {
       <div className="relative w-full flex-1 overflow-hidden shrink-0 bg-gray-100">
         <video
           ref={videoRef}
-          src={item.video?.src || item.video}
+          src={shouldLoadVideo ? videoSource : undefined}
+          poster={posterSource || undefined}
           playsInline
-          loop
-          preload="metadata"
-          controls
+          preload={shouldLoadVideo ? "metadata" : "none"}
+          controls={shouldLoadVideo}
+          onCanPlay={handleCanPlay}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        <div 
-          className={`absolute inset-0 transition-opacity duration-500 flex items-center justify-center cursor-pointer ${
-            isPlaying ? "opacity-0 pointer-events-none" : "bg-black/10 group-hover:bg-black/20"
+        <button
+          type="button"
+          className={`absolute inset-0 z-10 transition-opacity duration-300 flex items-center justify-center cursor-pointer ${
+            isPlaying ? "opacity-0 pointer-events-none" : "bg-black/15 group-hover:bg-black/25"
           }`}
           onClick={togglePlay}
+          aria-label={isPlaying ? "Pause video" : "Play video"}
         >
-          <button
-            className="w-14 h-14 md:w-16 md:h-16 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center text-brand-mint shadow-xl transform transition-transform hover:scale-110 cursor-pointer"
-            aria-label="Play video"
-          >
-            <Play className="w-6 h-6 md:w-8 md:h-8 fill-current ml-1" />
-          </button>
-        </div>
+          <span className="w-14 h-14 md:w-16 md:h-16 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center text-brand-mint shadow-xl transform transition-transform hover:scale-110">
+            {isPlaying ? (
+              <Pause className="w-6 h-6 md:w-8 md:h-8 fill-current" />
+            ) : (
+              <Play className="w-6 h-6 md:w-8 md:h-8 fill-current ml-1" />
+            )}
+          </span>
+        </button>
 
         {item.badge ? (
           <div className="absolute top-4 left-4 md:top-6 md:left-6 z-20">
@@ -78,3 +193,9 @@ export default function VideoCard({ item, index }) {
     </motion.div>
   );
 }
+
+function areEqual(prevProps, nextProps) {
+  return prevProps.item === nextProps.item && prevProps.index === nextProps.index;
+}
+
+export default memo(VideoCard, areEqual);

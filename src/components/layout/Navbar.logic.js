@@ -49,14 +49,24 @@ export function useNavbarLogic() {
     setLanguage(locale === "en" ? "ar" : "en");
   };
 
+  const getAuthCallbackUrl = () => {
+    const safePath = pathname && pathname.startsWith("/") ? pathname : "/";
+
+    if (typeof window === "undefined") {
+      return safePath;
+    }
+
+    return `${window.location.origin}${safePath}`;
+  };
+
   const loginWithProvider = async (providerId) => {
     setIsAuthMenuOpen(false);
-    await signIn(providerId, { callbackUrl: pathname || "/" });
+    await signIn(providerId, { callbackUrl: getAuthCallbackUrl() });
   };
 
   const logout = async () => {
     setIsAuthMenuOpen(false);
-    await signOut({ callbackUrl: pathname || "/" });
+    await signOut({ callbackUrl: getAuthCallbackUrl() });
   };
 
   return {
