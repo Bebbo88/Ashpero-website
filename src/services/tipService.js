@@ -112,15 +112,11 @@ function mapTipContainer(tip, locale = "en", index = 0) {
 }
 
 function isRenderableTipContainer(container) {
-  if (!container?.video?.src) {
-    return false;
-  }
-
-  if (!Array.isArray(container.cards) || container.cards.length !== 2) {
-    return false;
-  }
-
-  return container.cards.every((card) => Boolean(card?.image));
+  // Relaxed: As long as there is a video OR at least one image, show it.
+  const hasVideo = Boolean(container?.video?.src);
+  const hasImages = Array.isArray(container.cards) && container.cards.some(c => Boolean(c?.image));
+  
+  return hasVideo || hasImages;
 }
 
 export async function fetchTips(locale = "en") {

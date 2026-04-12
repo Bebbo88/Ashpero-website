@@ -2,14 +2,16 @@ import React from "react";
 import { cookies } from "next/headers";
 import { fetchTips } from "@/services/tipService";
 import TipsAndTricksClient from "./TipsAndTricksClient";
+import { unstable_noStore as noStore } from "next/cache";
 
-// Use ISR with a 10 second revalidation period.
-// This gives us the speed of a static page without the hour-long cache.
-export const dynamic = "force-static";
-export const revalidate = 10;
+// Force the page to be dynamic to ensure fresh data fetching on every request
+export const dynamic = "force-dynamic";
 
 export default async function TipsAndTricksPage() {
-  // 1. Get current locale from cookies (set by our LangProvider)
+  // 1. Opt out of the Next.js Data Cache for this request
+  noStore();
+
+  // 2. Get current locale from cookies (set by our LangProvider)
   const cookieStore = await cookies();
   const locale = cookieStore.get("NEXT_LOCALE")?.value || "en";
 

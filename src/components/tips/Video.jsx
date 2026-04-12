@@ -8,123 +8,25 @@ const IN_VIEW_THRESHOLD = 0.2;
 function VideoCard({ item, index }) {
   const containerRef = useRef(null);
   const videoRef = useRef(null);
-  const playRequestedRef = useRef(false);
-
   const [isPlaying, setIsPlaying] = useState(false);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
   const videoSource = item?.video?.src || item?.video || "";
   const posterSource = item?.video?.poster || item?.cards?.[0]?.image || "";
 
-  useEffect(() => {
-    setIsPlaying(false);
-    setShouldLoadVideo(false);
-    playRequestedRef.current = false;
-  }, [videoSource]);
-
-  useEffect(() => {
-    const target = containerRef.current;
-    if (!target) {
-      return undefined;
-    }
-
-    if (typeof IntersectionObserver === "undefined") {
-      setShouldLoadVideo(true);
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry) {
-          return;
-        }
-
-        if (entry.isIntersecting) {
-          setShouldLoadVideo(true);
-          observer.disconnect();
-        }
-      },
-      {
-        root: null,
-        rootMargin: LAZY_LOAD_ROOT_MARGIN,
-        threshold: IN_VIEW_THRESHOLD,
-      },
-    );
-
-    observer.observe(target);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [videoSource]);
-
-  useEffect(() => {
-    const target = containerRef.current;
-    if (!target || typeof IntersectionObserver === "undefined") {
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting && videoRef.current && !videoRef.current.paused) {
-          videoRef.current.pause();
-          setIsPlaying(false);
-        }
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      },
-    );
-
-    observer.observe(target);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
   const togglePlay = useCallback(async () => {
     const videoElement = videoRef.current;
-
-    if (!videoElement) {
-      return;
-    }
-
-    if (!shouldLoadVideo) {
-      playRequestedRef.current = true;
-      setShouldLoadVideo(true);
-      return;
-    }
+    if (!videoElement) return;
 
     if (isPlaying) {
       videoElement.pause();
-      setIsPlaying(false);
-      return;
+    } else {
+      try {
+        await videoElement.play();
+      } catch (err) {
+        console.error("Video play failed:", err);
+      }
     }
-
-    try {
-      await videoElement.play();
-      setIsPlaying(true);
-    } catch (_error) {
-      setIsPlaying(false);
-    }
-  }, [isPlaying, shouldLoadVideo]);
-
-  const handleCanPlay = useCallback(async () => {
-    if (!playRequestedRef.current || !videoRef.current) {
-      return;
-    }
-
-    playRequestedRef.current = false;
-
-    try {
-      await videoRef.current.play();
-      setIsPlaying(true);
-    } catch (_error) {
-      setIsPlaying(false);
-    }
-  }, []);
+  }, [isPlaying]);
 
   return (
     <motion.div
@@ -142,34 +44,32 @@ function VideoCard({ item, index }) {
       <div className="relative w-full flex-1 overflow-hidden shrink-0 bg-gray-100">
         <video
           ref={videoRef}
-          src={shouldLoadVideo ? videoSource : undefined}
+          src={videoSource}
           poster={posterSource || undefined}
           playsInline
-          preload={shouldLoadVideo ? "metadata" : "none"}
-          controls={shouldLoadVideo}
-          onCanPlay={handleCanPlay}
+          preload="metadata"
+          controls
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onEnded={() => setIsPlaying(false)}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-0"
         />
 
-        <button
-          type="button"
-          className={`absolute inset-0 z-10 transition-opacity duration-300 flex items-center justify-center cursor-pointer ${
-            isPlaying ? "opacity-0 pointer-events-none" : "bg-black/15 group-hover:bg-black/25"
-          }`}
-          onClick={togglePlay}
-          aria-label={isPlaying ? "Pause video" : "Play video"}
-        >
-          <span className="w-14 h-14 md:w-16 md:h-16 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center text-brand-mint shadow-xl transform transition-transform hover:scale-110">
-            {isPlaying ? (
-              <Pause className="w-6 h-6 md:w-8 md:h-8 fill-current" />
-            ) : (
+        {/* Custom Play Overlay - disappears when playing to allow native controls interaction */}
+        {!isPlaying && (
+          <div
+            className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors duration-300 cursor-pointer"
+            onClick={togglePlay}
+          >
+            <button
+              type="button"
+              className="w-14 h-14 md:w-16 md:h-16 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center text-brand-mint shadow-xl transform transition-transform hover:scale-110"
+              aria-label="Play video"
+            >
               <Play className="w-6 h-6 md:w-8 md:h-8 fill-current ml-1" />
-            )}
-          </span>
-        </button>
+            </button>
+          </div>
+        )}
 
         {item.badge ? (
           <div className="absolute top-4 left-4 md:top-6 md:left-6 z-20">
