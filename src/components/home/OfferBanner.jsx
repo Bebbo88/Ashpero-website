@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useSiteContentQuery } from "@/features/home/queries";
 import { mapHomeOfferBannerImage } from "@/features/home/mappers";
@@ -32,3 +32,4 @@ export default function OfferBanner() {
     </section>
   );
 }
+

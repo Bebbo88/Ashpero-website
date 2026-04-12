@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Star } from "lucide-react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import EmptyState from "@/components/ui/EmptyState";
 
 function StarRating({ rating, size = 16, interactive = false, onRate }) {
@@ -232,3 +232,4 @@ export function ProductReviewsUI({
     </section>
   );
 }
+

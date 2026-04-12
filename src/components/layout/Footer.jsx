@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import Link from "next/link";
 import { Send } from "lucide-react";
 import { useLanguage } from "../../hooks/useLanguage";
@@ -218,5 +218,6 @@ export default function Footer() {
     </footer>
   );
 }
+
 
 

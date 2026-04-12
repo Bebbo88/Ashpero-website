@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
@@ -103,3 +103,4 @@ export function HeroSectionUI({ backgroundSlides }) {
     </section>
   );
 }
+

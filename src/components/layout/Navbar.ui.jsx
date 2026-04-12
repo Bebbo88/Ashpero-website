@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import Link from "next/link";
 import { Heart, Sun, Moon, Globe, ChevronDown, X, User, LogOut } from "lucide-react";
 import TopBanner from "./TopBanner";
@@ -322,3 +322,4 @@ export function NavbarUI({
     </>
   );
 }
+

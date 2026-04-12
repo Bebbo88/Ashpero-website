@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMode } from "@/hooks/useMode";
 
@@ -88,5 +88,6 @@ export default function SplashScreen({ children }) {
     </>
   );
 }
+
 
 

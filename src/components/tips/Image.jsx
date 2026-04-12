@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import { motion } from "framer-motion";
 
 const CARD_IMAGE_SIZES = "(max-width: 1024px) 100vw, 34vw";
@@ -59,3 +59,4 @@ function areEqual(prevProps, nextProps) {
 }
 
 export default memo(SmallCard, areEqual);
+

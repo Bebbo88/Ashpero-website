@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import Link from "next/link";
 import { Heart, ShoppingCart } from "lucide-react";
 import { buildProductPath } from "@/utils/productUrl";
@@ -132,3 +132,4 @@ export default function ProductCard({ product }) {
     </Link>
   );
 }
+

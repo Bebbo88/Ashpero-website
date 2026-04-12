@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import { useLanguage } from "../../hooks/useLanguage";
 
 export default function HeritageCTA() {
@@ -74,3 +74,4 @@ export default function HeritageCTA() {
     </section>
   );
 }
+

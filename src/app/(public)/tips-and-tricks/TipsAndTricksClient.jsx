@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -156,3 +156,4 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
     </div>
   );
 }
+

@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/AppImage";
 import { useRouter } from "next/navigation";
 import {
   Lock,
@@ -545,6 +545,7 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
 
 
 
