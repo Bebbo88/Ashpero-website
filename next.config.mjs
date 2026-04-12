@@ -6,6 +6,7 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
+      // local
       {
         protocol: "http",
         hostname: "localhost",
@@ -18,12 +19,21 @@ const nextConfig = {
         port: "5000",
         pathname: "/uploads/**",
       },
-      // ✅ ده المهم
+
+      // render
       {
         protocol: "https",
         hostname: "ashpero-server-3.onrender.com",
         pathname: "/uploads/**",
       },
+
+      // ✅ أهم إضافة
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+
+      // social
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
