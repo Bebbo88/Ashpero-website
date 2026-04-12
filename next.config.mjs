@@ -29,9 +29,10 @@ const nextConfig = {
 
       // ✅ أهم إضافة
       {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-      },
+  protocol: "https",
+  hostname: "res.cloudinary.com",
+  pathname: "/**", // 🔥 دي المهمة
+}
 
       // social
       {
