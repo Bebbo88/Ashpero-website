@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "@/components/ui/AppImage";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
@@ -14,6 +13,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import styles from "@/animations/FeaturedBestsellers.animations.module.css";
+import Image from "@/components/ui/AppImage";
 
 export function FeaturedBestsellersUI({
   t,
@@ -157,4 +157,3 @@ export function FeaturedBestsellersUI({
     </section>
   );
 }
-

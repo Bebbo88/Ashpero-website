@@ -38,6 +38,8 @@ export function HeroSectionUI({ backgroundSlides }) {
                 fill
                 className="fit "
                 priority={idx === 0}
+                loading={idx === 0 ? "eager" : undefined}
+                fetchPriority={idx === 0 ? "high" : undefined}
                 sizes="100vw"
               />
             </SwiperSlide>
