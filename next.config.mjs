@@ -4,12 +4,8 @@ const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
-    domains: [
-      "res.cloudinary.com",
-      "lh3.googleusercontent.com",
-      "platform-lookaside.fbsbx.com",
-      "pbs.twimg.com",
-    ],
+    qualities: [70, 75],
+    qualities: [70, 75],
     remotePatterns: [
       {
         protocol: "https",

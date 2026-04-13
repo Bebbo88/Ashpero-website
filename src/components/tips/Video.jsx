@@ -10,8 +10,20 @@ function VideoCard({ item, index }) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const videoSource = item?.video?.src || item?.video || "";
+  const rawVideoSource = item?.video?.src || item?.video || "";
   const posterSource = item?.video?.poster || item?.cards?.[0]?.image || "";
+
+  // Simplify Cloudinary transformations to avoid 400 errors
+  const videoSource = React.useMemo(() => {
+    if (typeof rawVideoSource !== "string" || !rawVideoSource.includes("cloudinary.com")) {
+      return rawVideoSource;
+    }
+    // Change complex transformations to simple f_auto,q_auto
+    return rawVideoSource.replace(
+      /\/video\/upload\/[^/]+\//,
+      "/video/upload/f_auto,q_auto/"
+    );
+  }, [rawVideoSource]);
 
   const togglePlay = useCallback(async () => {
     const videoElement = videoRef.current;
@@ -44,7 +56,6 @@ function VideoCard({ item, index }) {
       <div className="relative w-full flex-1 overflow-hidden shrink-0 bg-gray-100">
         <video
           ref={videoRef}
-          src={videoSource}
           poster={posterSource || undefined}
           playsInline
           preload="metadata"
@@ -53,7 +64,10 @@ function VideoCard({ item, index }) {
           onPause={() => setIsPlaying(false)}
           onEnded={() => setIsPlaying(false)}
           className="absolute inset-0 w-full h-full object-cover z-0"
-        />
+        >
+          <source src={videoSource} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
 
         {/* Custom Play Overlay - disappears when playing to allow native controls interaction */}
         {!isPlaying && (
