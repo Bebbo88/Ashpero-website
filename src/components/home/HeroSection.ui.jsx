@@ -4,6 +4,7 @@ import React from "react";
 import Image from "@/components/ui/AppImage";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import Skeleton from "@/components/ui/Skeleton";
 
 import "swiper/css";
 import "swiper/css/effect-cards";
@@ -17,34 +18,38 @@ export function HeroSectionUI({ backgroundSlides }) {
   return (
     <section className={`${styles.root} relative w-full h-[77dvh]  `}>
       <div className="absolute inset-0 z-0">
-        <Swiper
-          modules={[Autoplay]}
-          loop={canLoop}
-          speed={700}
-          autoplay={
-            canLoop ? { delay: 5000, disableOnInteraction: false } : false
-          }
-          allowTouchMove={false}
-          className="h-full w-full"
-        >
-          {backgroundSlides.map((slide, idx) => (
-            <SwiperSlide
-              key={`${slide.id}-${idx}`}
-              className="w-full h-full relative"
-            >
-              <Image
-                src={slide.image}
-                alt="Ashpero Background"
-                fill
-                className="fit "
-                priority={idx === 0}
-                loading={idx === 0 ? "eager" : undefined}
-                fetchPriority={idx === 0 ? "high" : undefined}
-                sizes="100vw"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {backgroundSlides.length > 0 ? (
+          <Swiper
+            modules={[Autoplay]}
+            loop={canLoop}
+            speed={700}
+            autoplay={
+              canLoop ? { delay: 5000, disableOnInteraction: false } : false
+            }
+            allowTouchMove={false}
+            className="h-full w-full"
+          >
+            {backgroundSlides.map((slide, idx) => (
+              <SwiperSlide
+                key={`${slide.id}-${idx}`}
+                className="w-full h-full relative"
+              >
+                <Image
+                  src={slide.image}
+                  alt="Ashpero Background"
+                  fill
+                  className="fit "
+                  priority={idx === 0}
+                  loading={idx === 0 ? "eager" : undefined}
+                  fetchPriority={idx === 0 ? "high" : undefined}
+                  sizes="100vw"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <Skeleton className="w-full h-full rounded-none" />
+        )}
       </div>
 
       {/* <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-10 min-h-screen flex flex-col justify-center py-24 sm:py-28 lg:py-16">
@@ -105,4 +110,3 @@ export function HeroSectionUI({ backgroundSlides }) {
     </section>
   );
 }
-

@@ -57,8 +57,13 @@ export function ProductReviewsUI({
           <div className="lg:col-span-2 flex flex-col gap-8">
             <div className="flex items-center gap-6 pb-8 border-b border-border-color">
               <div className="flex flex-col items-center gap-1">
-                <span className="text-5xl font-bold text-text-primary">{averageRating}</span>
-                <StarRating rating={Math.round(Number(averageRating))} size={18} />
+                <span className="text-5xl font-bold text-text-primary">
+                  {averageRating}
+                </span>
+                <StarRating
+                  rating={Math.round(Number(averageRating))}
+                  size={18}
+                />
                 <span className="text-xs text-text-secondary mt-1">
                   {ratingsCount} {t("ProductDetails.reviews.reviewCount")}
                 </span>
@@ -77,14 +82,18 @@ export function ProductReviewsUI({
                         style={{ width: `${item.pct}%` }}
                       />
                     </div>
-                    <span className="text-xs text-text-secondary w-6">{item.count}</span>
+                    <span className="text-xs text-text-secondary w-6">
+                      {item.count}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
             {isLoading ? (
-              <div className="py-6 text-sm text-text-secondary">Loading reviews...</div>
+              <div className="py-6 text-sm text-text-secondary">
+                Loading reviews...
+              </div>
             ) : null}
 
             {isError ? (
@@ -125,13 +134,19 @@ export function ProductReviewsUI({
                           </div>
                         )}
                         <div>
-                          <h4 className="text-sm font-bold text-text-primary">{review.name}</h4>
+                          <h4 className="text-sm font-bold text-text-primary">
+                            {review.name}
+                          </h4>
                           <StarRating rating={review.rating} size={12} />
                         </div>
                       </div>
-                      <span className="text-[11px] text-text-secondary">{review.date}</span>
+                      <span className="text-[11px] text-text-secondary">
+                        {review.date}
+                      </span>
                     </div>
-                    <p className="text-sm text-text-secondary leading-relaxed mt-2">{review.comment}</p>
+                    <p className="text-sm text-text-secondary leading-relaxed mt-2">
+                      {review.comment}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -232,4 +247,3 @@ export function ProductReviewsUI({
     </section>
   );
 }
-

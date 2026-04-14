@@ -14,6 +14,7 @@ import "swiper/css/pagination";
 
 import styles from "@/animations/FeaturedBestsellers.animations.module.css";
 import Image from "@/components/ui/AppImage";
+import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
 
 export function FeaturedBestsellersUI({
   t,
@@ -149,9 +150,11 @@ export function FeaturedBestsellersUI({
           <div className="bs-pagination flex items-center justify-center gap-2 mt-10" />
         </div>
         {isLoading ? (
-          <p className="mt-5 text-center text-xs text-text-secondary">
-            Syncing best sellers...
-          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </div>
         ) : null}
       </div>
     </section>

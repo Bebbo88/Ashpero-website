@@ -9,7 +9,6 @@ export default function Loading() {
     <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-bg-primary">
       {/* Increased size by scaling everything up (1.5x) */}
       <div className="relative flex flex-col items-center h-48 w-32 scale-150">
-        
         {/* Dropper */}
         <motion.div
           animate={{ y: [0, 12, 0] }}
@@ -55,7 +54,6 @@ export default function Loading() {
 
         {/* CSS 3D Glass Bottle Base */}
         <div className="absolute bottom-0 z-40 w-16 h-24 bg-white/20 dark:bg-white/5 backdrop-blur-md border-[1.5px] border-white/50 dark:border-white/20 rounded-b-[1.25rem] rounded-t-2xl overflow-hidden loading-bottle-shadow flex flex-col justify-end">
-          
           {/* 3D Glass Highlights */}
           <div className="absolute top-1 right-1.5 w-[3px] h-[90%] bg-gradient-to-b from-white/70 to-transparent rounded-full opacity-60 pointer-events-none z-50 mix-blend-overlay"></div>
           <div className="absolute top-2 left-1.5 w-1 h-[60%] bg-gradient-to-b from-white/50 to-transparent rounded-full opacity-40 pointer-events-none z-50 mix-blend-overlay"></div>
@@ -66,36 +64,46 @@ export default function Loading() {
             This is an animated "wave" div that sits inside the overflowing hidden 3D bottle.
           */}
           <div className="relative w-full h-[65%] mt-auto z-10 transition-all">
-             {/* Wave 1 */}
-             <motion.div
-               animate={{ 
-                 y: [2, -3, 2],     
-                 rotate: [0, 360]  
-               }}
-               transition={{
-                 y: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 2.0 },
-                 rotate: { duration: 3.5, repeat: Infinity, ease: "linear" }
-               }}
-               className="absolute top-[-30%] left-[-50%] w-[200%] h-[200%] bg-brand-mint/40 dark:bg-brand-mint/60 mix-blend-multiply dark:mix-blend-screen"
-               style={{
-                 borderRadius: "40%", 
-               }}
-             />
-             {/* Wave 2 (Lighter for depth) */}
-             <motion.div
-               animate={{ 
-                 y: [5, 0, 5],
-                 rotate: [360, 0]
-               }}
-               transition={{
-                 y: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 2.0 },
-                 rotate: { duration: 5, repeat: Infinity, ease: "linear" }
-               }}
-               className="absolute top-[-15%] left-[-50%] w-[200%] h-[200%] bg-brand-mint/30 dark:bg-brand-mint/50 mix-blend-normal"
-               style={{
-                 borderRadius: "45%",
-               }}
-             />
+            {/* Wave 1 */}
+            <motion.div
+              animate={{
+                y: [2, -3, 2],
+                rotate: [0, 360],
+              }}
+              transition={{
+                y: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 2.0,
+                },
+                rotate: { duration: 3.5, repeat: Infinity, ease: "linear" },
+              }}
+              className="absolute top-[-30%] left-[-50%] w-[200%] h-[200%] bg-brand-mint/40 dark:bg-brand-mint/60 mix-blend-multiply dark:mix-blend-screen"
+              style={{
+                borderRadius: "40%",
+              }}
+            />
+            {/* Wave 2 (Lighter for depth) */}
+            <motion.div
+              animate={{
+                y: [5, 0, 5],
+                rotate: [360, 0],
+              }}
+              transition={{
+                y: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 2.0,
+                },
+                rotate: { duration: 5, repeat: Infinity, ease: "linear" },
+              }}
+              className="absolute top-[-15%] left-[-50%] w-[200%] h-[200%] bg-brand-mint/30 dark:bg-brand-mint/50 mix-blend-normal"
+              style={{
+                borderRadius: "45%",
+              }}
+            />
           </div>
         </div>
 
@@ -106,7 +114,7 @@ export default function Loading() {
             duration: 2.5,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 2.0, 
+            delay: 2.0,
           }}
           className="absolute bottom-6 z-10 w-8 h-4 bg-brand-mint blur-md rounded-full pointer-events-none"
         />
@@ -114,6 +122,3 @@ export default function Loading() {
     </div>
   );
 }
-
-
-
