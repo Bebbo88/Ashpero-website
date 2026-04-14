@@ -11,6 +11,7 @@ import {
 import ProductCard from "./ProductCard";
 import ProductFilter from "./ProductFilter";
 import EmptyState from "@/components/ui/EmptyState";
+import ProductCardSkeleton from "./ProductCardSkeleton";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { mapAllProducts } from "@/features/product/mappers";
@@ -46,8 +47,9 @@ const normalizeList = (values = []) =>
     .filter(Boolean)
     .filter(
       (value, index, list) =>
-        list.findIndex((entry) => entry.toLowerCase() === value.toLowerCase()) ===
-        index,
+        list.findIndex(
+          (entry) => entry.toLowerCase() === value.toLowerCase(),
+        ) === index,
     );
 
 function normalizeCategoryTranslationKey(category) {
@@ -119,10 +121,14 @@ export default function AllProductsPage() {
   const productsQuery = useProductsQuery({
     isActive: true,
     search: debouncedSearch || undefined,
-    category: filters.category.length > 0 ? filters.category.join(",") : undefined,
+    category:
+      filters.category.length > 0 ? filters.category.join(",") : undefined,
     productType:
-      filters.productType.length > 0 ? filters.productType.join(",") : undefined,
-    skinType: filters.skinType.length > 0 ? filters.skinType.join(",") : undefined,
+      filters.productType.length > 0
+        ? filters.productType.join(",")
+        : undefined,
+    skinType:
+      filters.skinType.length > 0 ? filters.skinType.join(",") : undefined,
   });
 
   const products = useMemo(
@@ -263,7 +269,8 @@ export default function AllProductsPage() {
 
   const isLoading = productsQuery.isLoading || facetsQuery.isLoading;
   const isError = productsQuery.isError || facetsQuery.isError;
-  const errorMessage = productsQuery.error?.message || facetsQuery.error?.message || "";
+  const errorMessage =
+    productsQuery.error?.message || facetsQuery.error?.message || "";
 
   return (
     <section className="w-full bg-bg-primary min-h-screen">
@@ -307,7 +314,9 @@ export default function AllProductsPage() {
               <input
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
-                placeholder={locale === "ar" ? "ابحث عن منتج..." : "Search products..."}
+                placeholder={
+                  locale === "ar" ? "ابحث عن منتج..." : "Search products..."
+                }
                 className="w-52 lg:w-64 rounded-lg border border-border-color bg-bg-primary py-2 ps-9 pe-3 text-sm text-text-primary outline-none focus:border-brand-orange"
               />
             </div>
@@ -318,14 +327,19 @@ export default function AllProductsPage() {
                 className="flex items-center gap-2 text-sm font-medium text-text-primary hover:text-brand-orange transition-colors cursor-pointer"
               >
                 {t("AllProducts.sortBy")}:{" "}
-                <span className="font-semibold">{t(`AllProducts.sort.${sortBy}`)}</span>
+                <span className="font-semibold">
+                  {t(`AllProducts.sort.${sortBy}`)}
+                </span>
                 <ChevronDown
                   className={`w-4 h-4 transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`}
                 />
               </button>
               {isSortOpen && (
                 <>
-                  <div className="fixed inset-0 z-30" onClick={() => setIsSortOpen(false)} />
+                  <div
+                    className="fixed inset-0 z-30"
+                    onClick={() => setIsSortOpen(false)}
+                  />
                   <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-48 bg-bg-primary border border-border-color rounded-xl shadow-xl z-40 overflow-hidden">
                     {SORT_OPTIONS.map((opt) => (
                       <button
@@ -386,8 +400,14 @@ export default function AllProductsPage() {
 
           <div className="flex-1">
             {isLoading ? (
-              <div className="text-sm text-text-secondary py-12 text-center">
-                Loading products...
+              <div
+                className={`grid gap-x-5 gap-y-10 grid-cols-2 ${
+                  gridCols === 3 ? "md:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-4"
+                }`}
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
               </div>
             ) : null}
 
@@ -397,7 +417,8 @@ export default function AllProductsPage() {
                   Failed to load products.
                 </p>
                 <p className="mt-2 text-xs text-red-600">
-                  {errorMessage || "Check API URL, backend status, and CORS origins."}
+                  {errorMessage ||
+                    "Check API URL, backend status, and CORS origins."}
                 </p>
               </div>
             ) : null}
@@ -405,7 +426,9 @@ export default function AllProductsPage() {
             {!isLoading && !isError && filteredProducts.length > 0 ? (
               <div
                 className={`grid gap-x-5 gap-y-10 grid-cols-2 ${
-                  gridCols === 3 ? "md:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-4"
+                  gridCols === 3
+                    ? "md:grid-cols-2 lg:grid-cols-3"
+                    : "md:grid-cols-3 lg:grid-cols-4"
                 }`}
               >
                 {filteredProducts.map((product) => (

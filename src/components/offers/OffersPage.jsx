@@ -5,6 +5,7 @@ import Image from "@/components/ui/AppImage";
 import { Search } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
 import EmptyState from "@/components/ui/EmptyState";
+import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useSiteContentQuery } from "@/features/home/queries";
@@ -19,8 +20,12 @@ function matchSearch(item, searchTerm) {
 
   const normalized = searchTerm.toLowerCase();
   return (
-    String(item.title || "").toLowerCase().includes(normalized) ||
-    String(item.description || "").toLowerCase().includes(normalized)
+    String(item.title || "")
+      .toLowerCase()
+      .includes(normalized) ||
+    String(item.description || "")
+      .toLowerCase()
+      .includes(normalized)
   );
 }
 
@@ -76,15 +81,19 @@ export default function OffersPage() {
             <input
               value={searchValue}
               onChange={(event) => setSearchValue(event.target.value)}
-              placeholder={locale === "ar" ? "???? ?? ??????..." : "Search offers..."}
+              placeholder={
+                locale === "ar" ? "???? ?? ??????..." : "Search offers..."
+              }
               className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 ps-9 pe-3 text-sm text-text-primary outline-none focus:border-brand-orange"
             />
           </div>
         </div>
 
         {offersQuery.isLoading ? (
-          <div className="text-sm text-text-secondary py-12 text-center">
-            Loading offers...
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
           </div>
         ) : null}
 
@@ -94,12 +103,15 @@ export default function OffersPage() {
               Failed to load offers.
             </p>
             <p className="mt-2 text-xs text-red-600">
-              {offersQuery.error?.message || "Please check backend status and try again."}
+              {offersQuery.error?.message ||
+                "Please check backend status and try again."}
             </p>
           </div>
         ) : null}
 
-        {!offersQuery.isLoading && !offersQuery.isError && filteredProducts.length > 0 ? (
+        {!offersQuery.isLoading &&
+        !offersQuery.isError &&
+        filteredProducts.length > 0 ? (
           <>
             <div className="mb-5 text-xs tracking-wide text-text-secondary">
               {locale === "ar"
@@ -114,7 +126,9 @@ export default function OffersPage() {
           </>
         ) : null}
 
-        {!offersQuery.isLoading && !offersQuery.isError && filteredProducts.length === 0 ? (
+        {!offersQuery.isLoading &&
+        !offersQuery.isError &&
+        filteredProducts.length === 0 ? (
           <EmptyState
             title={t("AllProducts.noResults")}
             description={t("AllProducts.noResultsDesc")}
@@ -124,4 +138,3 @@ export default function OffersPage() {
     </div>
   );
 }
-
