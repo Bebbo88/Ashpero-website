@@ -11,6 +11,9 @@ import "swiper/css/effect-cards";
 import "swiper/css/pagination";
 
 import styles from "@/animations/HeroSection.animations.module.css";
+import Loader from "../loader/loader";
+import HeroLoader from "./HearoLoader";
+import { AnimatePresence } from "framer-motion";
 
 export function HeroSectionUI({ backgroundSlides }) {
   const canLoop = backgroundSlides.length > 1;
@@ -34,21 +37,23 @@ export function HeroSectionUI({ backgroundSlides }) {
                 key={`${slide.id}-${idx}`}
                 className="w-full h-full relative"
               >
-                <Image
-                  src={slide.image}
-                  alt="Ashpero Background"
-                  fill
-                  className="fit "
-                  priority={idx === 0}
-                  loading={idx === 0 ? "eager" : undefined}
-                  fetchPriority={idx === 0 ? "high" : undefined}
-                  sizes="100vw"
-                />
+                {slide.image && (
+                  <Image
+                    src={slide.image}
+                    alt="Ashpero Background"
+                    fill
+                    className="fit"
+                    priority={idx === 0}
+                    sizes="100vw"
+                  />
+                )}
               </SwiperSlide>
             ))}
           </Swiper>
         ) : (
-          <Skeleton className="w-full h-full rounded-none" />
+          <AnimatePresence>
+            <HeroLoader />
+          </AnimatePresence>
         )}
       </div>
 

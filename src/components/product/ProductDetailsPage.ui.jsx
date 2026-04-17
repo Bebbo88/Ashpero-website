@@ -5,6 +5,7 @@ import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";
 import ProductReviews from "./ProductReviews";
 import EmptyState from "@/components/ui/EmptyState";
+import Loader from "../loader/loader";
 
 export function ProductDetailsPageUI({
   productId,
@@ -15,11 +16,9 @@ export function ProductDetailsPageUI({
 }) {
   if (isLoading) {
     return (
-      <section className="w-full bg-bg-primary min-h-screen py-8 md:py-14">
+      <section className="w-full bg-bg-primary min-h-screen py-8 md:py-40">
         <div className="container mx-auto px-6 lg:px-10">
-          <div className="py-16 text-center text-sm text-text-secondary">
-            Loading product details...
-          </div>
+          <Loader />
         </div>
       </section>
     );
@@ -31,7 +30,9 @@ export function ProductDetailsPageUI({
         <div className="container mx-auto px-6 lg:px-10">
           <EmptyState
             title="Product not found"
-            description={errorMessage || "We could not load this product right now."}
+            description={
+              errorMessage || "We could not load this product right now."
+            }
           />
         </div>
       </section>

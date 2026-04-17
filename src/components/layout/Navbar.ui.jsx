@@ -3,7 +3,17 @@
 import React from "react";
 import Image from "@/components/ui/AppImage";
 import Link from "next/link";
-import { Heart, Sun, Moon, Globe, ChevronDown, X, User, LogOut } from "lucide-react";
+import {
+  Heart,
+  Sun,
+  Moon,
+  Globe,
+  ChevronDown,
+  X,
+  User,
+  LogOut,
+  Menu,
+} from "lucide-react";
 import TopBanner from "./TopBanner";
 import {
   GoogleIcon,
@@ -49,6 +59,7 @@ export function NavbarUI({
 }) {
   const userLabel = session?.user?.name || session?.user?.email || "Account";
   const firstLetter = userLabel?.trim()?.charAt(0)?.toUpperCase() || "U";
+  const logoSrc = isDark ? "/assets/logo-white.svg" : "/assets/logo.svg";
 
   return (
     <>
@@ -58,25 +69,29 @@ export function NavbarUI({
           <div className="flex items-center justify-between h-20 gap-4 lg:gap-8">
             <button
               onClick={toggleMobileMenu}
-              className="md:hidden flex items-center relative h-8 w-24 bg-transparent cursor-pointer"
+              className="md:hidden flex items-center gap-2 h-8 w-24 bg-transparent cursor-pointer"
             >
-              <Image
-                src="/assets/logo mob.svg"
-                alt="Ashpero Mobile Logo"
-                fill
-                className="object-contain object-left"
-                priority
-                sizes="96px"
-              />
+              <Menu className="w-6 h-6 text-text-primary shrink-0" />
+
+              <div className="relative h-full w-full">
+                <Image
+                  src="/assets/logo-mob.svg"
+                  alt="Ashpero Mobile Logo"
+                  fill
+                  className="object-contain object-left"
+                  priority
+                  sizes="96px"
+                />
+              </div>
             </button>
 
             <div className="hidden md:flex items-center justify-start gap-3 lg:gap-4 xl:gap-6 flex-1 min-w-0">
               <Link
                 href="/"
-                className="flex-shrink-0 flex items-center relative h-12 w-32 lg:h-14 lg:w-40 bg-transparent cursor-pointer hover:opacity-80 transition-opacity"
+                className="shrink-0 flex items-center relative h-12 w-32 lg:h-14 lg:w-40 bg-transparent cursor-pointer hover:opacity-80 transition-opacity"
               >
                 <Image
-                  src={isDark ? "/assets/logo white.svg" : "/assets/logo.svg"}
+                  src={logoSrc}
                   alt="Ashpero Logo"
                   fill
                   className="object-contain object-left"
@@ -322,4 +337,3 @@ export function NavbarUI({
     </>
   );
 }
-
