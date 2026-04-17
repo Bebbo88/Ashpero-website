@@ -16,6 +16,7 @@ import { useLanguage } from "../../hooks/useLanguage";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { mapAllProducts } from "@/features/product/mappers";
 import { useProductsQuery } from "@/features/product/queries";
+import Loader from "../loader/loader";
 
 const SORT_OPTIONS = [
   { key: "featured", labelKey: "featured" },
@@ -402,7 +403,9 @@ export default function AllProductsPage() {
             {isLoading ? (
               <div
                 className={`grid gap-x-5 gap-y-10 grid-cols-2 ${
-                  gridCols === 3 ? "md:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-4"
+                  gridCols === 3
+                    ? "md:grid-cols-2 lg:grid-cols-3"
+                    : "md:grid-cols-3 lg:grid-cols-4"
                 }`}
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (

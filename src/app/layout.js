@@ -39,11 +39,9 @@ export const metadata = {
 
 const THEME_INIT_SCRIPT = `
   try {
-    if (
-      localStorage.getItem("theme") === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
+    const theme = localStorage.getItem("theme");
+
+    if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
@@ -90,5 +88,3 @@ export default async function RootLayout({ children }) {
     </html>
   );
 }
-
-

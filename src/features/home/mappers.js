@@ -31,35 +31,57 @@ function resolveProductId(product, fallbackIndex) {
 }
 
 export function mapBestSellerProducts(products = [], locale = "en") {
-  return products.map((product, index) => ({
-    id: resolveProductId(product, index),
-    image: toAbsoluteAssetUrl(product?.images?.[0] || "") || "/assets/photo1.jpeg",
-    category: getLocalizedValue(product, locale, "category", "category", "category") || "Skincare",
-    title: getLocalizedValue(product, locale, "name_en", "name_ar", "name") || "Product",
-    price: formatPrice(product?.price, locale),
-    priceNum: Number(product?.price) || 0,
-  }));
+  return products
+    .map((product, index) => {
+      const image = toAbsoluteAssetUrl(product?.images?.[0]);
+
+      return {
+        id: resolveProductId(product, index),
+        image: image || null, // ✅ null بدل ""
+        category:
+          getLocalizedValue(
+            product,
+            locale,
+            "category",
+            "category",
+            "category",
+          ) || "Skincare",
+        title:
+          getLocalizedValue(product, locale, "name_en", "name_ar", "name") ||
+          "Product",
+        price: formatPrice(product?.price, locale),
+        priceNum: Number(product?.price) || 0,
+      };
+    })
+    .filter((product) => product.image); // 🔥 يشيل أي عنصر مفيهوش صورة
 }
 
 export function mapHeroCards(products = [], locale = "en") {
-  return mapBestSellerProducts(products, locale).slice(0, 6).map((product, index) => ({
-    ...product,
-    badge: index === 0 ? "Bestseller" : null,
-  }));
+  return mapBestSellerProducts(products, locale)
+    .slice(0, 6)
+    .map((product, index) => ({
+      ...product,
+      badge: index === 0 ? "Bestseller" : null,
+    }));
 }
 
 export function mapHeroBackgroundSlides(content = {}) {
-  const heroImages = Array.isArray(content.heroImages) ? content.heroImages : [];
+  const heroImages = Array.isArray(content.heroImages)
+    ? content.heroImages
+    : [];
 
-  if (heroImages.length > 0) {
-    // New uploads are appended in backend, so we show newest first.
-    return heroImages.slice().reverse().map((path, index) => ({
-      id: `hero-${index}`,
-      image: toAbsoluteAssetUrl(path),
-    }));
-  }
+  return heroImages
+    .slice()
+    .reverse()
+    .map((path, index) => {
+      const image = toAbsoluteAssetUrl(path);
 
-  return [{ id: "hero-fallback", image: "/assets/background.jpg" }];
+      return {
+        id: `hero-${index}`,
+        image: image || null, // ✅ null
+      };
+    })
+    .filter((slide) => slide.image); // 🔥 مهم جدًا
 }
 
 function getLatestImagePath(items) {
@@ -77,7 +99,9 @@ export function mapHomeOfferBannerImage(content = {}) {
     getLatestImagePath(content.heroImages) ||
     "";
 
-  return toAbsoluteAssetUrl(selectedBanner) || "/assets/background.jpg";
+  const image = toAbsoluteAssetUrl(selectedBanner);
+
+  return image || null; // ✅ null
 }
 
 export function mapOffersPageBannerImage(content = {}) {
@@ -87,7 +111,9 @@ export function mapOffersPageBannerImage(content = {}) {
     getLatestImagePath(content.heroImages) ||
     "";
 
-  return toAbsoluteAssetUrl(selectedBanner) || "/assets/background.jpg";
+  const image = toAbsoluteAssetUrl(selectedBanner);
+
+  return image || null; // ✅ null
 }
 
 export function mapPrimaryBannerImage(content = {}) {

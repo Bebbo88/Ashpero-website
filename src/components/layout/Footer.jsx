@@ -5,11 +5,7 @@ import Image from "@/components/ui/AppImage";
 import Link from "next/link";
 import { Send } from "lucide-react";
 import { useLanguage } from "../../hooks/useLanguage";
-import {
-  InstagramIcon,
-  XIcon,
-  WhatsAppIcon,
-} from "@/svgs/Footer.svgs";
+import { InstagramIcon, XIcon, WhatsAppIcon } from "@/svgs/Footer.svgs";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -22,7 +18,7 @@ export default function Footer() {
           <div className="flex flex-col gap-6 col-span-1">
             <Link href="/" className="relative h-12 w-48">
               <Image
-                src="/assets/logo white.svg"
+                src="/assets/logo-white.svg"
                 alt="Ashpero Logo"
                 fill
                 sizes="192px"
@@ -218,6 +214,3 @@ export default function Footer() {
     </footer>
   );
 }
-
-
-
