@@ -166,14 +166,14 @@ export default function Footer() {
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
-                src="/assets/fawry.png"
+                src="/assets/fawry.jpg"
                 alt="Fawry"
                 width={80}
                 height={48}
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
-                src="/assets/aman.jfif"
+                src="/assets/aman.jpg"
                 alt="Aman"
                 width={80}
                 height={48}
