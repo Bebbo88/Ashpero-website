@@ -60,6 +60,9 @@ export function NavbarUI({
   const userLabel = session?.user?.name || session?.user?.email || "Account";
   const firstLetter = userLabel?.trim()?.charAt(0)?.toUpperCase() || "U";
   const logoSrc = isDark ? "/assets/logo-white.svg" : "/assets/logo.svg";
+  const logoMobileSrc = isDark
+    ? "/assets/favicon-light.png"
+    : "/assets/favicon-dark.png";
 
   return (
     <>
@@ -75,7 +78,7 @@ export function NavbarUI({
 
               <div className="relative h-full w-full">
                 <Image
-                  src="/assets/logo-mob.svg"
+                  src={logoMobileSrc}
                   alt="Ashpero Mobile Logo"
                   fill
                   className="object-contain object-left"

@@ -214,7 +214,7 @@ export default function AIChatBox({ onClose }) {
 
         <div className="text-center mt-2">
           <span className="text-[10px] text-text-secondary">
-            Powered by Google Gemini
+            Powered by Ashpero
           </span>
         </div>
       </div>

@@ -26,16 +26,19 @@ export default function FloatingActions() {
     let ticking = false;
 
     const updatePosition = () => {
-      const footer = document.querySelector('footer');
-      const navbar = document.querySelector('nav') || document.querySelector('header');
-      const floatingElement = document.getElementById('floating-actions-container');
+      const footer = document.querySelector("footer");
+      const navbar =
+        document.querySelector("nav") || document.querySelector("header");
+      const floatingElement = document.getElementById(
+        "floating-actions-container",
+      );
 
       if (footer && floatingElement) {
         const footerRect = footer.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-        
+
         let newOffset = 0;
-        
+
         if (footerRect.top < windowHeight) {
           // Push buttons up safely
           newOffset = windowHeight - footerRect.top;
@@ -45,11 +48,14 @@ export default function FloatingActions() {
         if (navbar) {
           const navbarBottom = navbar.getBoundingClientRect().bottom;
           const elementHeight = floatingElement.offsetHeight;
-          
+
           // Container normally sits around 40px (on desktop) from the bottom.
           // The maximum allowable offset is: Viewport - NavbarBottom - ElementHeight - DistanceFromBottom
-          const maxOffset = Math.max(0, windowHeight - navbarBottom - elementHeight - 40 - 20); // 20px extra padding
-          
+          const maxOffset = Math.max(
+            0,
+            windowHeight - navbarBottom - elementHeight - 40 - 20,
+          ); // 20px extra padding
+
           if (newOffset > maxOffset) {
             newOffset = maxOffset;
           }
@@ -67,14 +73,14 @@ export default function FloatingActions() {
         ticking = true;
       }
     };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
     updatePosition(); // initial check
-    
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -125,7 +131,7 @@ export default function FloatingActions() {
       {/* 2. WhatsApp Floating Button (Usually green) */}
       <motion.div variants={itemVariants}>
         <a
-          href="https://wa.me/201001234567" // Placeholder number
+          href="https://wa.me/01094317717" // Placeholder number
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center w-14 h-14 bg-social-whatsapp text-white rounded-full shadow-whatsapp hover:bg-social-whatsapp-hover transition-all hover:scale-110 active:scale-95"
