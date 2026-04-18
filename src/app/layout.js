@@ -28,8 +28,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
-  title: "Ashpero",
-  description: "Ashpero skin care products",
+  title: "Ashperoo Skincare",
+  description: "Ashperoo skin care products",
 
   icons: {
     icon: [
