@@ -7,12 +7,12 @@ export const revalidate = 60;
 export async function generateMetadata({ params }) {
   const { id } = await params;
   const resolvedId = extractProductIdFromParam(id);
-  
+
   // Later this can fetch actual product name, price, and image from API
   // e.g. const product = await fetchProduct(id);
-  
+
   return {
-    title: `Product ${resolvedId} | Ashpero Skincare`,
+    title: `Product ${resolvedId} | Ashperoo Skincare`,
     description: `Shop premium Ashpero product #${resolvedId}. Read reviews, instructions, and ingredients.`,
   };
 }
