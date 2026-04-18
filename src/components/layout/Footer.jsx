@@ -107,26 +107,31 @@ export default function Footer() {
           </div>
 
           {/* Column 4: Concierge */}
-          <div className="flex flex-col gap-5 col-span-1">
-            <h3 className="font-bold tracking-widest text-sm uppercase mb-2 text-white">
-              {t("Footer.reachUs")}
+          <div className="flex flex-col gap-2">
+            <h3 className="text-lg font-bold tracking-wider mb-2">
+              {t("Footer.location")}
             </h3>
-            <p className="text-sm font-medium text-white/80 leading-relaxed">
-              {t("Footer.subscribeText")}
-            </p>
-            <form className="mt-2 flex w-full relative group shadow-sm">
-              <input
-                type="email"
-                placeholder={t("Footer.emailPlaceholder")}
-                className="w-full bg-newsletter-input text-brand-dark rounded-l-md px-4 py-3 text-sm focus:outline-none placeholder:text-newsletter-placeholder rtl:rounded-l-none rtl:rounded-r-md transition-all font-medium"
-              />
-              <button
-                type="button"
-                className="bg-brand-orange hover:bg-footer-button-hover transition-colors rounded-r-md px-4 py-3 flex items-center justify-center cursor-pointer rtl:rounded-r-none rtl:rounded-l-md shrink-0 border border-brand-orange"
-              >
-                <Send className="w-5 h-5 text-white transform rtl:-scale-x-100" />
-              </button>
-            </form>
+            <address className="not-italic text-sm text-neutral-400 leading-relaxed mb-2">
+              شارع 151 , برج الجزيزة 2 , اعلي فرع فودافون
+              <br />
+              Maadi, Cairo Governorate 11728
+            </address>
+            <div className="w-full h-32 bg-neutral-800 rounded-lg overflow-hidden border border-neutral-700  relative opacity-80 hover:opacity-100 transition-opacity duration-300">
+              <iframe
+                title="Ashpero Location"
+                src="https://www.google.com/maps/embed?pb=!1m24!1m12!1m3!1d587.9715772149435!2d31.249601688401594!3d29.960787771412367!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m9!3e0!4m3!3m2!1d29.9721464!2d31.2474879!4m3!3m2!1d29.960507!2d31.249933!5e0!3m2!1sen!2seg!4v1776512009253!5m2!1sen!2seg"
+                width="100%"
+                height="100%"
+                style={{
+                  border: 0,
+                  filter:
+                    "invert(100%) hue-rotate(180deg) contrast(1.5) brightness(0.8) grayscale(0.5)",
+                }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
           </div>
         </div>
 
