@@ -30,10 +30,21 @@ const playfair = Playfair_Display({
 export const metadata = {
   title: "Ashpero",
   description: "Ashpero skin care products",
+
   icons: {
-    icon: "/assets/logo.svg",
-    shortcut: "/assets/logo.svg",
-    apple: "/assets/logo.svg",
+    icon: [
+      {
+        url: "/assets/favicon-dark.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/assets/favicon-light.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+
+    // fallback
+    shortcut: "/assets/favicon-light.png",
   },
 };
 
