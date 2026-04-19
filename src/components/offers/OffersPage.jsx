@@ -12,6 +12,8 @@ import { useSiteContentQuery } from "@/features/home/queries";
 import { mapOffersPageBannerImage } from "@/features/home/mappers";
 import { mapOfferProducts } from "@/features/offer/mappers";
 import { useOffersQuery } from "@/features/offer/queries";
+import { AnimatePresence } from "framer-motion";
+import HeroLoader from "../home/HearoLoader";
 
 function matchSearch(item, searchTerm) {
   if (!searchTerm) {
@@ -52,17 +54,27 @@ export default function OffersPage() {
     [siteContentQuery.data],
   );
 
+  const isLoading = siteContentQuery.isLoading || !headerImage;
+
   return (
     <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
       <section className="relative w-full overflow-hidden flex items-center min-h-[320px] md:min-h-[400px]">
-        <Image
-          src={headerImage}
-          alt="Offers Header"
-          fill
-          className="object-cover object-right"
-          priority
-          sizes="100vw"
-        />
+        {/* 🟡 Loader */}
+        {isLoading && (
+          <AnimatePresence>
+            <HeroLoader />
+          </AnimatePresence>
+        )}
+        {!isLoading && (
+          <Image
+            src={headerImage}
+            alt="Offers Header"
+            fill
+            className="object-cover object-right"
+            priority
+            sizes="100vw"
+          />
+        )}
       </section>
 
       <div className="mt-10">
