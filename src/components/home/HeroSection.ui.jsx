@@ -52,7 +52,7 @@ export function HeroSectionUI({ backgroundSlides }) {
           </Swiper>
         ) : (
           <AnimatePresence>
-            <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700" />
+            <HeroLoader />{" "}
           </AnimatePresence>
         )}
       </div>
