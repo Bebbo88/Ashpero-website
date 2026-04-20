@@ -13,6 +13,7 @@ import {
   User,
   LogOut,
   Menu,
+  Search,
 } from "lucide-react";
 import TopBanner from "./TopBanner";
 import {
@@ -105,10 +106,20 @@ export function NavbarUI({
 
               <div className="hidden lg:flex items-center gap-2 xl:gap-4 ml-2 overflow-hidden">
                 <div className="w-[1px] h-6 bg-text-primary opacity-20" />
-                <span className="font-playfair italic text-text-primary tracking-[0.1em] xl:tracking-[0.2em] text-[10px] xl:text-xs pt-1 uppercase opacity-80 whitespace-nowrap">
+                <span className="font-playfair italic text-text-primary tracking-[0.1em] xl:tracking-[0.2em] text-[10px] xl:text-xs pt-1 uppercase opacity-100 font-bold whitespace-nowrap">
                   {t("Navbar.success")}
                 </span>
               </div>
+            </div>
+
+            {/* Middle Search - responsive */}
+            <div className="flex-1 flex justify-center max-w-[150px] md:max-w-[200px] lg:max-w-[300px] mx-2 md:mx-4 shrink">
+              <Link href="/all-products" className="w-full flex items-center bg-black/5 dark:bg-white/5 border border-transparent hover:border-border-color rounded-full px-3 py-1.5 md:py-2 transition-colors cursor-pointer justify-center md:justify-start">
+                <Search className="w-4 h-4 text-text-secondary md:mr-2 shrink-0" />
+                <span className="text-xs text-text-secondary hidden md:block w-full truncate">
+                  {locale === "ar" ? "ابحث عن منتج..." : "Search products..."}
+                </span>
+              </Link>
             </div>
 
             <div className="flex items-center gap-3 lg:gap-6 flex-shrink-0">

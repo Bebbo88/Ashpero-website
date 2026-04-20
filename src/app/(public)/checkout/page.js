@@ -21,8 +21,6 @@ import { clearCart } from "@/store/slices/cartSlice";
 import { createOrder } from "@/services/orderService";
 import { applyCoupon } from "@/services/couponService";
 import EmptyState from "@/components/ui/EmptyState";
-
-const VAT_RATE = 0.14;
 const DEFAULT_DIAL_CODE = "+20";
 
 const PHONE_COUNTRIES = [
@@ -273,29 +271,14 @@ export default function CheckoutPage() {
     [subtotal, effectiveDiscount],
   );
 
-  const vatAmount = useMemo(
-    () => discountedSubtotal * VAT_RATE,
+  const finalTotal = useMemo(
+    () => discountedSubtotal,
     [discountedSubtotal],
   );
 
-  const finalTotal = useMemo(
-    () => discountedSubtotal + vatAmount,
-    [discountedSubtotal, vatAmount],
-  );
-
-  const vatRatePercentage = Math.round(VAT_RATE * 100);
   const subtotalLabel = currencyFormatter.format(subtotal);
   const discountLabel = currencyFormatter.format(effectiveDiscount);
-  const vatLabel = currencyFormatter.format(vatAmount);
   const totalLabel = currencyFormatter.format(finalTotal);
-  const vatLineLabel =
-    locale === "ar"
-      ? `ضريبة القيمة المضافة (${vatRatePercentage}%)`
-      : `VAT (${vatRatePercentage}%)`;
-  const vatHint =
-    locale === "ar"
-      ? `يشمل الإجمالي ضريبة القيمة المضافة بنسبة ${vatRatePercentage}%.`
-      : `Total includes ${vatRatePercentage}% VAT.`;
 
   const handlePromoInputChange = (event) => {
     const nextValue = String(event.target.value || "").toUpperCase();
@@ -835,12 +818,6 @@ export default function CheckoutPage() {
                   </div>
                 ) : null}
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-text-secondary">{vatLineLabel}</span>
-                  <span className="font-semibold text-text-primary">
-                    {vatLabel}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
                   <span className="text-text-secondary">
                     {t("Checkout.shipping")}
                   </span>
@@ -848,9 +825,6 @@ export default function CheckoutPage() {
                     {t("Checkout.free")}
                   </span>
                 </div>
-                <p className="text-[11px] leading-relaxed text-text-secondary/80">
-                  {vatHint}
-                </p>
               </div>
 
               <div className="flex justify-between items-center mb-8">

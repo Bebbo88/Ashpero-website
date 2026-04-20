@@ -60,8 +60,8 @@ export function FeaturedBestsellersUI({
 
           <Swiper
             modules={[Navigation, Pagination]}
-            spaceBetween={24}
-            slidesPerView={1}
+            spaceBetween={16}
+            slidesPerView={1.25}
             grabCursor
             navigation={{ nextEl: ".bs-next", prevEl: ".bs-prev" }}
             pagination={{ clickable: true, el: ".bs-pagination" }}

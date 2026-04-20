@@ -69,12 +69,18 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
       ]);
     },
     onError: (error) => {
+      let friendlyError = "Oops, something went wrong. Please try again.";
+      const errStr = error.message?.toLowerCase() || "";
+      if (errStr.includes("503") || errStr.includes("demand") || errStr.includes("quota")) {
+        friendlyError = "I'm currently assisting many customers and my system is very busy. Please try again in a few minutes!";
+      }
+
       setMessages((prev) => [
         ...prev,
         {
           id: `err-${Date.now()}`,
           role: "model",
-          text: `Oops, something went wrong: ${error.message}`,
+          text: friendlyError,
           isError: true,
           timestamp: Date.now(),
         },
