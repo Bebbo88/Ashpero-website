@@ -12,6 +12,7 @@ import HeroLoader from "./HearoLoader";
 
 export function HeroSectionUI({ backgroundSlides }) {
   const canLoop = backgroundSlides.length > 1;
+  const startIdx = canLoop ? 1 : 0;
 
   return (
     <section className={`${styles.root} relative w-full h-[77dvh]`}>
@@ -25,6 +26,7 @@ export function HeroSectionUI({ backgroundSlides }) {
               canLoop ? { delay: 5000, disableOnInteraction: false } : false
             }
             allowTouchMove={false}
+            initialSlide={startIdx}
             className="h-full w-full"
           >
             {backgroundSlides.map((slide, idx) => (
@@ -36,11 +38,11 @@ export function HeroSectionUI({ backgroundSlides }) {
                     fill
                     sizes="100vw"
                     // 🔥 أهم تعديل
-                    priority={idx === 0}
+                    priority={idx === startIdx}
                     // 🔥 تسريع التحميل
-                    quality={idx === 0 ? 60 : 50}
+                    quality={idx === startIdx ? 60 : 50}
                     // 🔥 Lazy لباقي الصور
-                    loading={idx === 0 ? "eager" : "lazy"}
+                    loading={idx === startIdx ? "eager" : "lazy"}
                     className="object-fill"
                   />
                 )}
