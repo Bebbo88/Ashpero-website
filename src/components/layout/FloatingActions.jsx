@@ -1,17 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, Heart } from "lucide-react"; // Using native Lucide for Cart, custom SVGs for others
-import { useLanguage } from "@/hooks/useLanguage";
+import { ShoppingCart } from "lucide-react"; // Using native Lucide for Cart, custom SVGs for others
 import { useCartDrawer } from "@/contexts/CartDrawerContext";
 import { useAppSelector } from "@/store/hooks";
 import { WhatsAppIcon, DoctorBotIcon } from "@/svgs/FloatingActions.svgs";
 import AIChatBox from "./AIChatBox";
 
 export default function FloatingActions() {
-  const { t } = useLanguage();
   const { openCart } = useCartDrawer();
   const cartItems = useAppSelector((state) => state.cart.items || []);
   const [bottomOffset, setBottomOffset] = useState(0);
@@ -110,59 +107,63 @@ export default function FloatingActions() {
       initial="hidden"
       animate="show"
       style={{ transform: `translateY(-${bottomOffset}px)` }}
-      className="fixed bottom-6 end-6 md:bottom-10 md:end-10 z-[150] flex flex-col gap-4 items-center"
+      className="fixed bottom-6 inset-x-6 md:bottom-10 md:inset-x-10 z-[150] flex items-end justify-between pointer-events-none"
     >
-      {/* 1. The Cart Button (Moved from Navbar) */}
-      <motion.div variants={itemVariants} className="relative group">
-        {/* Continuous soft pulse ring specifically for the cart (optional engagement) */}
-        <div className="absolute inset-0 bg-brand-orange/30 rounded-full animate-ping opacity-50"></div>
-        <button
-          onClick={openCart}
-          className="relative flex items-center justify-center w-14 h-14 bg-bg-secondary border border-border-color rounded-full shadow-lg hover:bg-brand-orange hover:text-white hover:border-brand-orange text-text-primary transition-all hover:scale-110 active:scale-95 group cursor-pointer"
-        >
-          <ShoppingCart className="w-6 h-6" />
-          {/* Cart Badge */}
-          <span className="absolute -top-1 -end-1 w-5 h-5 bg-brand-orange text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-bg-primary shadow-sm group-hover:border-brand-orange transition-colors">
-            {cartCount}
-          </span>
-        </button>
-      </motion.div>
-
-      {/* 2. WhatsApp Floating Button (Usually green) */}
-      <motion.div variants={itemVariants}>
-        <a
-          href="https://wa.me/01094317717" // Placeholder number
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center w-14 h-14 bg-social-whatsapp text-white rounded-full shadow-whatsapp hover:bg-social-whatsapp-hover transition-all hover:scale-110 active:scale-95"
-          aria-label="Contact us on WhatsApp"
-        >
-          <WhatsAppIcon className="w-7 h-7" />
-        </a>
-      </motion.div>
-
-      {/* 3. AI Agent (Doctor Bot) */}
-      <motion.div variants={itemVariants}>
-        <button
-          onClick={() => setIsChatOpen(!isChatOpen)}
-          className="relative flex items-center cursor-pointer justify-center w-16 h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95 group"
-          aria-label="Consult AI Skincare Doctor"
-        >
-          {/* Cool floating/bobbing animation specifically for the bot to make it feel alive */}
-          <motion.div
-            animate={{ y: [-2, 2, -2] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      <div className="flex flex-col gap-4 items-center pointer-events-auto">
+        {/* 2. WhatsApp Floating Button (Usually green) */}
+        <motion.div variants={itemVariants}>
+          <a
+            href="https://wa.me/01094317717" // Placeholder number
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center w-14 h-14 bg-social-whatsapp text-white rounded-full shadow-whatsapp hover:bg-social-whatsapp-hover transition-all hover:scale-110 active:scale-95"
+            aria-label="Contact us on WhatsApp"
           >
-            <DoctorBotIcon className="w-8 h-8 group-hover:drop-shadow-md transition-all" />
-          </motion.div>
-          {/* Active status indicator dot */}
-          <span className="absolute bottom-1 end-1 w-3.5 h-3.5 bg-green-400 border-2 border-brand-dark rounded-full"></span>
-        </button>
-      </motion.div>
+            <WhatsAppIcon className="w-7 h-7" />
+          </a>
+        </motion.div>
 
-      <AnimatePresence>
-        {isChatOpen && <AIChatBox onClose={() => setIsChatOpen(false)} />}
-      </AnimatePresence>
+        {/* 3. AI Agent (Doctor Bot) */}
+        <motion.div variants={itemVariants} className="relative">
+          <button
+            onClick={() => setIsChatOpen(!isChatOpen)}
+            className="relative flex items-center cursor-pointer justify-center w-16 h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95 group"
+            aria-label="Consult AI Skincare Doctor"
+          >
+            {/* Cool floating/bobbing animation specifically for the bot to make it feel alive */}
+            <motion.div
+              animate={{ y: [-2, 2, -2] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <DoctorBotIcon className="w-8 h-8 group-hover:drop-shadow-md transition-all" />
+            </motion.div>
+            {/* Active status indicator dot */}
+            <span className="absolute bottom-1 end-1 w-3.5 h-3.5 bg-green-400 border-2 border-brand-dark rounded-full"></span>
+          </button>
+
+          <AnimatePresence>
+            {isChatOpen && <AIChatBox onClose={() => setIsChatOpen(false)} alignment="start" />}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
+      <div className="flex flex-col gap-4 items-center pointer-events-auto">
+        {/* 1. The Cart Button (Moved from Navbar) */}
+        <motion.div variants={itemVariants} className="relative group">
+          {/* Continuous soft pulse ring specifically for the cart (optional engagement) */}
+          <div className="absolute inset-0 bg-brand-orange/30 rounded-full animate-ping opacity-50"></div>
+          <button
+            onClick={openCart}
+            className="relative flex items-center justify-center w-14 h-14 bg-bg-secondary border border-border-color rounded-full shadow-lg hover:bg-brand-orange hover:text-white hover:border-brand-orange text-text-primary transition-all hover:scale-110 active:scale-95 group cursor-pointer"
+          >
+            <ShoppingCart className="w-6 h-6" />
+            {/* Cart Badge */}
+            <span className="absolute -top-1 -end-1 w-5 h-5 bg-brand-orange text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-bg-primary shadow-sm group-hover:border-brand-orange transition-colors">
+              {cartCount}
+            </span>
+          </button>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }

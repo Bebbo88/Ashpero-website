@@ -57,9 +57,9 @@ export default function OffersPage() {
   const isLoading = siteContentQuery.isLoading || !headerImage;
 
   return (
-    <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
-      <section className="relative w-full overflow-hidden flex items-center min-h-[320px] md:min-h-[400px]">
-        {/* 🟡 Loader */}
+    <div className="w-full">
+      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card">
+        {/* Ã°Å¸Å¸Â¡ Loader */}
         {isLoading && (
           <AnimatePresence>
             <HeroLoader />
@@ -70,14 +70,14 @@ export default function OffersPage() {
             src={headerImage}
             alt="Offers Header"
             fill
-            className="object-cover object-right"
+            className="object-fill"
             priority
             sizes="100vw"
           />
         )}
-      </section>
+      </div>
 
-      <div className="mt-10">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 className="text-2xl md:text-3xl font-serif text-text-primary mb-1">

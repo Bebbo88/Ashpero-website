@@ -40,7 +40,7 @@ export default function OfferBanner() {
               src={bannerImage}
               alt="Offer Background"
               fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className="object-fill transition-transform duration-700 ease-out group-hover:scale-105"
               sizes="100vw"
             />
           </div>

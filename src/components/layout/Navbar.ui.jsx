@@ -106,19 +106,8 @@ export function NavbarUI({
               <div className="hidden lg:flex items-center gap-2 xl:gap-4 ml-2 overflow-hidden">
                 <div className="w-[1px] h-6 bg-text-primary opacity-20" />
                 <span className="font-playfair italic text-text-primary tracking-[0.1em] xl:tracking-[0.2em] text-[10px] xl:text-xs pt-1 uppercase opacity-80 whitespace-nowrap">
-                  {t("Navbar.madeInEgypt")}
+                  {t("Navbar.success")}
                 </span>
-
-                <div className="hidden xl:flex items-center gap-4">
-                  <div className="w-[1px] h-6 bg-text-primary opacity-20" />
-                  <span className="font-playfair italic text-text-primary tracking-[0.2em] text-xs pt-1 uppercase opacity-80 whitespace-nowrap">
-                    {t("Navbar.luxurySkincare")}
-                  </span>
-                  <div className="w-[1px] h-6 bg-text-primary opacity-20" />
-                  <span className="font-playfair italic text-text-primary tracking-[0.2em] text-xs pt-1 uppercase opacity-80 whitespace-nowrap">
-                    {t("Navbar.naturalIngredients")}
-                  </span>
-                </div>
               </div>
             </div>
 

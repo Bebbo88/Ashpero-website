@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "@/components/ui/AppImage";
 import Link from "next/link";
-import { Send } from "lucide-react";
 import { useLanguage } from "../../hooks/useLanguage";
 import { InstagramIcon, XIcon, WhatsAppIcon } from "@/svgs/Footer.svgs";
 
@@ -93,7 +92,7 @@ export default function Footer() {
             </Link>
 
             <Link
-              href="/contact-us"
+              href="/privacy-policy"
               className="text-sm font-medium text-white/80 hover:text-white transition-colors"
             >
               {t("Footer.privacyPolicy")}

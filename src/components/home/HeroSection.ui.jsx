@@ -42,7 +42,7 @@ export function HeroSectionUI({ backgroundSlides }) {
                     src={slide.image}
                     alt="Ashpero Background"
                     fill
-                    className="fit"
+                    className=" object-fill transition-transform duration-700 ease-out group-hover:scale-105"
                     priority={idx === 0}
                     sizes="100vw"
                   />
