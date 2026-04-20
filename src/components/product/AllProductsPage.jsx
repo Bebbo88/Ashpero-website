@@ -8,6 +8,7 @@ import {
   Grid3X3,
   Search,
 } from "lucide-react";
+import Image from "@/components/ui/AppImage";
 import ProductCard from "./ProductCard";
 import ProductFilter from "./ProductFilter";
 import EmptyState from "@/components/ui/EmptyState";
@@ -16,7 +17,6 @@ import { useLanguage } from "../../hooks/useLanguage";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { mapAllProducts } from "@/features/product/mappers";
 import { useProductsQuery } from "@/features/product/queries";
-import Loader from "../loader/loader";
 
 const SORT_OPTIONS = [
   { key: "featured", labelKey: "featured" },
@@ -275,18 +275,15 @@ export default function AllProductsPage() {
 
   return (
     <section className="w-full bg-bg-primary min-h-screen">
-      <div className="w-full all-products-hero-gradient pt-12 pb-8 md:pt-16 md:pb-12">
-        <div className="container mx-auto px-6 lg:px-10">
-          <p className="font-sans text-[11px] font-bold tracking-[0.3em] uppercase text-white/60 mb-2">
-            {t("AllProducts.subtitle")}
-          </p>
-          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-medium text-white tracking-wide">
-            {t("AllProducts.title")}
-          </h1>
-          <p className="mt-2 text-sm text-white/75 max-w-xl leading-relaxed">
-            {t("AllProducts.description")}
-          </p>
-        </div>
+      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card">
+        <Image
+          src="/assets/all_prods.jpg"
+          alt="All Products"
+          fill
+          priority
+          className="object-fill"
+          sizes="100vw"
+        />
       </div>
 
       <div className="container mx-auto px-6 lg:px-10 py-10 md:py-14">

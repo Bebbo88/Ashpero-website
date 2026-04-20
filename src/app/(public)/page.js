@@ -2,7 +2,7 @@ import HeroSection from "@/components/home/HeroSection";
 import FeaturedBestsellers from "@/components/home/FeaturedBestsellers";
 import OfferBanner from "@/components/home/OfferBanner";
 import UseItFeelIt from "@/components/home/UseItFeelIt";
-import HeritageCTA from "@/components/home/HeritageCTA";
+import HeritageCTA from "../../components/home/HeritageCTA";
 
 export const metadata = {
   title: "Ashperoo | Luxury Skincare Made in Egypt",

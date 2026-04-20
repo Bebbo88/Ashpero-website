@@ -2,13 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchBestSellers, fetchSiteContent } from "@/services/homeService";
 import { homeQueryKeys } from "./queryKeys";
 
+const HOME_CACHE_STALE_TIME = 1000 * 60 * 60 * 24 * 7; // 7 days
+const HOME_CACHE_GC_TIME = 1000 * 60 * 60 * 24 * 30; // 30 days
+
+const HOME_QUERY_OPTIONS = {
+  staleTime: HOME_CACHE_STALE_TIME,
+  gcTime: HOME_CACHE_GC_TIME,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+};
+
 export function useSiteContentQuery() {
   return useQuery({
     queryKey: homeQueryKeys.content(),
     queryFn: fetchSiteContent,
-    staleTime: 1000 * 15,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
+    ...HOME_QUERY_OPTIONS,
   });
 }
 
@@ -16,8 +25,6 @@ export function useBestSellersQuery(limit = 8) {
   return useQuery({
     queryKey: homeQueryKeys.bestSellers(limit),
     queryFn: () => fetchBestSellers(limit),
-    staleTime: 1000 * 15,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
+    ...HOME_QUERY_OPTIONS,
   });
 }

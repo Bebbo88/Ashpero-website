@@ -22,7 +22,7 @@ export default function HeritageCTA() {
           <div className="relative mx-auto w-full max-w-[420px] md:max-w-none">
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
-                src="/assets/CTA.png"
+                src="/assets/heritage.jpg"
                 alt="Ashpero Heritage"
                 fill
                 className="object-contain p-2 sm:p-3"
@@ -74,4 +74,3 @@ export default function HeritageCTA() {
     </section>
   );
 }
-

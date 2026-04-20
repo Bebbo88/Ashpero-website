@@ -12,6 +12,9 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearCart } from "@/store/slices/cartSlice";
@@ -19,9 +22,24 @@ import { createOrder } from "@/services/orderService";
 import { applyCoupon } from "@/services/couponService";
 import EmptyState from "@/components/ui/EmptyState";
 
-const initialForm = {
+const VAT_RATE = 0.14;
+const DEFAULT_DIAL_CODE = "+20";
+
+const PHONE_COUNTRIES = [
+  { dialCode: "+20", flag: "EG", labelEn: "Egypt", labelAr: "مصر" },
+  { dialCode: "+966", flag: "SA", labelEn: "Saudi Arabia", labelAr: "السعودية" },
+  { dialCode: "+971", flag: "AE", labelEn: "UAE", labelAr: "الإمارات" },
+  { dialCode: "+965", flag: "KW", labelEn: "Kuwait", labelAr: "الكويت" },
+  { dialCode: "+974", flag: "QA", labelEn: "Qatar", labelAr: "قطر" },
+  { dialCode: "+1", flag: "US", labelEn: "United States", labelAr: "الولايات المتحدة" },
+  { dialCode: "+44", flag: "GB", labelEn: "United Kingdom", labelAr: "المملكة المتحدة" },
+];
+
+const initialFormValues = {
   customerName: "",
+  phoneCountryCode: DEFAULT_DIAL_CODE,
   phone: "",
+  secondaryPhoneCountryCode: DEFAULT_DIAL_CODE,
   secondaryPhone: "",
   email: "",
   city: "",
@@ -30,7 +48,162 @@ const initialForm = {
   address2: "",
   postalCode: "",
   orderNote: "",
+  paymentMethod: "card",
 };
+
+function normalizeDigits(value) {
+  return String(value || "").replace(/\D/g, "");
+}
+
+function toFlagEmoji(countryCode) {
+  return countryCode
+    .toUpperCase()
+    .replace(/./g, (char) =>
+      String.fromCodePoint(127397 + char.charCodeAt(0)),
+    );
+}
+
+function formatInternationalPhone(dialCode, localPhone) {
+  const cleaned = normalizeDigits(localPhone).replace(/^0+/, "");
+  return `${dialCode}${cleaned}`;
+}
+
+function createCheckoutSchema(locale) {
+  const isArabic = locale === "ar";
+
+  return z.object({
+    customerName: z
+      .string()
+      .trim()
+      .min(
+        3,
+        isArabic
+          ? "الاسم الكامل يجب أن يكون 3 أحرف على الأقل."
+          : "Full name must be at least 3 characters.",
+      )
+      .max(
+        80,
+        isArabic
+          ? "الاسم الكامل طويل جدًا."
+          : "Full name is too long.",
+      ),
+    phoneCountryCode: z
+      .string()
+      .trim()
+      .min(1, isArabic ? "اختر كود الدولة." : "Please select a country code."),
+    phone: z
+      .string()
+      .trim()
+      .transform(normalizeDigits)
+      .refine(
+        (value) => value.length >= 7 && value.length <= 14,
+        isArabic
+          ? "رقم الهاتف يجب أن يكون بين 7 و14 رقمًا."
+          : "Phone number must be between 7 and 14 digits.",
+      ),
+    secondaryPhoneCountryCode: z
+      .string()
+      .trim()
+      .min(
+        1,
+        isArabic ? "اختر كود الدولة للرقم البديل." : "Select country code for alternate phone.",
+      ),
+    secondaryPhone: z
+      .string()
+      .trim()
+      .transform(normalizeDigits)
+      .refine(
+        (value) => value === "" || (value.length >= 7 && value.length <= 14),
+        isArabic
+          ? "الرقم البديل يجب أن يكون بين 7 و14 رقمًا."
+          : "Alternate phone must be between 7 and 14 digits.",
+      ),
+    email: z
+      .string()
+      .trim()
+      .max(
+        120,
+        isArabic ? "البريد الإلكتروني طويل جدًا." : "Email is too long.",
+      )
+      .refine(
+        (value) => value === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        isArabic
+          ? "يرجى إدخال بريد إلكتروني صحيح."
+          : "Please enter a valid email address.",
+      ),
+    city: z
+      .string()
+      .trim()
+      .min(
+        2,
+        isArabic ? "المدينة مطلوبة." : "City is required.",
+      )
+      .max(60, isArabic ? "اسم المدينة طويل جدًا." : "City name is too long."),
+    state: z
+      .string()
+      .trim()
+      .max(
+        60,
+        isArabic ? "اسم المحافظة طويل جدًا." : "State/Province name is too long.",
+      )
+      .refine(
+        (value) => value === "" || value.length >= 2,
+        isArabic
+          ? "المحافظة يجب أن تكون حرفين على الأقل."
+          : "State/Province must be at least 2 characters.",
+      ),
+    address1: z
+      .string()
+      .trim()
+      .min(
+        5,
+        isArabic ? "العنوان الأول مطلوب." : "Address line 1 is required.",
+      )
+      .max(
+        160,
+        isArabic ? "العنوان الأول طويل جدًا." : "Address line 1 is too long.",
+      ),
+    address2: z
+      .string()
+      .trim()
+      .max(
+        160,
+        isArabic ? "العنوان الثاني طويل جدًا." : "Address line 2 is too long.",
+      ),
+    postalCode: z
+      .string()
+      .trim()
+      .max(20, isArabic ? "الرمز البريدي طويل جدًا." : "Postal code is too long.")
+      .refine(
+        (value) => value === "" || /^[a-zA-Z0-9\- ]+$/.test(value),
+        isArabic
+          ? "الرمز البريدي يحتوي على حروف غير صالحة."
+          : "Postal code contains invalid characters.",
+      ),
+    orderNote: z
+      .string()
+      .trim()
+      .max(
+        500,
+        isArabic ? "ملاحظات الطلب طويلة جدًا." : "Order note is too long.",
+      ),
+    paymentMethod: z.enum(["card", "cash"]),
+  });
+}
+
+function getInputClass(hasError) {
+  return `w-full px-4 py-3.5 bg-bg-primary border rounded-xl text-sm transition-colors ${
+    hasError
+      ? "border-status-error focus:outline-none focus:ring-2 focus:ring-status-error/15"
+      : "border-border-color focus:outline-none focus:ring-2 focus:ring-brand-mint/15"
+  }`;
+}
+
+function getPhoneInputClass(hasError) {
+  return `flex-1 px-4 py-3.5 bg-transparent text-sm transition-colors focus:outline-none ${
+    hasError ? "text-status-error" : "text-text-primary"
+  }`;
+}
 
 export default function CheckoutPage() {
   const { t, locale } = useLanguage();
@@ -38,15 +211,37 @@ export default function CheckoutPage() {
   const router = useRouter();
   const cartItems = useAppSelector((state) => state.cart.items || []);
 
-  const [paymentMethod, setPaymentMethod] = useState("card");
-  const [form, setForm] = useState(initialForm);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [promoCode, setPromoCode] = useState("");
   const [promoStatus, setPromoStatus] = useState("idle");
   const [promoMessage, setPromoMessage] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
   const [appliedPromoCode, setAppliedPromoCode] = useState("");
+
+  const checkoutSchema = useMemo(() => createCheckoutSchema(locale), [locale]);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: initialFormValues,
+    mode: "onBlur",
+    reValidateMode: "onChange",
+  });
+
+  const paymentMethod = watch("paymentMethod");
+
+  const countryOptions = useMemo(
+    () =>
+      PHONE_COUNTRIES.map((country) => ({
+        ...country,
+        label: locale === "ar" ? country.labelAr : country.labelEn,
+      })),
+    [locale],
+  );
 
   const subtotal = useMemo(
     () =>
@@ -73,19 +268,34 @@ export default function CheckoutPage() {
     [discountAmount, subtotal],
   );
 
-  const finalTotal = useMemo(
+  const discountedSubtotal = useMemo(
     () => Math.max(subtotal - effectiveDiscount, 0),
     [subtotal, effectiveDiscount],
   );
 
+  const vatAmount = useMemo(
+    () => discountedSubtotal * VAT_RATE,
+    [discountedSubtotal],
+  );
+
+  const finalTotal = useMemo(
+    () => discountedSubtotal + vatAmount,
+    [discountedSubtotal, vatAmount],
+  );
+
+  const vatRatePercentage = Math.round(VAT_RATE * 100);
   const subtotalLabel = currencyFormatter.format(subtotal);
   const discountLabel = currencyFormatter.format(effectiveDiscount);
+  const vatLabel = currencyFormatter.format(vatAmount);
   const totalLabel = currencyFormatter.format(finalTotal);
-
-  const handleFieldChange = (event) => {
-    const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+  const vatLineLabel =
+    locale === "ar"
+      ? `ضريبة القيمة المضافة (${vatRatePercentage}%)`
+      : `VAT (${vatRatePercentage}%)`;
+  const vatHint =
+    locale === "ar"
+      ? `يشمل الإجمالي ضريبة القيمة المضافة بنسبة ${vatRatePercentage}%.`
+      : `Total includes ${vatRatePercentage}% VAT.`;
 
   const handlePromoInputChange = (event) => {
     const nextValue = String(event.target.value || "").toUpperCase();
@@ -109,7 +319,7 @@ export default function CheckoutPage() {
       setPromoStatus("error");
       setPromoMessage(
         locale === "ar"
-          ? "\u0645\u0646 \u0641\u0636\u0644\u0643 \u0627\u062f\u062e\u0644 \u0643\u0648\u062f \u0627\u0644\u062e\u0635\u0645."
+          ? "من فضلك أدخل كود الخصم."
           : "Please enter a promo code.",
       );
       return;
@@ -138,7 +348,7 @@ export default function CheckoutPage() {
       setPromoStatus("success");
       setPromoMessage(
         locale === "ar"
-          ? "\u062a\u0645 \u062a\u0637\u0628\u064a\u0642 \u0643\u0648\u062f \u0627\u0644\u062e\u0635\u0645 \u0628\u0646\u062c\u0627\u062d."
+          ? "تم تطبيق كود الخصم بنجاح."
           : "Promo code applied successfully.",
       );
     } catch (error) {
@@ -148,50 +358,48 @@ export default function CheckoutPage() {
       setPromoMessage(
         error?.message ||
           (locale === "ar"
-            ? "\u0627\u0644\u0643\u0648\u062f \u063a\u064a\u0631 \u0635\u062d\u064a\u062d \u0623\u0648 \u0645\u0646\u062a\u0647\u064a \u0627\u0644\u0635\u0644\u0627\u062d\u064a\u0629."
+            ? "الكود غير صحيح أو منتهي الصلاحية."
             : "Invalid or expired promo code."),
       );
     }
   };
 
-  const canSubmit =
-    cartItems.length > 0 &&
-    form.customerName.trim() &&
-    form.phone.trim() &&
-    (form.address1.trim() || form.city.trim());
-
-  const submitOrder = async (event) => {
-    event.preventDefault();
-
-    if (!canSubmit || isSubmitting) {
+  const submitOrder = async (values) => {
+    if (cartItems.length === 0) {
       return;
     }
 
     setSubmitError("");
-    setIsSubmitting(true);
 
     try {
       const payload = {
-        customerName: form.customerName.trim(),
-        phone: form.phone.trim(),
-        secondaryPhone: form.secondaryPhone.trim(),
-        email: form.email.trim(),
+        customerName: values.customerName.trim(),
+        phone: formatInternationalPhone(values.phoneCountryCode, values.phone),
+        secondaryPhone: values.secondaryPhone
+          ? formatInternationalPhone(
+              values.secondaryPhoneCountryCode,
+              values.secondaryPhone,
+            )
+          : "",
+        email: values.email.trim(),
         address:
-          `${form.address1} ${form.address2}`.trim() || form.address1.trim(),
+          `${values.address1} ${values.address2}`.trim() ||
+          values.address1.trim(),
         shippingAddress: {
           country: "Egypt",
-          governorate: form.state.trim(),
-          city: form.city.trim(),
-          street: form.address1.trim(),
-          area: form.address2.trim(),
-          postalCode: form.postalCode.trim(),
+          governorate: values.state.trim(),
+          city: values.city.trim(),
+          street: values.address1.trim(),
+          area: values.address2.trim(),
+          postalCode: values.postalCode.trim(),
           fullAddress:
-            `${form.address1} ${form.address2} ${form.city} ${form.state} ${form.postalCode}`
+            `${values.address1} ${values.address2} ${values.city} ${values.state} ${values.postalCode}`
               .replace(/\s+/g, " ")
               .trim(),
         },
-        orderNote: form.orderNote.trim(),
-        paymentMethod: paymentMethod === "cash" ? "cash_on_delivery" : "card",
+        orderNote: values.orderNote.trim(),
+        paymentMethod:
+          values.paymentMethod === "cash" ? "cash_on_delivery" : "card",
         items: cartItems.map((item) => ({
           productId: item.productId,
           quantity: Number(item.quantity || 1),
@@ -205,8 +413,6 @@ export default function CheckoutPage() {
       setSubmitError(
         error?.message || "Failed to create order. Please try again.",
       );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -252,43 +458,124 @@ export default function CheckoutPage() {
 
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14">
           <div className="flex-1">
-            <form className="flex flex-col gap-10" onSubmit={submitOrder}>
+            <form
+              className="flex flex-col gap-10"
+              onSubmit={handleSubmit(submitOrder)}
+              noValidate
+            >
               <section>
                 <h3 className="font-playfair text-xl md:text-2xl font-bold text-text-primary mb-6">
                   {t("Checkout.contactInfo")}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <input
-                    name="customerName"
-                    value={form.customerName}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.fullNameHolder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm"
-                    required
-                  />
-                  <input
-                    name="email"
-                    type="email"
-                    value={form.email}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.emailHolder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm"
-                  />
-                  <input
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.phoneHolder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm"
-                    required
-                  />
-                  <input
-                    name="secondaryPhone"
-                    value={form.secondaryPhone}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.altPhoneHolder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm"
-                  />
+                  <div>
+                    <input
+                      {...register("customerName")}
+                      placeholder={t("Checkout.fullNameHolder")}
+                      className={getInputClass(Boolean(errors.customerName))}
+                    />
+                    {errors.customerName ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.customerName.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div>
+                    <input
+                      {...register("email")}
+                      type="email"
+                      placeholder={t("Checkout.emailHolder")}
+                      className={getInputClass(Boolean(errors.email))}
+                    />
+                    {errors.email ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.email.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div>
+                    <div
+                      className={`flex items-center rounded-xl border overflow-hidden ${
+                        errors.phone || errors.phoneCountryCode
+                          ? "border-status-error"
+                          : "border-border-color"
+                      }`}
+                    >
+                      <select
+                        {...register("phoneCountryCode")}
+                        className="w-[130px] shrink-0 px-3 py-3.5 bg-bg-secondary text-text-primary text-sm border-e border-border-color focus:outline-none"
+                      >
+                        {countryOptions.map((country) => (
+                          <option key={country.dialCode} value={country.dialCode}>
+                            {`${toFlagEmoji(country.flag)} ${country.dialCode}`}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        {...register("phone")}
+                        inputMode="numeric"
+                        onInput={(event) => {
+                          event.currentTarget.value = normalizeDigits(
+                            event.currentTarget.value,
+                          );
+                        }}
+                        placeholder={t("Checkout.phoneHolder")}
+                        className={getPhoneInputClass(
+                          Boolean(errors.phone || errors.phoneCountryCode),
+                        )}
+                      />
+                    </div>
+                    {errors.phone || errors.phoneCountryCode ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.phone?.message || errors.phoneCountryCode?.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div>
+                    <div
+                      className={`flex items-center rounded-xl border overflow-hidden ${
+                        errors.secondaryPhone || errors.secondaryPhoneCountryCode
+                          ? "border-status-error"
+                          : "border-border-color"
+                      }`}
+                    >
+                      <select
+                        {...register("secondaryPhoneCountryCode")}
+                        className="w-[130px] shrink-0 px-3 py-3.5 bg-bg-secondary text-text-primary text-sm border-e border-border-color focus:outline-none"
+                      >
+                        {countryOptions.map((country) => (
+                          <option key={country.dialCode} value={country.dialCode}>
+                            {`${toFlagEmoji(country.flag)} ${country.dialCode}`}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        {...register("secondaryPhone")}
+                        inputMode="numeric"
+                        onInput={(event) => {
+                          event.currentTarget.value = normalizeDigits(
+                            event.currentTarget.value,
+                          );
+                        }}
+                        placeholder={t("Checkout.altPhoneHolder")}
+                        className={getPhoneInputClass(
+                          Boolean(
+                            errors.secondaryPhone ||
+                              errors.secondaryPhoneCountryCode,
+                          ),
+                        )}
+                      />
+                    </div>
+                    {errors.secondaryPhone || errors.secondaryPhoneCountryCode ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.secondaryPhone?.message ||
+                          errors.secondaryPhoneCountryCode?.message}
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
               </section>
 
@@ -297,43 +584,70 @@ export default function CheckoutPage() {
                   {t("Checkout.shippingAddress")}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <input
-                    name="address1"
-                    value={form.address1}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.address1Holder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm md:col-span-2"
-                    required
-                  />
-                  <input
-                    name="address2"
-                    value={form.address2}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.address2Holder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm md:col-span-2"
-                  />
-                  <input
-                    name="city"
-                    value={form.city}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.cityHolder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm"
-                    required
-                  />
-                  <input
-                    name="state"
-                    value={form.state}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.stateHolder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm"
-                  />
-                  <input
-                    name="postalCode"
-                    value={form.postalCode}
-                    onChange={handleFieldChange}
-                    placeholder={t("Checkout.postalHolder")}
-                    className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm"
-                  />
+                  <div className="md:col-span-2">
+                    <input
+                      {...register("address1")}
+                      placeholder={t("Checkout.address1Holder")}
+                      className={getInputClass(Boolean(errors.address1))}
+                    />
+                    {errors.address1 ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.address1.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <input
+                      {...register("address2")}
+                      placeholder={t("Checkout.address2Holder")}
+                      className={getInputClass(Boolean(errors.address2))}
+                    />
+                    {errors.address2 ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.address2.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div>
+                    <input
+                      {...register("city")}
+                      placeholder={t("Checkout.cityHolder")}
+                      className={getInputClass(Boolean(errors.city))}
+                    />
+                    {errors.city ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.city.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div>
+                    <input
+                      {...register("state")}
+                      placeholder={t("Checkout.stateHolder")}
+                      className={getInputClass(Boolean(errors.state))}
+                    />
+                    {errors.state ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.state.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div>
+                    <input
+                      {...register("postalCode")}
+                      placeholder={t("Checkout.postalHolder")}
+                      className={getInputClass(Boolean(errors.postalCode))}
+                    />
+                    {errors.postalCode ? (
+                      <p className="mt-1.5 text-xs text-status-error">
+                        {errors.postalCode.message}
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
               </section>
 
@@ -343,14 +657,16 @@ export default function CheckoutPage() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "card" ? "border-brand-mint bg-brand-mint/5" : "border-border-color bg-bg-primary"}`}
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${
+                      paymentMethod === "card"
+                        ? "border-brand-mint bg-brand-mint/5"
+                        : "border-border-color bg-bg-primary"
+                    }`}
                   >
                     <input
                       type="radio"
-                      name="paymentMethod"
                       value="card"
-                      checked={paymentMethod === "card"}
-                      onChange={() => setPaymentMethod("card")}
+                      {...register("paymentMethod")}
                       className="sr-only"
                     />
                     <div className="flex items-center gap-4">
@@ -362,14 +678,16 @@ export default function CheckoutPage() {
                   </label>
 
                   <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "cash" ? "border-brand-mint bg-brand-mint/5" : "border-border-color bg-bg-primary"}`}
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${
+                      paymentMethod === "cash"
+                        ? "border-brand-mint bg-brand-mint/5"
+                        : "border-border-color bg-bg-primary"
+                    }`}
                   >
                     <input
                       type="radio"
-                      name="paymentMethod"
                       value="cash"
-                      checked={paymentMethod === "cash"}
-                      onChange={() => setPaymentMethod("cash")}
+                      {...register("paymentMethod")}
                       className="sr-only"
                     />
                     <div className="flex items-center gap-4">
@@ -384,13 +702,16 @@ export default function CheckoutPage() {
 
               <section>
                 <textarea
-                  name="orderNote"
+                  {...register("orderNote")}
                   rows="4"
-                  value={form.orderNote}
-                  onChange={handleFieldChange}
                   placeholder={t("Checkout.orderNotesHolder")}
-                  className="w-full px-4 py-3.5 bg-bg-primary border border-border-color rounded-xl text-sm resize-none"
+                  className={getInputClass(Boolean(errors.orderNote))}
                 />
+                {errors.orderNote ? (
+                  <p className="mt-1.5 text-xs text-status-error">
+                    {errors.orderNote.message}
+                  </p>
+                ) : null}
               </section>
 
               {submitError ? (
@@ -401,7 +722,7 @@ export default function CheckoutPage() {
 
               <button
                 type="submit"
-                disabled={!canSubmit || isSubmitting}
+                disabled={isSubmitting}
                 className="w-full py-4 bg-brand-mint text-white text-center font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-opacity-90 transition-all disabled:opacity-60"
               >
                 {isSubmitting ? "Processing..." : t("Checkout.continue")}
@@ -470,7 +791,7 @@ export default function CheckoutPage() {
                   >
                     {promoStatus === "applying"
                       ? locale === "ar"
-                        ? "\u062c\u0627\u0631\u064a..."
+                        ? "جاري..."
                         : "Applying..."
                       : t("Checkout.apply")}
                   </button>
@@ -506,13 +827,19 @@ export default function CheckoutPage() {
                 {effectiveDiscount > 0 ? (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-text-secondary">
-                      {locale === "ar" ? "\u0627\u0644\u062e\u0635\u0645" : "Discount"}
+                      {locale === "ar" ? "الخصم" : "Discount"}
                     </span>
                     <span className="font-semibold text-status-success">
                       - {discountLabel}
                     </span>
                   </div>
                 ) : null}
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-text-secondary">{vatLineLabel}</span>
+                  <span className="font-semibold text-text-primary">
+                    {vatLabel}
+                  </span>
+                </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-text-secondary">
                     {t("Checkout.shipping")}
@@ -521,6 +848,9 @@ export default function CheckoutPage() {
                     {t("Checkout.free")}
                   </span>
                 </div>
+                <p className="text-[11px] leading-relaxed text-text-secondary/80">
+                  {vatHint}
+                </p>
               </div>
 
               <div className="flex justify-between items-center mb-8">
@@ -545,7 +875,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-
-
-

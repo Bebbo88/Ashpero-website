@@ -125,7 +125,7 @@ export function ProductInfoUI({
       ) : null}
 
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-2">
-        <div className="flex items-center border border-border-color rounded-xl overflow-hidden">
+        <div className="flex items-center border border-border-color w-[160px]  rounded-xl overflow-hidden">
           <button
             onClick={decrementQty}
             className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"

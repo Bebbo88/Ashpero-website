@@ -41,7 +41,7 @@
     "tipsAndTricks": "TIPS & TRICKS",
     "luxurySkincare": "Luxury Skincare",
     "naturalIngredients": "Natural Ingredients",
-    "madeInEgypt": "Made in Egypt"
+    "success": "Success has a shape"
   },
   "Footer": {
     "description": "Pioneering the future of clean, clinical skincare through botanical intelligence and sustainable luxury.",
@@ -96,16 +96,16 @@
   "Heritage": {
     "titleLine1": "The Ashpero",
     "titleLine2": "Heritage",
-    "paragraph1": "Founded in the lush foothills of the Alps, Ashpero began with a singular vision: to harness the raw, potent energy of mountain botanicals without compromising on clinical efficacy.",
-    "paragraph2": "Our journey is one of meticulous sourcing and ethical innovation. Every product we create is a testament to our commitment to pure, sustainable luxury that respects both your skin and the earth.",
+    "paragraph1": "We are a company specialized in manufacturing cosmetics to global standards. We believe true beauty begins with self-confidence, so we create products that blend exceptional quality with a luxurious touch to give you a complete experience that reflects your identity and highlights your distinction. Every product we craft is a step toward a deeper sense of success, because we do not offer mere care, we create an experience that makes you feel power, confidence, and the difference you deserve.",
+    "paragraph2": "We craft luxury cosmetics to elite standards, giving you a commanding presence, irresistible confidence, and an experience that reflects the essence of true success.",
     "established": "EST. 2012",
     "quote": "Nature's secrets, refined by science for your beauty.",
     "stat1Value": "100%",
-    "stat1Label": "VEGAN",
-    "stat2Value": "Zero",
-    "stat2Label": "SYNTHETICS",
-    "stat3Value": "CR-Free",
-    "stat3Label": "CERTIFIED"
+    "stat1Label": "Natural Materials",
+    "stat2Value": "0%",
+    "stat2Label": "Allergy Triggers",
+    "stat3Value": "Free From",
+    "stat3Label": "Parabens, Aluminum & Formaldehyde"
   },
   "AllProducts": {
     "subtitle": "ASHPERO COLLECTION",
@@ -296,19 +296,19 @@
     "timelineSubtitle": "A History of Innovation",
     "events": {
       "year2012": {
-        "year": "2012",
-        "title": "The Inception",
-        "description": "Founded with a mission to bring pure, botanical skincare to the world, starting with our signature oil."
+        "year": "2024",
+        "title": "The Idea Was Born",
+        "description": "The idea of Ashpero Cosmetics was born, carrying an innovative vision of beauty that combines quality, innovation, and lasting confidence."
       },
       "year2015": {
-        "year": "2015",
-        "title": "Clinical Trials",
-        "description": "Partnered with top dermatologists to prove the efficacy of our organic formulations."
+        "year": "2025",
+        "title": "Foundation & Direction",
+        "description": "Ashpero began laying down its brand foundations and product direction, with a clear beauty vision built on quality, innovation, and enduring trust."
       },
       "year2018": {
-        "year": "2018",
-        "title": "Global Expansion",
-        "description": "Opened flagship stores across major cities, bringing Ashpero to international markets."
+        "year": "2026",
+        "title": "Official Launch",
+        "description": "Ashpero officially launched into reality, marking the true beginning of its journey to deliver cosmetics with quality and innovation worthy of ambition."
       },
       "year2023": {
         "year": "2023",

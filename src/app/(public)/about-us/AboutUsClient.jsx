@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import Image from "@/components/ui/AppImage";
 
 export default function AboutUsPage() {
   const { t, locale } = useLanguage();
@@ -30,53 +31,26 @@ export default function AboutUsPage() {
       title: t("AboutUs.events.year2018.title"),
       desc: t("AboutUs.events.year2018.description"),
     },
-    {
-      year: t("AboutUs.events.year2023.year"),
-      title: t("AboutUs.events.year2023.title"),
-      desc: t("AboutUs.events.year2023.description"),
-    },
   ];
 
   const faqs = [
     { q: t("AboutUs.faqs.q1.question"), a: t("AboutUs.faqs.q1.answer") },
     { q: t("AboutUs.faqs.q2.question"), a: t("AboutUs.faqs.q2.answer") },
     { q: t("AboutUs.faqs.q3.question"), a: t("AboutUs.faqs.q3.answer") },
-    { q: t("AboutUs.faqs.q4.question"), a: t("AboutUs.faqs.q4.answer") },
   ];
 
   return (
     <div className="min-h-screen bg-bg-primary overflow-hidden">
-      
-      {/* Hero Section */}
-      <section className="relative w-full pt-12 pb-20 md:pt-16 md:pb-32 px-6">
-        <div className="absolute top-0 right-0 w-2/3 md:w-1/2 h-full bg-brand-mint/10 dark:bg-brand-mint/5 blur-[120px] rounded-full pointer-events-none" />
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-brand-orange text-xs md:text-sm font-bold tracking-[0.2em] uppercase mb-4 md:mb-6 block"
-          >
-            {t("AboutUs.heroSubtitle")}
-          </motion.span>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-playfair font-semibold text-brand-dark dark:text-brand-mint mb-6 md:mb-8 leading-tight"
-          >
-            {t("AboutUs.heroTitle")}
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base md:text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto"
-          >
-            {t("AboutUs.heroDesc")}
-          </motion.p>
-        </div>
-      </section>
+      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card">
+        <Image
+          src="/assets/about us.jpg"
+          alt="About Ashperoo"
+          fill
+          priority
+          className="object-fill"
+          sizes="100vw"
+        />
+      </div>
 
       {/* Timeline / Roadmap Section */}
       <section className="py-20 md:py-28 px-6 bg-bg-secondary border-y border-border-color">
