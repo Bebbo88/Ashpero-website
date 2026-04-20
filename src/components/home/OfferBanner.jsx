@@ -24,22 +24,17 @@ export default function OfferBanner() {
     <section className="w-full px-6 lg:px-10 py-10">
       <Link
         href="/offers"
-        className="relative w-full rounded-3xl overflow-hidden min-h-[320px] md:min-h-[380px] flex items-center group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300 block"
+        className="relative w-full rounded-3xl overflow-hidden min-h-[320px] md:min-h-[380px] flex items-center group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300 block bg-surface-muted"
       >
-        {/* 🟡 Loader */}
-        {isLoading && (
-          <AnimatePresence>
-            <HeroLoader />
-          </AnimatePresence>
-        )}
-
         {/* 🟢 Image */}
-        {!isLoading && (
+        {bannerImage && (
           <div className="absolute inset-0">
             <Image
               src={bannerImage}
               alt="Offer Background"
               fill
+              priority={true}
+              loading="eager"
               className="object-fill transition-transform duration-700 ease-out group-hover:scale-105"
               sizes="100vw"
             />

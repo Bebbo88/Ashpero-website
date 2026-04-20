@@ -58,20 +58,15 @@ export default function OffersPage() {
 
   return (
     <div className="w-full">
-      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card">
-        {/* Ã°Å¸Å¸Â¡ Loader */}
-        {isLoading && (
-          <AnimatePresence>
-            <HeroLoader />
-          </AnimatePresence>
-        )}
-        {!isLoading && (
+      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card bg-surface-muted">
+        {headerImage && (
           <Image
             src={headerImage}
             alt="Offers Header"
             fill
             className="object-fill"
-            priority
+            priority={true}
+            loading="eager"
             sizes="100vw"
           />
         )}

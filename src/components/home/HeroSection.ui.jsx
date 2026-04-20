@@ -39,8 +39,6 @@ export function HeroSectionUI({ backgroundSlides }) {
                     sizes="100vw"
                     // 🔥 أهم تعديل
                     priority={idx === startIdx}
-                    // 🔥 تسريع التحميل
-                    quality={idx === startIdx ? 60 : 50}
                     // 🔥 Lazy لباقي الصور
                     loading={idx === startIdx ? "eager" : "lazy"}
                     className="object-fill"
