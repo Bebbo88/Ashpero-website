@@ -15,8 +15,8 @@ export function HeroSectionUI({ backgroundSlides }) {
   const startIdx = canLoop ? 1 : 0;
 
   return (
-    <section className={`${styles.root} relative w-full`}>
-      <div className="w-full">
+    <section className={`${styles.root} relative w-full `}>
+      <div className="absolute inset-0">
         {backgroundSlides.length > 0 ? (
           <Swiper
             modules={[Autoplay]}
@@ -27,7 +27,7 @@ export function HeroSectionUI({ backgroundSlides }) {
             }
             allowTouchMove={false}
             initialSlide={startIdx}
-            className="w-full"
+            className="h-full w-full"
           >
             {backgroundSlides.map((slide, idx) => (
               <SwiperSlide key={`${slide.id}-${idx}`}>
@@ -35,14 +35,13 @@ export function HeroSectionUI({ backgroundSlides }) {
                   <Image
                     src={slide.image}
                     alt="Ashpero Background"
-                    width={1920}
-                    height={1080}
+                    fill
                     sizes="100vw"
                     // 🔥 أهم تعديل
                     priority={idx === startIdx}
                     // 🔥 Lazy لباقي الصور
                     loading={idx === startIdx ? "eager" : "lazy"}
-                    className="w-full h-auto object-cover"
+                    className="object-contain"
                   />
                 )}
               </SwiperSlide>
