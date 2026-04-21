@@ -275,13 +275,14 @@ export default function AllProductsPage() {
 
   return (
     <section className="w-full bg-bg-primary min-h-screen">
-      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card">
+      <div className="w-full">
         <Image
           src="/assets/all_prods.jpg"
           alt="All Products"
-          fill
+          width={1920}
+          height={1080}
           priority
-          className="object-fill"
+          className="w-full h-auto object-cover"
           sizes="100vw"
         />
       </div>

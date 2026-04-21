@@ -58,13 +58,14 @@ export default function OffersPage() {
 
   return (
     <div className="w-full">
-      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card bg-surface-muted">
+      <div className="w-full bg-surface-muted">
         {headerImage && (
           <Image
             src={headerImage}
             alt="Offers Header"
-            fill
-            className="object-fill"
+            width={1920}
+            height={1080}
+            className="w-full h-auto object-cover"
             priority={true}
             loading="eager"
             sizes="100vw"

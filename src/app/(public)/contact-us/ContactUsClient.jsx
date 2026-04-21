@@ -146,13 +146,14 @@ export default function ContactUsPage() {
 
   return (
     <div className="min-h-screen bg-bg-primary pb-20 overflow-hidden relative">
-      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card">
+      <div className="w-full">
         <Image
           src="/assets/contact us.jpg"
           alt="Contact Ashperoo"
-          fill
+          width={1920}
+          height={1080}
           priority
-          className="object-fill"
+          className="w-full h-auto object-cover"
           sizes="100vw"
         />
       </div>

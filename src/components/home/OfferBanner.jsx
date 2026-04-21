@@ -24,18 +24,19 @@ export default function OfferBanner() {
     <section className="w-full px-6 lg:px-10 py-10">
       <Link
         href="/offers"
-        className="relative w-full rounded-3xl overflow-hidden min-h-[320px] md:min-h-[380px] flex items-center group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300 block bg-surface-muted"
+        className="relative w-full rounded-3xl overflow-hidden flex items-center group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300 block bg-surface-muted"
       >
         {/* 🟢 Image */}
         {bannerImage && (
-          <div className="absolute inset-0">
+          <div className="w-full">
             <Image
               src={bannerImage}
               alt="Offer Background"
-              fill
+              width={1920}
+              height={1080}
               priority={true}
               loading="eager"
-              className="object-fill transition-transform duration-700 ease-out group-hover:scale-105"
+              className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               sizes="100vw"
             />
           </div>

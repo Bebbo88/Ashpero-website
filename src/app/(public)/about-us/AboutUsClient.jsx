@@ -41,13 +41,14 @@ export default function AboutUsPage() {
 
   return (
     <div className="min-h-screen bg-bg-primary overflow-hidden">
-      <div className="relative w-full min-h-[240px] md:min-h-[380px]  overflow-hidden shadow-card">
+      <div className="w-full">
         <Image
           src="/assets/about us.jpg"
           alt="About Ashperoo"
-          fill
+          width={1920}
+          height={1080}
           priority
-          className="object-fill"
+          className="w-full h-auto object-cover"
           sizes="100vw"
         />
       </div>
