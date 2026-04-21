@@ -179,14 +179,14 @@ export default function Footer() {
         {/* Bottom Bar with Payment Badges */}
         <div className="border-t border-white/20 pt-8 mt-4 flex flex-col xl:flex-row justify-between items-center gap-8">
           <div className="flex flex-col md:flex-row items-center gap-6 xl:gap-8">
-            <p className="text-[11px] font-semibold text-white/60 tracking-wider uppercase text-center md:text-left rtl:md:text-right">
+            <p className="text-[11px] font-semibold text-white/80 tracking-wider uppercase text-center md:text-left rtl:md:text-right">
               {t("Footer.copyright")}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6"></div>
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-4">
-            <span className="text-[9px] font-bold text-white/50 tracking-[0.2em] uppercase shrink-0">
+            <span className="text-[9px] font-bold text-white/80 tracking-[0.2em] uppercase shrink-0">
               {t("Checkout.securePaymob") || "SECURED VIA PAYMOB"}
             </span>
             <div className="flex items-center flex-wrap justify-center gap-2">

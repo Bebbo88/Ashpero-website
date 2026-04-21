@@ -70,7 +70,7 @@ function createContactSchema(locale) {
 }
 
 function getInputClass(hasError) {
-  return `w-full px-5 py-4 bg-bg-primary border rounded-xl focus:outline-none focus:ring-2 text-text-primary transition-all placeholder:text-text-primary/30 ${
+  return `w-full px-5 py-4 bg-bg-primary border rounded-xl focus:outline-none focus:ring-2 text-text-primary transition-all placeholder:text-text-primary/50 ${
     hasError
       ? "border-status-error focus:ring-status-error/15"
       : "border-border-color focus:ring-brand-mint/20"
@@ -217,6 +217,7 @@ export default function ContactUsPage() {
                   href="https://www.facebook.com/Ashperoo1"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Facebook"
                   className="w-10 h-10 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95"
                 >
                   <FacebookIcon className="w-5 h-5" />
@@ -225,6 +226,7 @@ export default function ContactUsPage() {
                   href="https://www.instagram.com/ashperoo?igsh=MWo1djBnaGprMjJkMw=="
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Instagram"
                   className="w-10 h-10 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95"
                 >
                   <InstagramIcon className="w-5 h-5" />
@@ -233,6 +235,7 @@ export default function ContactUsPage() {
                   href="https://www.tiktok.com/@ashperoo1?_r=1&_t=ZS-95gKOyN0MFU"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="TikTok"
                   className="w-10 h-10 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95"
                 >
                   <TiktokIcon className="w-5 h-5" />
@@ -241,6 +244,7 @@ export default function ContactUsPage() {
                   href="https://www.linkedin.com/company/ashperoo-cosmetics-serum/?viewAsMember=true"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="LinkedIn"
                   className="w-10 h-10 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95"
                 >
                   <LinkedinIcon className="w-5 h-5" />
@@ -249,6 +253,7 @@ export default function ContactUsPage() {
                   href="https://wa.me/201108851834"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="WhatsApp"
                   className="w-10 h-10 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95"
                 >
                   <WhatsAppIcon className="w-5 h-5" />
@@ -257,6 +262,7 @@ export default function ContactUsPage() {
                   href="https://www.youtube.com/@ashperoo1"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="YouTube"
                   className="w-10 h-10 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95"
                 >
                   <YoutubeIcon className="w-5 h-5" />
@@ -265,6 +271,7 @@ export default function ContactUsPage() {
                   href="https://x.com/ashperoo"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="X (Twitter)"
                   className="w-10 h-10 border-2 border-brand-mint/20 bg-brand-mint/5 rounded-full flex items-center justify-center text-brand-mint hover:bg-brand-mint hover:text-white transition-all hover:scale-105 active:scale-95"
                 >
                   <XIcon className="w-5 h-5" />

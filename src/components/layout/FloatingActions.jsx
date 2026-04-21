@@ -154,6 +154,7 @@ export default function FloatingActions() {
           <div className="absolute inset-0 bg-brand-orange/30 rounded-full animate-ping opacity-50"></div>
           <button
             onClick={openCart}
+            aria-label="Open Cart"
             className="relative flex items-center justify-center w-14 h-14 bg-bg-secondary border border-border-color rounded-full shadow-lg hover:bg-brand-orange hover:text-white hover:border-brand-orange text-text-primary transition-all hover:scale-110 active:scale-95 group cursor-pointer"
           >
             <ShoppingCart className="w-6 h-6" />

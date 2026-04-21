@@ -73,6 +73,7 @@ export function NavbarUI({
           <div className="flex items-center justify-between h-20 gap-4 lg:gap-8">
             <button
               onClick={toggleMobileMenu}
+              aria-label={t("Navbar.toggleMenu") || "Toggle mobile menu"}
               className="md:hidden flex items-center gap-2 h-8 w-24 bg-transparent cursor-pointer"
             >
               <Menu className="w-6 h-6 text-text-primary shrink-0" />
@@ -126,6 +127,7 @@ export function NavbarUI({
               <div className="flex items-center gap-2 lg:gap-4 text-text-primary">
                 <button
                   onClick={toggleDark}
+                  aria-label="Toggle dark mode"
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors"
                 >
                   {isDark ? (
@@ -136,6 +138,7 @@ export function NavbarUI({
                 </button>
                 <button
                   onClick={toggleLang}
+                  aria-label="Toggle language"
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors flex items-center font-bold text-xs lg:text-sm"
                 >
                   <Globe className="w-4 h-4 lg:w-5 lg:h-5 mr-1" />
@@ -146,6 +149,7 @@ export function NavbarUI({
 
                 <Link
                   href="/wishlist"
+                  aria-label="Wishlist"
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative flex items-center justify-center"
                 >
                   <Heart className="w-4 h-4 lg:w-5 lg:h-5" />
@@ -176,6 +180,7 @@ export function NavbarUI({
                     </span>
                     <button
                       onClick={logout}
+                      aria-label="Logout"
                       className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-text-primary hover:text-brand-orange"
                       title="Logout"
                     >
@@ -186,6 +191,7 @@ export function NavbarUI({
                   <button
                     onClick={toggleAuthMenu}
                     disabled={isAuthLoading}
+                    aria-label={t("Navbar.login") || "Login"}
                     className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-text-primary hover:text-brand-orange disabled:opacity-60 flex items-center justify-center"
                     title={t("Navbar.login")}
                   >
@@ -258,6 +264,7 @@ export function NavbarUI({
                       closeMobileMenu();
                       logout();
                     }}
+                    aria-label="Logout"
                     className="w-full cursor-pointer flex items-center justify-center gap-2 text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
@@ -270,6 +277,7 @@ export function NavbarUI({
                     toggleAuthMenu();
                   }}
                   disabled={isAuthLoading}
+                  aria-label={t("Navbar.login") || "Login"}
                   className="w-full cursor-pointer flex items-center justify-center gap-2 text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors disabled:opacity-60"
                 >
                   <User className="w-4 h-4" />
