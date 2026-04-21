@@ -131,7 +131,9 @@ export default function HomePopup() {
                 height={800}
                 className="w-full h-auto object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                priority
+                priority={true}
+                loading="eager"
+                fetchPriority="high"
               />
             </div>
           </motion.div>
