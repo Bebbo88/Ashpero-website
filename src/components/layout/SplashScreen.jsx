@@ -3,35 +3,23 @@
 import React, { useState, useEffect } from "react";
 import Image from "@/components/ui/AppImage";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMode } from "@/hooks/useMode";
 
-export default function SplashScreen({ children }) {
-  const [showSplash, setShowSplash] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const { isDark } = useMode();
+export default function SplashScreen({ children, hasSeenSplash }) {
+  const [showSplash, setShowSplash] = useState(!hasSeenSplash);
 
   useEffect(() => {
-    setIsMounted(true);
     // Check if the splash was already shown in the current tab session
-    const hasSeenSplash = sessionStorage.getItem("splash_shown");
-    if (!hasSeenSplash) {
-      setShowSplash(true);
+    const hasSeenSplashSession = sessionStorage.getItem("splash_shown");
+    if (hasSeenSplashSession && showSplash) {
+      setShowSplash(false);
     }
-  }, []);
+  }, [showSplash]);
 
   const handleAnimationComplete = () => {
+    document.cookie = "splash_shown=true; path=/";
     sessionStorage.setItem("splash_shown", "true");
     setShowSplash(false);
   };
-
-  // Prevent flash of unstyled content wait for client to mount
-  if (!isMounted) {
-    return (
-      <div className="fixed inset-0 z-[100] bg-bg-primary flex items-center justify-center">
-        {/* Silent loading state before hydration captures the layout */}
-      </div>
-    );
-  }
 
   return (
     <>
@@ -39,7 +27,7 @@ export default function SplashScreen({ children }) {
         {showSplash && (
           <motion.div
             key="splash-overlay"
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-bg-primary/80 dark:bg-bg-primary/80 backdrop-blur-md"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-bg-primary/80 dark:bg-bg-primary/80 backdrop-blur-md"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -67,14 +55,26 @@ export default function SplashScreen({ children }) {
                 onAnimationComplete={handleAnimationComplete}
                 className="w-full h-full relative"
               >
-                <Image
-                  src={isDark ? "/assets/logo-white.svg" : "/assets/logo.svg"}
-                  alt="Ashpero Logo"
-                  fill
-                  sizes="(max-width: 768px) 256px, 320px"
-                  className="object-contain"
-                  priority
-                />
+                <div className="w-full h-full block dark:hidden">
+                  <Image
+                    src="/assets/logo.svg"
+                    alt="Ashpero Logo"
+                    fill
+                    sizes="(max-width: 768px) 256px, 320px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+                <div className="w-full h-full hidden dark:block">
+                  <Image
+                    src="/assets/logo-white.svg"
+                    alt="Ashpero Logo"
+                    fill
+                    sizes="(max-width: 768px) 256px, 320px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
               </motion.div>
             </motion.div>
           </motion.div>

@@ -73,11 +73,19 @@ export default function FloatingActions() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);
+    
+    // Also observe body size changes (e.g. content loading, images, etc.)
+    const resizeObserver = new ResizeObserver(() => {
+      handleScroll();
+    });
+    resizeObserver.observe(document.body);
+
     updatePosition(); // initial check
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
+      resizeObserver.disconnect();
     };
   }, []);
 

@@ -83,6 +83,7 @@ export function FeaturedBestsellersUI({
                       className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 bg-surface-muted dark:bg-white/5"
                     >
                       <button
+                        aria-label="Toggle Wishlist"
                         onClick={(event) => {
                           event.preventDefault();
                           event.stopPropagation();
@@ -122,7 +123,7 @@ export function FeaturedBestsellersUI({
                     </Link>
 
                     <div className="flex flex-col gap-1 px-1">
-                      <span className="text-[11px] font-bold tracking-[0.15em] text-gray-400 dark:text-gray-500 uppercase">
+                      <span className="text-[11px] font-bold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase">
                         {product.category}
                       </span>
                       <Link href={buildProductPath(product.id, product.title)}>
@@ -140,10 +141,10 @@ export function FeaturedBestsellersUI({
             })}
           </Swiper>
 
-          <button className="bs-prev absolute top-[35%] -translate-y-1/2 left-0 md:-left-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 hover:shadow-orange cursor-pointer border border-gray-200 dark:border-gray-700">
+          <button aria-label="Previous slide" className="bs-prev absolute top-[35%] -translate-y-1/2 left-0 md:-left-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 hover:shadow-orange cursor-pointer border border-gray-200 dark:border-gray-700">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <button className="bs-next absolute top-[35%] -translate-y-1/2 right-0 md:-right-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 hover:shadow-orange cursor-pointer border border-gray-200 dark:border-gray-700">
+          <button aria-label="Next slide" className="bs-next absolute top-[35%] -translate-y-1/2 right-0 md:-right-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 hover:shadow-orange cursor-pointer border border-gray-200 dark:border-gray-700">
             <ChevronRight className="w-5 h-5" />
           </button>
 
