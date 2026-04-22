@@ -191,7 +191,7 @@ export default function ContactUsPage() {
                   <h3 className="text-lg font-bold text-text-primary mb-2 font-playfair">
                     {t("ContactUs.phoneTitle")}
                   </h3>
-                  <p className="text-text-secondary">+20 10 94317717</p>
+                  <p className="text-text-secondary">+20 109 431 7717</p>
                 </div>
               </div>
 

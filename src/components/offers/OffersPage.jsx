@@ -90,7 +90,7 @@ export default function OffersPage() {
               value={searchValue}
               onChange={(event) => setSearchValue(event.target.value)}
               placeholder={
-                locale === "ar" ? "???? ?? ??????..." : "Search offers..."
+                locale === "ar" ? "ابحث عن عروض..." : "Search offers..."
               }
               className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 ps-9 pe-3 text-sm text-text-primary outline-none focus:border-brand-orange"
             />
@@ -123,7 +123,7 @@ export default function OffersPage() {
           <>
             <div className="mb-5 text-xs tracking-wide text-text-secondary">
               {locale === "ar"
-                ? `??? ???????? ????????: ${filteredProducts.length}`
+                ? `عدد المنتجات المعروضة: ${filteredProducts.length}`
                 : `Showing ${filteredProducts.length} offer products`}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6">

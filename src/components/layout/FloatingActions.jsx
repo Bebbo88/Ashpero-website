@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart } from "lucide-react"; // Using native Lucide for Cart, custom SVGs for others
+import { ShoppingCart } from "lucide-react";
 import { useCartDrawer } from "@/contexts/CartDrawerContext";
 import { useAppSelector } from "@/store/hooks";
 import { WhatsAppIcon, DoctorBotIcon } from "@/svgs/FloatingActions.svgs";
@@ -11,7 +11,6 @@ import AIChatBox from "./AIChatBox";
 export default function FloatingActions() {
   const { openCart } = useCartDrawer();
   const cartItems = useAppSelector((state) => state.cart.items || []);
-  const [bottomOffset, setBottomOffset] = useState(0);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const cartCount = cartItems.reduce(
@@ -19,77 +18,6 @@ export default function FloatingActions() {
     0,
   );
 
-  useEffect(() => {
-    let ticking = false;
-
-    const updatePosition = () => {
-      const footer = document.querySelector("footer");
-      const navbar =
-        document.querySelector("nav") || document.querySelector("header");
-      const floatingElement = document.getElementById(
-        "floating-actions-container",
-      );
-
-      if (footer && floatingElement) {
-        const footerRect = footer.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-
-        let newOffset = 0;
-
-        if (footerRect.top < windowHeight) {
-          // Push buttons up safely
-          newOffset = windowHeight - footerRect.top;
-        }
-
-        // Cap the offset to prevent overlapping the navbar
-        if (navbar) {
-          const navbarBottom = navbar.getBoundingClientRect().bottom;
-          const elementHeight = floatingElement.offsetHeight;
-
-          // Container normally sits around 40px (on desktop) from the bottom.
-          // The maximum allowable offset is: Viewport - NavbarBottom - ElementHeight - DistanceFromBottom
-          const maxOffset = Math.max(
-            0,
-            windowHeight - navbarBottom - elementHeight - 40 - 20,
-          ); // 20px extra padding
-
-          if (newOffset > maxOffset) {
-            newOffset = maxOffset;
-          }
-        }
-
-        setBottomOffset(newOffset);
-      }
-      ticking = false;
-    };
-
-    const handleScroll = () => {
-      // Throttle function using requestAnimationFrame to prevent layout thrashing and maintain 60fps
-      if (!ticking) {
-        window.requestAnimationFrame(updatePosition);
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-    
-    // Also observe body size changes (e.g. content loading, images, etc.)
-    const resizeObserver = new ResizeObserver(() => {
-      handleScroll();
-    });
-    resizeObserver.observe(document.body);
-
-    updatePosition(); // initial check
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  // Staggering animation variants for the buttons when they enter
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -114,39 +42,36 @@ export default function FloatingActions() {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      style={{ transform: `translateY(-${bottomOffset}px)` }}
-      className="fixed bottom-6 inset-x-6 md:bottom-10 md:inset-x-10 z-[150] flex items-end justify-between pointer-events-none"
+      className="fixed bottom-4 inset-x-4 sm:bottom-6 sm:inset-x-6 md:bottom-10 md:inset-x-10 z-[150] flex items-end justify-between pointer-events-none"
     >
-      <div className="flex flex-col gap-4 items-center pointer-events-auto">
-        {/* 2. WhatsApp Floating Button (Usually green) */}
+      <div className="flex flex-col gap-2 sm:gap-4 items-center pointer-events-auto">
+        {/* WhatsApp Floating Button */}
         <motion.div variants={itemVariants}>
           <a
-            href="https://wa.me/01094317717" // Placeholder number
+            href="https://wa.me/01094317717"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center w-14 h-14 bg-social-whatsapp text-white rounded-full shadow-whatsapp hover:bg-social-whatsapp-hover transition-all hover:scale-110 active:scale-95"
+            className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-social-whatsapp text-white rounded-full shadow-whatsapp hover:bg-social-whatsapp-hover transition-all hover:scale-110 active:scale-95"
             aria-label="Contact us on WhatsApp"
           >
-            <WhatsAppIcon className="w-7 h-7" />
+            <WhatsAppIcon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
           </a>
         </motion.div>
 
-        {/* 3. AI Agent (Doctor Bot) */}
+        {/* AI Agent (Doctor Bot) */}
         <motion.div variants={itemVariants} className="relative">
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
-            className="relative flex items-center cursor-pointer justify-center w-16 h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95 group"
+            className="relative flex items-center cursor-pointer justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95 group"
             aria-label="Consult AI Skincare Doctor"
           >
-            {/* Cool floating/bobbing animation specifically for the bot to make it feel alive */}
             <motion.div
               animate={{ y: [-2, 2, -2] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
-              <DoctorBotIcon className="w-8 h-8 group-hover:drop-shadow-md transition-all" />
+              <DoctorBotIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 group-hover:drop-shadow-md transition-all" />
             </motion.div>
-            {/* Active status indicator dot */}
-            <span className="absolute bottom-1 end-1 w-3.5 h-3.5 bg-green-400 border-2 border-brand-dark rounded-full"></span>
+            <span className="absolute bottom-0.5 end-0.5 sm:bottom-1 sm:end-1 w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 bg-green-400 border-2 border-brand-dark rounded-full"></span>
           </button>
 
           <AnimatePresence>
@@ -155,19 +80,20 @@ export default function FloatingActions() {
         </motion.div>
       </div>
 
-      <div className="flex flex-col gap-4 items-center pointer-events-auto">
-        {/* 1. The Cart Button (Moved from Navbar) */}
+      <div className="flex flex-col gap-2 sm:gap-4 items-center pointer-events-auto">
+        {/* Cart Button */}
         <motion.div variants={itemVariants} className="relative group">
-          {/* Continuous soft pulse ring specifically for the cart (optional engagement) */}
           <div className="absolute inset-0 bg-brand-orange/30 rounded-full animate-ping opacity-50"></div>
           <button
             onClick={openCart}
             aria-label="Open Cart"
-            className="relative flex items-center justify-center w-14 h-14 bg-bg-secondary border border-border-color rounded-full shadow-lg hover:bg-brand-orange hover:text-white hover:border-brand-orange text-text-primary transition-all hover:scale-110 active:scale-95 group cursor-pointer"
+            className="relative flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-bg-secondary border border-border-color rounded-full shadow-lg hover:bg-brand-orange hover:text-white hover:border-brand-orange text-text-primary transition-all hover:scale-110 active:scale-95 group cursor-pointer"
           >
-            <ShoppingCart className="w-6 h-6" />
-            {/* Cart Badge */}
-            <span className="absolute -top-1 -end-1 w-5 h-5 bg-brand-orange text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-bg-primary shadow-sm group-hover:border-brand-orange transition-colors">
+            <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+            <span
+              suppressHydrationWarning
+              className="absolute -top-1 -end-1 w-4 h-4 sm:w-5 sm:h-5 bg-brand-orange text-white text-[9px] sm:text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-bg-primary shadow-sm group-hover:border-brand-orange transition-colors"
+            >
               {cartCount}
             </span>
           </button>

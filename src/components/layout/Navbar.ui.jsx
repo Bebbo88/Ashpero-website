@@ -13,9 +13,9 @@ import {
   User,
   LogOut,
   Menu,
-  Search,
 } from "lucide-react";
 import TopBanner from "./TopBanner";
+import NavbarSearch from "./NavbarSearch";
 import {
   GoogleIcon,
   FacebookIcon as FacebookProviderIcon,
@@ -113,15 +113,8 @@ export function NavbarUI({
               </div>
             </div>
 
-            {/* Middle Search - responsive */}
-            <div className="flex-1 flex justify-center max-w-[150px] md:max-w-[200px] lg:max-w-[300px] mx-2 md:mx-4 shrink">
-              <Link href="/all-products" className="w-full flex items-center bg-black/5 dark:bg-white/5 border border-transparent hover:border-border-color rounded-full px-3 py-1.5 md:py-2 transition-colors cursor-pointer justify-center md:justify-start">
-                <Search className="w-4 h-4 text-text-secondary md:mr-2 shrink-0" />
-                <span className="text-xs text-text-secondary hidden md:block w-full truncate">
-                  {locale === "ar" ? "ابحث عن منتج..." : "Search products..."}
-                </span>
-              </Link>
-            </div>
+            {/* Middle Search - real-time, bilingual */}
+            <NavbarSearch />
 
             <div className="flex items-center gap-3 lg:gap-6 flex-shrink-0">
               <div className="flex items-center gap-2 lg:gap-4 text-text-primary">
