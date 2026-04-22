@@ -47,15 +47,15 @@ export default function SplashScreen({ children, hasSeenSplash }) {
               <motion.div
                 animate={{ scale: [1, 1, 15], opacity: [1, 1, 0] }}
                 transition={{
-                  duration: 1.6,
-                  times: [0, 0.5, 1], // Waits smoothly at scale 1 before dramatically zooming in (scale 15) and fading out
+                  duration: 2.4,
+                  times: [0, 0.7, 1],
                   ease: [0.4, 0, 0.2, 1],
-                  delay: 1.2, // starts zooming out after the drop is completed
+                  delay: 1.2,
                 }}
                 onAnimationComplete={handleAnimationComplete}
                 className="w-full h-full relative"
               >
-                <div className="w-full h-full block dark:hidden">
+                <div className="w-full h-full relative block dark:hidden">
                   <Image
                     src="/assets/logo.svg"
                     alt="Ashpero Logo"
@@ -65,7 +65,7 @@ export default function SplashScreen({ children, hasSeenSplash }) {
                     priority
                   />
                 </div>
-                <div className="w-full h-full hidden dark:block">
+                <div className="w-full h-full relative hidden dark:block">
                   <Image
                     src="/assets/logo-white.svg"
                     alt="Ashpero Logo"

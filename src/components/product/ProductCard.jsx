@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cartSlice";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, priority = false }) {
   const { t } = useLanguage();
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
@@ -88,6 +88,7 @@ export default function ProductCard({ product }) {
             fill
             className="object-cover"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            priority={priority}
           />
         </div>
 

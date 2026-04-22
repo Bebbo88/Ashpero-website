@@ -1,8 +1,5 @@
 import PrivacyPolicyClient from "./PrivacyPolicyClient";
 
-export const dynamic = "force-static";
-export const revalidate = false;
-
 export const metadata = {
   title: "Privacy Policy | Ashperoo",
   description:

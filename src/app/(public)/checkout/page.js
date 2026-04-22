@@ -25,12 +25,27 @@ const DEFAULT_DIAL_CODE = "+20";
 
 const PHONE_COUNTRIES = [
   { dialCode: "+20", flag: "EG", labelEn: "Egypt", labelAr: "مصر" },
-  { dialCode: "+966", flag: "SA", labelEn: "Saudi Arabia", labelAr: "السعودية" },
+  {
+    dialCode: "+966",
+    flag: "SA",
+    labelEn: "Saudi Arabia",
+    labelAr: "السعودية",
+  },
   { dialCode: "+971", flag: "AE", labelEn: "UAE", labelAr: "الإمارات" },
   { dialCode: "+965", flag: "KW", labelEn: "Kuwait", labelAr: "الكويت" },
   { dialCode: "+974", flag: "QA", labelEn: "Qatar", labelAr: "قطر" },
-  { dialCode: "+1", flag: "US", labelEn: "United States", labelAr: "الولايات المتحدة" },
-  { dialCode: "+44", flag: "GB", labelEn: "United Kingdom", labelAr: "المملكة المتحدة" },
+  {
+    dialCode: "+1",
+    flag: "US",
+    labelEn: "United States",
+    labelAr: "الولايات المتحدة",
+  },
+  {
+    dialCode: "+44",
+    flag: "GB",
+    labelEn: "United Kingdom",
+    labelAr: "المملكة المتحدة",
+  },
 ];
 
 const initialFormValues = {
@@ -56,9 +71,7 @@ function normalizeDigits(value) {
 function toFlagEmoji(countryCode) {
   return countryCode
     .toUpperCase()
-    .replace(/./g, (char) =>
-      String.fromCodePoint(127397 + char.charCodeAt(0)),
-    );
+    .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)));
 }
 
 function formatInternationalPhone(dialCode, localPhone) {
@@ -79,12 +92,7 @@ function createCheckoutSchema(locale) {
           ? "الاسم الكامل يجب أن يكون 3 أحرف على الأقل."
           : "Full name must be at least 3 characters.",
       )
-      .max(
-        80,
-        isArabic
-          ? "الاسم الكامل طويل جدًا."
-          : "Full name is too long.",
-      ),
+      .max(80, isArabic ? "الاسم الكامل طويل جدًا." : "Full name is too long."),
     phoneCountryCode: z
       .string()
       .trim()
@@ -102,10 +110,8 @@ function createCheckoutSchema(locale) {
     secondaryPhoneCountryCode: z
       .string()
       .trim()
-      .min(
-        1,
-        isArabic ? "اختر كود الدولة للرقم البديل." : "Select country code for alternate phone.",
-      ),
+      .optional()
+      .default(DEFAULT_DIAL_CODE),
     secondaryPhone: z
       .string()
       .trim()
@@ -115,7 +121,9 @@ function createCheckoutSchema(locale) {
         isArabic
           ? "الرقم البديل يجب أن يكون بين 7 و14 رقمًا."
           : "Alternate phone must be between 7 and 14 digits.",
-      ),
+      )
+      .optional()
+      .default(""),
     email: z
       .string()
       .trim()
@@ -132,17 +140,16 @@ function createCheckoutSchema(locale) {
     city: z
       .string()
       .trim()
-      .min(
-        2,
-        isArabic ? "المدينة مطلوبة." : "City is required.",
-      )
+      .min(2, isArabic ? "المدينة مطلوبة." : "City is required.")
       .max(60, isArabic ? "اسم المدينة طويل جدًا." : "City name is too long."),
     state: z
       .string()
       .trim()
       .max(
         60,
-        isArabic ? "اسم المحافظة طويل جدًا." : "State/Province name is too long.",
+        isArabic
+          ? "اسم المحافظة طويل جدًا."
+          : "State/Province name is too long.",
       )
       .refine(
         (value) => value === "" || value.length >= 2,
@@ -153,10 +160,7 @@ function createCheckoutSchema(locale) {
     address1: z
       .string()
       .trim()
-      .min(
-        5,
-        isArabic ? "العنوان الأول مطلوب." : "Address line 1 is required.",
-      )
+      .min(5, isArabic ? "العنوان الأول مطلوب." : "Address line 1 is required.")
       .max(
         160,
         isArabic ? "العنوان الأول طويل جدًا." : "Address line 1 is too long.",
@@ -171,7 +175,10 @@ function createCheckoutSchema(locale) {
     postalCode: z
       .string()
       .trim()
-      .max(20, isArabic ? "الرمز البريدي طويل جدًا." : "Postal code is too long.")
+      .max(
+        20,
+        isArabic ? "الرمز البريدي طويل جدًا." : "Postal code is too long.",
+      )
       .refine(
         (value) => value === "" || /^[a-zA-Z0-9\- ]+$/.test(value),
         isArabic
@@ -271,10 +278,7 @@ export default function CheckoutPage() {
     [subtotal, effectiveDiscount],
   );
 
-  const finalTotal = useMemo(
-    () => discountedSubtotal,
-    [discountedSubtotal],
-  );
+  const finalTotal = useMemo(() => discountedSubtotal, [discountedSubtotal]);
 
   const subtotalLabel = currencyFormatter.format(subtotal);
   const discountLabel = currencyFormatter.format(effectiveDiscount);
@@ -480,7 +484,7 @@ export default function CheckoutPage() {
 
                   <div>
                     <div
-                      className={`flex items-center rounded-xl border overflow-hidden ${
+                      className={`flex items-center mt-6 rounded-xl border overflow-hidden ${
                         errors.phone || errors.phoneCountryCode
                           ? "border-status-error"
                           : "border-border-color"
@@ -491,7 +495,10 @@ export default function CheckoutPage() {
                         className="w-[130px] shrink-0 px-3 py-3.5 bg-bg-secondary text-text-primary text-sm border-e border-border-color focus:outline-none"
                       >
                         {countryOptions.map((country) => (
-                          <option key={country.dialCode} value={country.dialCode}>
+                          <option
+                            key={country.dialCode}
+                            value={country.dialCode}
+                          >
                             {`${toFlagEmoji(country.flag)} ${country.dialCode}`}
                           </option>
                         ))}
@@ -512,15 +519,25 @@ export default function CheckoutPage() {
                     </div>
                     {errors.phone || errors.phoneCountryCode ? (
                       <p className="mt-1.5 text-xs text-status-error">
-                        {errors.phone?.message || errors.phoneCountryCode?.message}
+                        {errors.phone?.message ||
+                          errors.phoneCountryCode?.message}
                       </p>
                     ) : null}
                   </div>
 
                   <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs text-text-secondary">
+                        {locale === "ar" ? "رقم بديل" : "Alternate Phone"}
+                      </span>
+                      <span className="text-[10px] font-semibold text-brand-mint bg-brand-mint/10 px-2 py-0.5 rounded-full">
+                        {locale === "ar" ? "اختياري" : "Optional"}
+                      </span>
+                    </div>
                     <div
                       className={`flex items-center rounded-xl border overflow-hidden ${
-                        errors.secondaryPhone || errors.secondaryPhoneCountryCode
+                        errors.secondaryPhone ||
+                        errors.secondaryPhoneCountryCode
                           ? "border-status-error"
                           : "border-border-color"
                       }`}
@@ -530,7 +547,10 @@ export default function CheckoutPage() {
                         className="w-[130px] shrink-0 px-3 py-3.5 bg-bg-secondary text-text-primary text-sm border-e border-border-color focus:outline-none"
                       >
                         {countryOptions.map((country) => (
-                          <option key={country.dialCode} value={country.dialCode}>
+                          <option
+                            key={country.dialCode}
+                            value={country.dialCode}
+                          >
                             {`${toFlagEmoji(country.flag)} ${country.dialCode}`}
                           </option>
                         ))}
@@ -547,12 +567,13 @@ export default function CheckoutPage() {
                         className={getPhoneInputClass(
                           Boolean(
                             errors.secondaryPhone ||
-                              errors.secondaryPhoneCountryCode,
+                            errors.secondaryPhoneCountryCode,
                           ),
                         )}
                       />
                     </div>
-                    {errors.secondaryPhone || errors.secondaryPhoneCountryCode ? (
+                    {errors.secondaryPhone ||
+                    errors.secondaryPhoneCountryCode ? (
                       <p className="mt-1.5 text-xs text-status-error">
                         {errors.secondaryPhone?.message ||
                           errors.secondaryPhoneCountryCode?.message}
@@ -706,7 +727,8 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-brand-mint text-white text-center font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-opacity-90 transition-all disabled:opacity-60"
+                aria-label={t("Checkout.continue")}
+                className="w-full py-4 cursor-pointer bg-brand-mint text-white text-center font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-opacity-90 transition-all disabled:opacity-60"
               >
                 {isSubmitting ? "Processing..." : t("Checkout.continue")}
               </button>
