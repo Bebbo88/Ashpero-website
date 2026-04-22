@@ -128,6 +128,7 @@ export function ProductInfoUI({
         <div className="flex items-center border border-border-color w-[160px]  rounded-xl overflow-hidden">
           <button
             onClick={decrementQty}
+            aria-label="Decrease quantity"
             className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
           >
             <Minus className="w-4 h-4 text-text-primary" />
@@ -137,6 +138,7 @@ export function ProductInfoUI({
           </span>
           <button
             onClick={incrementQty}
+            aria-label="Increase quantity"
             className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4 text-text-primary" />
@@ -153,6 +155,7 @@ export function ProductInfoUI({
 
         <button
           onClick={handleToggleWishlist}
+          aria-label="Toggle Wishlist"
           className={`w-12 h-12 shrink-0 rounded-xl border flex items-center justify-center transition-all duration-300 cursor-pointer ${
             isWishlisted
               ? "bg-red-500 border-red-500 text-white"

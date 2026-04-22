@@ -23,6 +23,7 @@ export default function ProductGallery({ images, productName }) {
         {images.map((img, idx) => (
           <button
             key={idx}
+            aria-label={`View ${productName} image ${idx + 1}`}
             onClick={() => handleThumbnailClick(idx)}
             className={`relative shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-200 ${
               selectedIndex === idx

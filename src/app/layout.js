@@ -63,6 +63,7 @@ const THEME_INIT_SCRIPT = `
 export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
   const locale = cookieStore.get("NEXT_LOCALE")?.value || "en";
+  const hasSeenSplash = cookieStore.get("splash_shown")?.value === "true";
   const dictionary = await getDictionary(locale);
 
   return (
@@ -86,7 +87,7 @@ export default async function RootLayout({ children }) {
               <AuthSessionProvider>
                 <ModeProvider>
                   <CartDrawerProvider>
-                    <SplashScreen>{children}</SplashScreen>
+                    <SplashScreen hasSeenSplash={hasSeenSplash}>{children}</SplashScreen>
                     <FloatingActions />
                     <CartDrawer />
                   </CartDrawerProvider>

@@ -300,6 +300,7 @@ export function NavbarUI({
           <div className="relative w-full max-w-md rounded-3xl border border-auth-modal-border auth-modal-surface backdrop-blur-2xl shadow-auth-modal p-6 md:p-7">
             <button
               onClick={closeAuthMenu}
+              aria-label="Close"
               className="absolute top-4 right-4 w-8 h-8 rounded-full border border-auth-modal-close-border text-auth-modal-close-text hover:bg-white flex items-center justify-center cursor-pointer"
             >
               <X className="w-4 h-4" />

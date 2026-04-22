@@ -67,6 +67,7 @@ export default function ProductCard({ product }) {
 
         {/* Wishlist Button */}
         <button
+          aria-label="Toggle Wishlist"
           onClick={handleToggleWishlist}
           className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 cursor-pointer shadow-sm bg-white/90 dark:bg-black/40 backdrop-blur-sm hover:scale-110 hover:bg-white dark:hover:bg-black/60"
         >
@@ -106,7 +107,7 @@ export default function ProductCard({ product }) {
       {/* Product Info */}
       <div className="flex flex-col gap-0.5 px-1 pb-2">
         {product.category && (
-        <span className="text-[10px] font-bold tracking-[0.15em] text-gray-400 dark:text-gray-500 uppercase">
+        <span className="text-[10px] font-bold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase">
           {product.category}
         </span>
         )}
@@ -118,7 +119,7 @@ export default function ProductCard({ product }) {
             {product.price}
           </span>
           {product.oldPrice && (
-            <span className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm line-through">
+            <span className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm line-through">
               {product.oldPrice}
             </span>
           )}
