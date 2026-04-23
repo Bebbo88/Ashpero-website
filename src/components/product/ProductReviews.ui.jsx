@@ -233,7 +233,7 @@ export function ProductReviewsUI({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3.5 rounded-xl bg-brand-dark dark:bg-brand-mint text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60"
+                  className="w-full py-3.5 rounded-xl bg-brand-mint dark:bg-brand-dark text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60"
                 >
                   {isSubmitting
                     ? "Submitting..."

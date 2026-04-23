@@ -132,9 +132,9 @@ export default function NavbarSearch() {
   return (
     <div ref={containerRef} className="relative flex-1 flex justify-center">
       {/* ── DESKTOP SEARCH (md and up) ── */}
-      <div className="hidden md:flex w-full max-w-[200px] lg:max-w-[300px] flex-col items-stretch relative">
+      <div className="hidden md:flex w-full max-w-[280px] lg:max-w-[450px] flex-col items-stretch relative mx-4">
         <div
-          className={`flex items-center bg-black/5 dark:bg-white/5 border rounded-full px-3 py-1.5 md:py-2 transition-all duration-200 gap-2 ${
+          className={`flex items-center bg-black/5 dark:bg-white/5 border rounded-xl px-3 py-1.5 md:py-2 transition-all duration-200 gap-2 ${
             isOpen
               ? "border-brand-mint shadow-[0_0_0_2px_rgba(12,109,109,0.15)]"
               : "border-transparent hover:border-border-color"

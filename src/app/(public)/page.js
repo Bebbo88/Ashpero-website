@@ -4,7 +4,11 @@ import OfferBanner from "@/components/home/OfferBanner";
 import UseItFeelIt from "@/components/home/UseItFeelIt";
 import HeritageCTA from "../../components/home/HeritageCTA";
 import HomePopup from "@/components/home/HomePopup";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { fetchBestSellers, fetchSiteContent } from "@/services/homeService";
 import { homeQueryKeys } from "@/features/home/queryKeys";
 export const metadata = {

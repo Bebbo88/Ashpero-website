@@ -83,7 +83,7 @@ export function NavbarUI({
                   src={logoMobileSrc}
                   alt="Ashpero Mobile Logo"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left rtl:object-right"
                   priority
                   sizes="96px"
                 />
@@ -99,7 +99,7 @@ export function NavbarUI({
                   src={logoSrc}
                   alt="Ashpero Logo"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left rtl:object-right"
                   priority
                   sizes="160px"
                 />

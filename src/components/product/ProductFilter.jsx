@@ -10,7 +10,10 @@ const DEFAULT_FILTER_SECTIONS = [
   { key: "category", titleFallback: "Category", options: [] },
   { key: "productType", options: [] },
   { key: "skinType", options: [] },
-  { key: "priceRange", options: ["under30", "from30to60", "from60to100", "over100"] },
+  {
+    key: "priceRange",
+    options: ["under30", "from30to60", "from60to100", "over100"],
+  },
 ];
 
 export default function ProductFilter({
@@ -208,9 +211,9 @@ export default function ProductFilter({
                   {expandedSections[section.key] && (
                     <div className="mt-4 flex flex-col gap-3">
                       {section.options.map((option) => {
-                        const isChecked = (
-                          filters[section.key] || []
-                        ).includes(option);
+                        const isChecked = (filters[section.key] || []).includes(
+                          option,
+                        );
                         return (
                           <label
                             key={option}

@@ -147,7 +147,7 @@ export function ProductInfoUI({
 
         <button
           onClick={handleAddToCart}
-          className="flex-1 flex items-center justify-center gap-3 px-8 py-3.5 rounded-xl bg-brand-dark dark:bg-brand-mint text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-brand-dark/20 dark:shadow-brand-mint/20"
+          className="flex-1 flex items-center justify-center gap-3 px-8 py-3.5 rounded-xl bg-brand-mint dark:bg-brand-dark text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-brand-dark/20 dark:shadow-brand-mint/20"
         >
           <ShoppingCart className="w-4 h-4" />
           {t("ProductDetails.addToCart")}

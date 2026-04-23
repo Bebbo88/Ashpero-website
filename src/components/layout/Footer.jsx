@@ -4,7 +4,15 @@ import React from "react";
 import Image from "@/components/ui/AppImage";
 import Link from "next/link";
 import { useLanguage } from "../../hooks/useLanguage";
-import { InstagramIcon, XIcon, WhatsAppIcon, FacebookIcon, TiktokIcon, LinkedinIcon, YoutubeIcon } from "@/svgs/ContactUsClient.svgs";
+import {
+  InstagramIcon,
+  XIcon,
+  WhatsAppIcon,
+  FacebookIcon,
+  TiktokIcon,
+  LinkedinIcon,
+  YoutubeIcon,
+} from "@/svgs/ContactUsClient.svgs";
 
 export default function Footer() {
   const { t } = useLanguage();

@@ -6,22 +6,26 @@ import { useLanguage } from "../../hooks/useLanguage";
 const products = [
   {
     id: 1,
-    video: "/assets/\u0627\u0644\u0647\u064A\u0627\u0644\u0648\u0631\u0646\u064A\u0643 - \u0641\u064A\u062F\u064A\u0648 1.mp4",
+    video:
+      "/assets/\u0627\u0644\u0647\u064A\u0627\u0644\u0648\u0631\u0646\u064A\u0643 - \u0641\u064A\u062F\u064A\u0648 1.mp4",
     nameKey: "product2",
   },
   {
     id: 2,
-    video: "/assets/\u0643\u0648\u0644\u0627\u062C\u064A\u0646 - \u0641\u064A\u062F\u064A\u0648 2.mp4",
+    video:
+      "/assets/\u0643\u0648\u0644\u0627\u062C\u064A\u0646 - \u0641\u064A\u062F\u064A\u0648 2.mp4",
     nameKey: "product3",
   },
   {
     id: 3,
-    video: "/assets/\u0641\u064A\u062A\u0627\u0645\u064A\u0646 \u0633\u064A - \u0641\u064A\u062F\u064A\u0648 3.mp4",
+    video:
+      "/assets/\u0641\u064A\u062A\u0627\u0645\u064A\u0646 \u0633\u064A - \u0641\u064A\u062F\u064A\u0648 3.mp4",
     nameKey: "product1",
   },
   {
     id: 4,
-    video: "/assets/\u0627\u0644\u0631\u064A\u062A\u064A\u0646\u0648\u0644 - \u0641\u064A\u062F\u064A\u0648 4.mp4",
+    video:
+      "/assets/\u0627\u0644\u0631\u064A\u062A\u064A\u0646\u0648\u0644 - \u0641\u064A\u062F\u064A\u0648 4.mp4",
     nameKey: "product4",
   },
 ];

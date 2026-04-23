@@ -12,8 +12,6 @@ import { useSiteContentQuery } from "@/features/home/queries";
 import { mapOffersPageBannerImage } from "@/features/home/mappers";
 import { mapOfferProducts } from "@/features/offer/mappers";
 import { useOffersQuery } from "@/features/offer/queries";
-import { AnimatePresence } from "framer-motion";
-import HeroLoader from "../home/HearoLoader";
 
 function matchSearch(item, searchTerm) {
   if (!searchTerm) {

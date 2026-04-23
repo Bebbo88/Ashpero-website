@@ -48,7 +48,7 @@ export default function FloatingActions() {
         {/* WhatsApp Floating Button */}
         <motion.div variants={itemVariants}>
           <a
-            href="https://wa.me/01094317717"
+            href="https://wa.me/201108851834"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-social-whatsapp text-white rounded-full shadow-whatsapp hover:bg-social-whatsapp-hover transition-all hover:scale-110 active:scale-95"
@@ -75,7 +75,12 @@ export default function FloatingActions() {
           </button>
 
           <AnimatePresence>
-            {isChatOpen && <AIChatBox onClose={() => setIsChatOpen(false)} alignment="start" />}
+            {isChatOpen && (
+              <AIChatBox
+                onClose={() => setIsChatOpen(false)}
+                alignment="start"
+              />
+            )}
           </AnimatePresence>
         </motion.div>
       </div>

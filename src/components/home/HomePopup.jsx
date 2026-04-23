@@ -43,18 +43,17 @@ export default function HomePopup() {
       return;
     }
 
-    let timeoutId;
-    const checkSplash = () => {
-      if (sessionStorage.getItem("splash_shown")) {
-        timeoutId = setTimeout(() => setIsVisible(true), 1500);
-      } else {
-        timeoutId = setTimeout(checkSplash, 500);
-      }
-    };
+    // A much safer, bulletproof timeout that waits for the splash screen
+    // without using a recursive loop which can cause memory leaks or fail
+    // to execute in background tabs/certain mobile devtools states.
+    const splashDoneInSession = sessionStorage.getItem("splash_shown");
+    const delay = splashDoneInSession ? 1500 : 700; // 3.5s covers the entire splash animation if it's running
 
-    checkSplash();
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, delay);
 
-    return () => clearTimeout(timeoutId);
+    return () => clearTimeout(timer);
   }, [isOffersLoading, activeOffer]);
 
   const closePopup = () => {
@@ -72,7 +71,7 @@ export default function HomePopup() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 w-screen min-h-[100dvh]"
           onClick={closePopup}
         >
           {/* Prevent clicks inside from closing */}
