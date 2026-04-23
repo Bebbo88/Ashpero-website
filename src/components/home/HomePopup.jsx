@@ -43,17 +43,26 @@ export default function HomePopup() {
       return;
     }
 
-    // A much safer, bulletproof timeout that waits for the splash screen
-    // without using a recursive loop which can cause memory leaks or fail
-    // to execute in background tabs/certain mobile devtools states.
-    const splashDoneInSession = sessionStorage.getItem("splash_shown");
-    const delay = splashDoneInSession ? 1500 : 700; // 3.5s covers the entire splash animation if it's running
+    let timeoutId;
+    const checkSplash = () => {
+      // Check both sessionStorage and cookie, because if the user opens a new tab,
+      // the splash screen might be skipped (cookie is true), but sessionStorage is empty.
+      const splashDoneInSession = sessionStorage.getItem("splash_shown");
+      const splashDoneInCookie = document.cookie.includes("splash_shown=true");
 
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, delay);
+      if (splashDoneInSession || splashDoneInCookie) {
+        // If splash was already done (e.g. new tab), show popup faster (500ms).
+        // If splash is currently running (in session), wait a bit more (1500ms) for it to finish.
+        const delay = splashDoneInSession ? 1500 : 500;
+        timeoutId = setTimeout(() => setIsVisible(true), delay);
+      } else {
+        timeoutId = setTimeout(checkSplash, 500);
+      }
+    };
 
-    return () => clearTimeout(timer);
+    checkSplash();
+
+    return () => clearTimeout(timeoutId);
   }, [isOffersLoading, activeOffer]);
 
   const closePopup = () => {
@@ -71,7 +80,7 @@ export default function HomePopup() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 w-screen min-h-[100dvh]"
+          className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
           onClick={closePopup}
         >
           {/* Prevent clicks inside from closing */}
