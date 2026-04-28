@@ -135,7 +135,7 @@ export default function Footer() {
               {t("Footer.customerCare")}
             </h3>
             <Link
-              href="/contact-us"
+              href="/returns"
               className="text-sm font-medium text-white/80 hover:text-white transition-colors"
             >
               {t("Footer.shippingReturns")}
