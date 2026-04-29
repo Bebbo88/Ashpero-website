@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "../../hooks/useLanguage";
+import ScrollAnimationWrapper from "../ui/ScrollAnimationWrapper";
 
 const products = [
   {
@@ -36,18 +37,24 @@ export default function UseItFeelIt() {
   return (
     <section className="w-full py-20 bg-bg-primary overflow-hidden">
       <div className="container mx-auto px-6 lg:px-10">
-        <div className="flex flex-col items-center justify-center mb-14 text-center">
-          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-text-primary font-medium tracking-wide">
-            {t("UseItFeelIt.title")}
-          </h2>
-          <div className="w-16 h-[3px] bg-brand-orange rounded-full mt-5" />
-        </div>
+        <ScrollAnimationWrapper animation="fade-up">
+          <div className="flex flex-col items-center justify-center mb-14 text-center">
+            <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-text-primary font-medium tracking-wide">
+              {t("UseItFeelIt.title")}
+            </h2>
+            <div className="w-16 h-[3px] bg-brand-orange rounded-full mt-5" />
+          </div>
+        </ScrollAnimationWrapper>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 max-w-7xl mx-auto py-10">
-          {products.map((product) => (
-            <div
+          {products.map((product, index) => (
+            <ScrollAnimationWrapper
               key={product.id}
-              className="flex justify-center"
+              animation={index < 2 ? "slide-from-right" : "slide-from-left"}
+              delay={index * 0.1}
+            >
+              <div
+                className="flex justify-center"
               style={{ perspective: "600px", perspectiveOrigin: "50% 50%" }}
             >
               <div
@@ -103,8 +110,9 @@ export default function UseItFeelIt() {
                     </p>
                   </div>
                 </div>
+                </div>
               </div>
-            </div>
+            </ScrollAnimationWrapper>
           ))}
         </div>
       </div>

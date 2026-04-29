@@ -4,12 +4,33 @@ import React from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const arContent = {
-  pageTitle: "سياسة الاستبدال والاسترجاع",
+  pageTitle: "سياسة الشحن والاستبدال",
   sections: [
     {
       title: " سياسة الاستبدال والاسترجاع",
       intro:
         "في حالة الرغبة في استرداد أو استبدال الطلب، يجب إبلاغ الشركة قبل 48 ساعة بحد أقصى مع مراعاة سلامة المنتج وعدم تلفه أو استخدامه.",
+    },
+    {
+      title: " سياسة الشحن",
+      points: [
+        {
+          title: "تغطية الشحن",
+          text: "يتم الشحن لجميع محافظات مصر.",
+        },
+        {
+          title: "تجهيز الطلب",
+          text: "يتم تجهيز الطلب خلال 24–48 ساعة.",
+        },
+        {
+          title: "مدة التوصيل",
+          text: "القاهرة والجيزة: 3–5 أيام عمل\nباقي المحافظات: 3–7 أيام عمل",
+        },
+        {
+          title: "شركات الشحن",
+          text: "يتم الشحن من خلال شركات شحن موثوقة، ويتم إرسال رقم تتبع الشحنة للعميل بعد إتمام الشحن.",
+        },
+      ],
     },
   ],
 };
@@ -18,9 +39,30 @@ const enContent = {
   pageTitle: "Shipping and Returns Policy",
   sections: [
     {
-      title: "Shipping and Returns Policy",
+      title: "Returns Policy",
       intro:
         "If you wish to request a refund or exchange, you must notify the company within a maximum of 48 hours, provided the product remains intact, unused, and undamaged.",
+    },
+    {
+      title: "Shipping Policy",
+      points: [
+        {
+          title: "Coverage",
+          text: "Shipping is available to all governorates within Egypt.",
+        },
+        {
+          title: "Order Preparation",
+          text: "Orders are prepared within 24–48 hours.",
+        },
+        {
+          title: "Delivery Time",
+          text: "Cairo & Giza: 3–5 business days\nOther governorates: 3–7 business days",
+        },
+        {
+          title: "Shipping Partners",
+          text: "We deliver through trusted shipping companies. A tracking number will be sent to the customer after shipment.",
+        },
+      ],
     },
   ],
 };
@@ -57,7 +99,7 @@ export default function PrivacyPolicyClient() {
 
               {section.intro ? (
                 <p
-                  className={`text-text-secondary leading-8 mb-5 ${
+                  className={`text-text-secondary leading-8 mb-5 whitespace-pre-line ${
                     isArabic ? "text-right" : "text-left"
                   }`}
                 >
@@ -77,7 +119,7 @@ export default function PrivacyPolicyClient() {
                         {point.title}
                       </h3>
                       <p
-                        className={`text-text-secondary leading-7 ${
+                        className={`text-text-secondary leading-7 whitespace-pre-line ${
                           isArabic ? "text-right" : "text-left"
                         }`}
                       >
