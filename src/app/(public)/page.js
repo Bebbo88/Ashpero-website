@@ -4,6 +4,7 @@ import OfferBanner from "@/components/home/OfferBanner";
 import UseItFeelIt from "@/components/home/UseItFeelIt";
 import HeritageCTA from "../../components/home/HeritageCTA";
 import HomePopup from "@/components/home/HomePopup";
+import ScrollAnimationWrapper from "@/components/ui/ScrollAnimationWrapper";
 import {
   dehydrate,
   HydrationBoundary,
@@ -38,11 +39,21 @@ export default async function Home() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <HomePopup />
-      <HeroSection />
-      <FeaturedBestsellers />
-      <OfferBanner />
-      <UseItFeelIt />
-      <HeritageCTA />
+      <div className="overflow-x-hidden w-full">
+        <ScrollAnimationWrapper mode="load" animation="fade-up">
+          <HeroSection />
+        </ScrollAnimationWrapper>
+        <ScrollAnimationWrapper animation="fade-up">
+          <FeaturedBestsellers />
+        </ScrollAnimationWrapper>
+        <ScrollAnimationWrapper animation="scale-up">
+          <OfferBanner />
+        </ScrollAnimationWrapper>
+        <UseItFeelIt />
+        <ScrollAnimationWrapper animation="slide-from-left">
+          <HeritageCTA />
+        </ScrollAnimationWrapper>
+      </div>
     </HydrationBoundary>
   );
 }
