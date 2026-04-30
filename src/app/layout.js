@@ -87,7 +87,9 @@ export default async function RootLayout({ children }) {
               <AuthSessionProvider>
                 <ModeProvider>
                   <CartDrawerProvider>
-                    <SplashScreen hasSeenSplash={hasSeenSplash}>{children}</SplashScreen>
+                    <SplashScreen hasSeenSplash={hasSeenSplash}>
+                      {children}
+                    </SplashScreen>
                     <FloatingActions />
                     <CartDrawer />
                   </CartDrawerProvider>
