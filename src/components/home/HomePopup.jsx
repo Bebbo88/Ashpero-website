@@ -6,6 +6,45 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useOffersQuery } from "@/features/offer/queries";
 
+const POPUP_IMAGE_SRC = "/assets/popupp.jpg";
+const SPLASH_COMPLETE_EVENT = "ashperoo:splash-complete";
+
+let popupImagePreloadPromise;
+
+function preloadPopupImage() {
+  if (popupImagePreloadPromise) {
+    return popupImagePreloadPromise;
+  }
+
+  popupImagePreloadPromise = new Promise((resolve) => {
+    let timeoutId;
+    const resolveOnce = () => {
+      clearTimeout(timeoutId);
+      resolve();
+    };
+
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = POPUP_IMAGE_SRC;
+    link.fetchPriority = "high";
+    document.head.appendChild(link);
+
+    const image = new window.Image();
+    image.onload = resolveOnce;
+    image.onerror = resolveOnce;
+    image.src = POPUP_IMAGE_SRC;
+
+    if (image.complete) {
+      resolveOnce();
+    } else {
+      timeoutId = setTimeout(resolveOnce, 2500);
+    }
+  });
+
+  return popupImagePreloadPromise;
+}
+
 export default function HomePopup() {
   const [isVisible, setIsVisible] = useState(false);
   const { locale } = useLanguage();
@@ -32,37 +71,51 @@ export default function HomePopup() {
   }
 
   useEffect(() => {
-    if (
-      sessionStorage.getItem("home_popup_shown") ||
-      isOffersLoading ||
-      !activeOffer
-    ) {
-      if (!isOffersLoading && !activeOffer) {
-        sessionStorage.setItem("home_popup_shown", "true");
-      }
+    preloadPopupImage();
+  }, []);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("home_popup_shown") || isOffersLoading) {
+      return;
+    }
+
+    if (!activeOffer) {
       return;
     }
 
     let timeoutId;
-    const checkSplash = () => {
-      // Check both sessionStorage and cookie, because if the user opens a new tab,
-      // the splash screen might be skipped (cookie is true), but sessionStorage is empty.
-      const splashDoneInSession = sessionStorage.getItem("splash_shown");
-      const splashDoneInCookie = document.cookie.includes("splash_shown=true");
+    let isCancelled = false;
 
-      if (splashDoneInSession || splashDoneInCookie) {
-        // If splash was already done (e.g. new tab), show popup faster (500ms).
-        // If splash is currently running (in session), wait a bit more (1500ms) for it to finish.
-        const delay = splashDoneInSession ? 1500 : 500;
-        timeoutId = setTimeout(() => setIsVisible(true), delay);
-      } else {
-        timeoutId = setTimeout(checkSplash, 500);
+    const showAfterImageReady = async () => {
+      await preloadPopupImage();
+
+      if (!isCancelled) {
+        timeoutId = setTimeout(() => {
+          if (!isCancelled) {
+            setIsVisible(true);
+          }
+        }, 500);
       }
     };
 
-    checkSplash();
+    // Check both sessionStorage and cookie, because if the user opens a new tab,
+    // the splash screen might be skipped (cookie is true), but sessionStorage is empty.
+    const splashDoneInSession = sessionStorage.getItem("splash_shown");
+    const splashDoneInCookie = document.cookie.includes("splash_shown=true");
 
-    return () => clearTimeout(timeoutId);
+    if (splashDoneInSession || splashDoneInCookie) {
+      showAfterImageReady();
+    } else {
+      window.addEventListener(SPLASH_COMPLETE_EVENT, showAfterImageReady, {
+        once: true,
+      });
+    }
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeoutId);
+      window.removeEventListener(SPLASH_COMPLETE_EVENT, showAfterImageReady);
+    };
   }, [isOffersLoading, activeOffer]);
 
   const closePopup = () => {
@@ -133,12 +186,13 @@ export default function HomePopup() {
             {/* Popup Image */}
             <div className="w-full bg-bg-secondary">
               <Image
-                src="/assets/popupp.jpg"
+                src={POPUP_IMAGE_SRC}
                 alt="Ashpero Popup Offer"
                 width={800}
                 height={800}
                 className="w-full h-auto object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                unoptimized
                 priority={true}
                 loading="eager"
                 fetchPriority="high"

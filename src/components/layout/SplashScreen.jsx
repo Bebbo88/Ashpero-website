@@ -4,20 +4,35 @@ import React, { useState, useEffect } from "react";
 import Image from "@/components/ui/AppImage";
 import { motion, AnimatePresence } from "framer-motion";
 
+const SPLASH_COMPLETE_EVENT = "ashperoo:splash-complete";
+
 export default function SplashScreen({ children, hasSeenSplash }) {
   const [showSplash, setShowSplash] = useState(!hasSeenSplash);
+
+  const markSplashComplete = () => {
+    document.cookie = "splash_shown=true; path=/";
+    sessionStorage.setItem("splash_shown", "true");
+    window.dispatchEvent(new Event(SPLASH_COMPLETE_EVENT));
+  };
 
   useEffect(() => {
     // Check if the splash was already shown in the current tab session
     const hasSeenSplashSession = sessionStorage.getItem("splash_shown");
     if (hasSeenSplashSession && showSplash) {
-      setShowSplash(false);
+      window.dispatchEvent(new Event(SPLASH_COMPLETE_EVENT));
+      const timeoutId = setTimeout(() => setShowSplash(false), 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [showSplash]);
+
+  useEffect(() => {
+    if (!showSplash) {
+      window.dispatchEvent(new Event(SPLASH_COMPLETE_EVENT));
     }
   }, [showSplash]);
 
   const handleAnimationComplete = () => {
-    document.cookie = "splash_shown=true; path=/";
-    sessionStorage.setItem("splash_shown", "true");
+    markSplashComplete();
     setShowSplash(false);
   };
 
