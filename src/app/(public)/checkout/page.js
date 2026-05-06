@@ -21,6 +21,7 @@ import { clearCart } from "@/store/slices/cartSlice";
 import { createOrder } from "@/services/orderService";
 import { applyCoupon } from "@/services/couponService";
 import EmptyState from "@/components/ui/EmptyState";
+import { savePendingCheckout } from "@/utils/checkoutSession";
 const DEFAULT_DIAL_CODE = "+20";
 
 const PHONE_COUNTRIES = [
@@ -393,9 +394,36 @@ export default function CheckoutPage() {
         })),
       };
 
-      await createOrder(payload);
-      dispatch(clearCart());
-      router.push("/success");
+      const result = await createOrder(payload);
+      const nextOrder = result?.order || {};
+      const nextPayment = result?.payment || {};
+
+      savePendingCheckout({
+        orderId: nextOrder._id || "",
+        merchantOrderId: nextOrder.merchantOrderId || "",
+        totalPrice: nextOrder.finalPrice || nextOrder.totalPrice || finalTotal,
+        paymentMethod: nextOrder.paymentMethod || payload.paymentMethod,
+        paymentStatus: nextOrder.paymentStatus || "pending",
+        orderStatus: nextOrder.orderStatus || "new",
+        createdAt: nextOrder.createdAt || new Date().toISOString()
+      });
+
+      if (nextOrder.paymentMethod === "cash_on_delivery") {
+        dispatch(clearCart());
+        router.push(`/success?orderId=${nextOrder._id || ""}&source=cod`);
+        return;
+      }
+
+      if (nextPayment.checkoutUrl) {
+        window.location.assign(nextPayment.checkoutUrl);
+        return;
+      }
+
+      throw new Error(
+        locale === "ar"
+          ? "تعذر بدء عملية الدفع الإلكتروني. تحقق من إعدادات Paymob."
+          : "Unable to start online payment. Please verify the Paymob checkout configuration.",
+      );
     } catch (error) {
       setSubmitError(
         error?.message || "Failed to create order. Please try again.",
@@ -730,7 +758,15 @@ export default function CheckoutPage() {
                 aria-label={t("Checkout.continue")}
                 className="w-full py-4 cursor-pointer bg-brand-mint text-white text-center font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-opacity-90 transition-all disabled:opacity-60"
               >
-                {isSubmitting ? "Processing..." : t("Checkout.continue")}
+                {isSubmitting
+                  ? paymentMethod === "card"
+                    ? locale === "ar"
+                      ? "جاري تحويلك لصفحة الدفع..."
+                      : "Redirecting to payment..."
+                    : locale === "ar"
+                      ? "جاري تأكيد الطلب..."
+                      : "Placing order..."
+                  : t("Checkout.continue")}
               </button>
             </form>
           </div>
