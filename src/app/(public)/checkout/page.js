@@ -390,7 +390,10 @@ export default function CheckoutPage() {
           values.paymentMethod === "cash" ? "cash_on_delivery" : "card",
         items: cartItems.map((item) => ({
           productId: item.productId,
+
           quantity: Number(item.quantity || 1),
+
+          size: item.size || "",
         })),
       };
 
@@ -405,7 +408,7 @@ export default function CheckoutPage() {
         paymentMethod: nextOrder.paymentMethod || payload.paymentMethod,
         paymentStatus: nextOrder.paymentStatus || "pending",
         orderStatus: nextOrder.orderStatus || "new",
-        createdAt: nextOrder.createdAt || new Date().toISOString()
+        createdAt: nextOrder.createdAt || new Date().toISOString(),
       });
 
       if (nextOrder.paymentMethod === "cash_on_delivery") {
