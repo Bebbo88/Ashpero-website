@@ -8,3 +8,8 @@ export async function createOrder(payload) {
   const response = await apiClient.post("/orders", payload);
   return unwrapApiResponse(response) || {};
 }
+
+export async function getPublicOrderSummary(orderId) {
+  const response = await apiClient.get(`/orders/${orderId}/summary`);
+  return unwrapApiResponse(response) || {};
+}
