@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Check, LoaderCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCheckoutSummary } from "@/hooks/useCheckoutSummary";
 import { useAppDispatch } from "@/store/hooks";
 import { clearCart } from "@/store/slices/cartSlice";
 import { clearPendingCheckout } from "@/utils/checkoutSession";
+import { confirmPaymobCallback } from "@/services/paymentService";
 
 function getStatusLabel(summary, locale, t) {
   if (summary?.paymentMethod === "cash_on_delivery") {
@@ -25,8 +26,49 @@ function getStatusLabel(summary, locale, t) {
 export default function SuccessPage() {
   const { t, locale } = useLanguage();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const dispatch = useAppDispatch();
+  const [confirmStatus, setConfirmStatus] = useState("idle");
   const { summary, status } = useCheckoutSummary(searchParams, { poll: true });
+
+  const hasDirectPaymobPayload =
+    searchParams.has("hmac") &&
+    !searchParams.has("orderId") &&
+    Boolean(searchParams.get("merchant_order_id") || searchParams.get("order"));
+
+  useEffect(() => {
+    if (!hasDirectPaymobPayload) {
+      return undefined;
+    }
+
+    let isCancelled = false;
+
+    async function confirmResponse() {
+      try {
+        setConfirmStatus("loading");
+        const result = await confirmPaymobCallback(searchParams);
+
+        if (isCancelled) {
+          return;
+        }
+
+        const targetPath = result.paymentStatus === "paid" ? "/success" : "/failed";
+        router.replace(`${targetPath}?orderId=${result.orderId}&paymob=1`);
+      } catch (_error) {
+        if (isCancelled) {
+          return;
+        }
+
+        setConfirmStatus("error");
+      }
+    }
+
+    confirmResponse();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [hasDirectPaymobPayload, router, searchParams]);
 
   useEffect(() => {
     if (!summary) {
@@ -49,12 +91,21 @@ export default function SuccessPage() {
     [locale],
   );
 
-  const orderLabel = summary?.merchantOrderId || summary?._id || searchParams.get("orderId") || "--";
+  const fallbackAmount = Number(searchParams.get("amount_cents") || 0) / 100;
+  const orderLabel =
+    summary?.merchantOrderId ||
+    searchParams.get("merchant_order_id") ||
+    summary?._id ||
+    searchParams.get("orderId") ||
+    "--";
   const orderTotal = currencyFormatter.format(
-    Number(summary?.finalPrice || summary?.totalPrice || 0),
+    Number(summary?.finalPrice || summary?.totalPrice || fallbackAmount || 0),
   );
   const statusLabel = getStatusLabel(summary, locale, t);
-  const showPending = summary?.paymentMethod === "card" && summary?.paymentStatus !== "paid";
+  const showPending =
+    confirmStatus === "loading" ||
+    hasDirectPaymobPayload ||
+    (summary?.paymentMethod === "card" && summary?.paymentStatus !== "paid");
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-center px-4 py-20 relative overflow-hidden">
@@ -114,9 +165,17 @@ export default function SuccessPage() {
           </div>
         </div>
 
-        {status === "loading" ? (
+        {status === "loading" || confirmStatus === "loading" ? (
           <p className="mb-6 text-xs text-text-secondary">
             {locale === "ar" ? "جاري تحديث حالة الطلب..." : "Refreshing order status..."}
+          </p>
+        ) : null}
+
+        {confirmStatus === "error" ? (
+          <p className="mb-6 text-xs text-status-error">
+            {locale === "ar"
+              ? "تعذر تأكيد حالة الدفع تلقائيًا. حدّث الصفحة بعد لحظات."
+              : "We could not confirm the payment automatically. Please refresh in a moment."}
           </p>
         ) : null}
 

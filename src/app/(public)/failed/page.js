@@ -1,20 +1,60 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCheckoutSummary } from "@/hooks/useCheckoutSummary";
-import { initializePaymobPayment } from "@/services/paymentService";
+import { confirmPaymobCallback, initializePaymobPayment } from "@/services/paymentService";
 
 export default function FailedPage() {
   const { t, locale } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { orderId, summary } = useCheckoutSummary(searchParams);
   const [isRetrying, setIsRetrying] = useState(false);
   const [retryError, setRetryError] = useState("");
+  const [confirmStatus, setConfirmStatus] = useState("idle");
+  const { orderId, summary } = useCheckoutSummary(searchParams);
+
+  const hasDirectPaymobPayload =
+    searchParams.has("hmac") &&
+    !searchParams.has("orderId") &&
+    Boolean(searchParams.get("merchant_order_id") || searchParams.get("order"));
+
+  useEffect(() => {
+    if (!hasDirectPaymobPayload) {
+      return undefined;
+    }
+
+    let isCancelled = false;
+
+    async function confirmResponse() {
+      try {
+        setConfirmStatus("loading");
+        const result = await confirmPaymobCallback(searchParams);
+
+        if (isCancelled) {
+          return;
+        }
+
+        const targetPath = result.paymentStatus === "paid" ? "/success" : "/failed";
+        router.replace(`${targetPath}?orderId=${result.orderId}&paymob=1`);
+      } catch (_error) {
+        if (isCancelled) {
+          return;
+        }
+
+        setConfirmStatus("error");
+      }
+    }
+
+    confirmResponse();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [hasDirectPaymobPayload, router, searchParams]);
 
   const currencyFormatter = useMemo(
     () =>
@@ -51,6 +91,13 @@ export default function FailedPage() {
       setIsRetrying(false);
     }
   }
+
+  const fallbackAmount = Number(searchParams.get("amount_cents") || 0) / 100;
+  const orderReference =
+    summary?.merchantOrderId ||
+    searchParams.get("merchant_order_id") ||
+    orderId ||
+    "--";
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-center px-4 py-20 relative overflow-hidden">
@@ -91,6 +138,14 @@ export default function FailedPage() {
           </div>
         ) : null}
 
+        {confirmStatus === "error" ? (
+          <div className="w-full mb-4 rounded-xl border border-status-error/25 bg-status-error-soft px-4 py-3 text-sm text-status-error">
+            {locale === "ar"
+              ? "تعذر تأكيد حالة العملية تلقائيًا."
+              : "We could not confirm the transaction automatically."}
+          </div>
+        ) : null}
+
         <div className="w-full text-left bg-bg-secondary p-8 rounded-2xl border border-border-color shadow-sm mb-6">
           <h3 className="font-playfair text-lg font-bold text-text-primary mb-6 uppercase tracking-wider">
             {t("Status.failed.orderSummary")}
@@ -102,7 +157,7 @@ export default function FailedPage() {
                 {t("Status.failed.referenceNo")}
               </span>
               <span className="font-semibold text-text-primary text-right break-all">
-                {summary?.merchantOrderId || orderId || "--"}
+                {orderReference}
               </span>
             </div>
 
@@ -112,7 +167,7 @@ export default function FailedPage() {
               <span>{t("Status.failed.subtotal")}</span>
               <span className="font-medium text-text-primary">
                 {currencyFormatter.format(
-                  Number(summary?.finalPrice || summary?.totalPrice || 0),
+                  Number(summary?.finalPrice || summary?.totalPrice || fallbackAmount || 0),
                 )}
               </span>
             </div>
@@ -133,7 +188,7 @@ export default function FailedPage() {
               </span>
               <span className="font-bold text-brand-mint text-lg">
                 {currencyFormatter.format(
-                  Number(summary?.finalPrice || summary?.totalPrice || 0),
+                  Number(summary?.finalPrice || summary?.totalPrice || fallbackAmount || 0),
                 )}
               </span>
             </div>
