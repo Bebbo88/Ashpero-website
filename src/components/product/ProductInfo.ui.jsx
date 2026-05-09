@@ -25,14 +25,18 @@ const BENEFITS = ["VEGAN", "CLEAN", "PURE", "ETHIC"];
 export function ProductInfoUI({
   product,
   t,
-  sizeOptions,
+  variants,
   quantity,
   selectedSize,
   displayPrice,
+  oldPrice,
+  hasOffer,
+  discountValue,
   isWishlisted,
   openAccordion,
   accordions,
   setSelectedSize,
+  resolvedVariant,
   shareLinks,
   shareToast,
   handleShareClick,
@@ -67,15 +71,27 @@ export function ProductInfoUI({
         {product.title}
       </h1>
 
-      <div className="flex items-center gap-4 -mt-2">
+      <div className="flex flex-wrap items-center gap-3 -mt-2">
         <span className="text-2xl font-bold text-brand-orange">
           {displayPrice}
         </span>
-        {product.originalPrice ? (
-          <span className="text-lg text-text-secondary line-through">
-            {product.originalPrice}
-          </span>
+
+        {hasOffer && oldPrice ? (
+          <>
+            <span className="text-lg text-text-secondary line-through">
+              {oldPrice}
+            </span>
+
+            <span className="rounded-full bg-red-100 px-2 py-1 text-[11px] font-bold text-red-600">
+              {discountValue}
+              {product.discountType === "percentage" ? "% OFF" : " EGP OFF"}
+            </span>
+          </>
         ) : null}
+
+        <p className="text-sm text-text-secondary">
+          Stock: {resolvedVariant?.stock || 0}
+        </p>
       </div>
 
       <p className="text-sm text-text-secondary leading-relaxed">
@@ -101,23 +117,23 @@ export function ProductInfoUI({
         ))}
       </div>
 
-      {sizeOptions.length > 0 ? (
+      {variants.length > 0 ? (
         <div className="flex flex-col gap-3 mt-2">
           <span className="text-xs font-bold tracking-wider uppercase text-text-secondary">
             {t("ProductDetails.selectSize")}
           </span>
           <div className="flex flex-wrap gap-2">
-            {sizeOptions.map((size) => (
+            {variants.map((variant) => (
               <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
+                key={variant.size}
+                onClick={() => setSelectedSize(variant.size)}
                 className={`px-4 py-2 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
-                  selectedSize === size
+                  selectedSize === variant.size
                     ? "border-brand-orange bg-brand-orange text-white"
                     : "border-border-color text-text-primary hover:border-brand-orange hover:text-brand-orange"
                 }`}
               >
-                {size}
+                {variant.size}
               </button>
             ))}
           </div>

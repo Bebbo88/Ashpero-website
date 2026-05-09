@@ -22,6 +22,7 @@ import { createOrder } from "@/services/orderService";
 import { applyCoupon } from "@/services/couponService";
 import EmptyState from "@/components/ui/EmptyState";
 import { savePendingCheckout } from "@/utils/checkoutSession";
+import { saveOrderReference } from "@/utils/ordersStorage";
 const DEFAULT_DIAL_CODE = "+20";
 
 const PHONE_COUNTRIES = [
@@ -53,6 +54,7 @@ const initialFormValues = {
   customerName: "",
   phoneCountryCode: DEFAULT_DIAL_CODE,
   phone: "",
+  walletPhone: "",
   secondaryPhoneCountryCode: DEFAULT_DIAL_CODE,
   secondaryPhone: "",
   email: "",
@@ -83,118 +85,189 @@ function formatInternationalPhone(dialCode, localPhone) {
 function createCheckoutSchema(locale) {
   const isArabic = locale === "ar";
 
-  return z.object({
-    customerName: z
-      .string()
-      .trim()
-      .min(
-        3,
-        isArabic
-          ? "الاسم الكامل يجب أن يكون 3 أحرف على الأقل."
-          : "Full name must be at least 3 characters.",
-      )
-      .max(80, isArabic ? "الاسم الكامل طويل جدًا." : "Full name is too long."),
-    phoneCountryCode: z
-      .string()
-      .trim()
-      .min(1, isArabic ? "اختر كود الدولة." : "Please select a country code."),
-    phone: z
-      .string()
-      .trim()
-      .transform(normalizeDigits)
-      .refine(
-        (value) => value.length >= 7 && value.length <= 14,
-        isArabic
-          ? "رقم الهاتف يجب أن يكون بين 7 و14 رقمًا."
-          : "Phone number must be between 7 and 14 digits.",
-      ),
-    secondaryPhoneCountryCode: z
-      .string()
-      .trim()
-      .optional()
-      .default(DEFAULT_DIAL_CODE),
-    secondaryPhone: z
-      .string()
-      .trim()
-      .transform(normalizeDigits)
-      .refine(
-        (value) => value === "" || (value.length >= 7 && value.length <= 14),
-        isArabic
-          ? "الرقم البديل يجب أن يكون بين 7 و14 رقمًا."
-          : "Alternate phone must be between 7 and 14 digits.",
-      )
-      .optional()
-      .default(""),
-    email: z
-      .string()
-      .trim()
-      .max(
-        120,
-        isArabic ? "البريد الإلكتروني طويل جدًا." : "Email is too long.",
-      )
-      .refine(
-        (value) => value === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-        isArabic
-          ? "يرجى إدخال بريد إلكتروني صحيح."
-          : "Please enter a valid email address.",
-      ),
-    city: z
-      .string()
-      .trim()
-      .min(2, isArabic ? "المدينة مطلوبة." : "City is required.")
-      .max(60, isArabic ? "اسم المدينة طويل جدًا." : "City name is too long."),
-    state: z
-      .string()
-      .trim()
-      .max(
-        60,
-        isArabic
-          ? "اسم المحافظة طويل جدًا."
-          : "State/Province name is too long.",
-      )
-      .refine(
-        (value) => value === "" || value.length >= 2,
-        isArabic
-          ? "المحافظة يجب أن تكون حرفين على الأقل."
-          : "State/Province must be at least 2 characters.",
-      ),
-    address1: z
-      .string()
-      .trim()
-      .min(5, isArabic ? "العنوان الأول مطلوب." : "Address line 1 is required.")
-      .max(
-        160,
-        isArabic ? "العنوان الأول طويل جدًا." : "Address line 1 is too long.",
-      ),
-    address2: z
-      .string()
-      .trim()
-      .max(
-        160,
-        isArabic ? "العنوان الثاني طويل جدًا." : "Address line 2 is too long.",
-      ),
-    postalCode: z
-      .string()
-      .trim()
-      .max(
-        20,
-        isArabic ? "الرمز البريدي طويل جدًا." : "Postal code is too long.",
-      )
-      .refine(
-        (value) => value === "" || /^[a-zA-Z0-9\- ]+$/.test(value),
-        isArabic
-          ? "الرمز البريدي يحتوي على حروف غير صالحة."
-          : "Postal code contains invalid characters.",
-      ),
-    orderNote: z
-      .string()
-      .trim()
-      .max(
-        500,
-        isArabic ? "ملاحظات الطلب طويلة جدًا." : "Order note is too long.",
-      ),
-    paymentMethod: z.enum(["card", "cash"]),
-  });
+  const blockedDomains = [
+    "mailinator.com",
+    "tempmail.com",
+    "10minutemail.com",
+    "guerrillamail.com",
+    "fakeinbox.com",
+  ];
+
+  return z
+    .object({
+      customerName: z
+        .string()
+        .trim()
+        .min(
+          5,
+          isArabic
+            ? "أدخل الاسم الكامل الحقيقي."
+            : "Enter your full real name.",
+        )
+        .max(80, isArabic ? "الاسم طويل جدًا." : "Name is too long.")
+        .refine(
+          (value) =>
+            /^[\p{L}\s]+$/u.test(value) &&
+            value.trim().split(/\s+/).length >= 2,
+          isArabic
+            ? "يجب إدخال الاسم الأول واسم العائلة بحروف فقط."
+            : "Please enter first and last name using letters only.",
+        ),
+
+      phoneCountryCode: z
+        .string()
+        .trim()
+        .min(
+          1,
+          isArabic ? "اختر كود الدولة." : "Please select a country code.",
+        ),
+
+      phone: z
+        .string()
+        .trim()
+        .transform(normalizeDigits)
+        .refine(
+          (value) => /^[0-9]{7,15}$/.test(value),
+          isArabic ? "أدخل رقم هاتف صحيح." : "Enter a valid phone number.",
+        ),
+
+      walletPhone: z
+        .string()
+        .trim()
+        .transform(normalizeDigits)
+        .refine(
+          (value) => value === "" || /^[0-9]{7,15}$/.test(value),
+          isArabic ? "أدخل رقم محفظة صحيح." : "Enter a valid wallet number.",
+        )
+        .optional()
+        .default(""),
+
+      secondaryPhoneCountryCode: z
+        .string()
+        .trim()
+        .optional()
+        .default(DEFAULT_DIAL_CODE),
+
+      secondaryPhone: z
+        .string()
+        .trim()
+        .transform(normalizeDigits)
+        .refine(
+          (value) => value === "" || /^[0-9]{7,15}$/.test(value),
+          isArabic
+            ? "أدخل رقم هاتف بديل صحيح."
+            : "Enter a valid alternate phone number.",
+        )
+        .optional()
+        .default(""),
+
+      email: z
+        .string()
+        .trim()
+        .min(1, isArabic ? "البريد الإلكتروني مطلوب." : "Email is required.")
+        .email(
+          isArabic
+            ? "أدخل بريد إلكتروني صحيح."
+            : "Enter a valid email address.",
+        )
+        .max(
+          120,
+          isArabic ? "البريد الإلكتروني طويل جدًا." : "Email is too long.",
+        )
+        .refine(
+          (value) => {
+            const domain = value.split("@")[1]?.toLowerCase();
+
+            return !blockedDomains.includes(domain);
+          },
+          {
+            message: isArabic
+              ? "البريد الإلكتروني المؤقت غير مسموح."
+              : "Disposable email addresses are not allowed.",
+          },
+        ),
+
+      city: z
+        .string()
+        .trim()
+        .min(2, isArabic ? "المدينة مطلوبة." : "City is required.")
+        .max(
+          60,
+          isArabic ? "اسم المدينة طويل جدًا." : "City name is too long.",
+        ),
+
+      state: z
+        .string()
+        .trim()
+        .min(2, isArabic ? "المحافظة مطلوبة." : "State/Province is required.")
+        .max(
+          60,
+          isArabic
+            ? "اسم المحافظة طويل جدًا."
+            : "State/Province name is too long.",
+        ),
+
+      address1: z
+        .string()
+        .trim()
+        .min(
+          10,
+          isArabic
+            ? "أدخل عنوانًا تفصيليًا صحيحًا."
+            : "Please enter a detailed address.",
+        )
+        .max(160, isArabic ? "العنوان طويل جدًا." : "Address is too long."),
+
+      address2: z
+        .string()
+        .trim()
+        .max(
+          160,
+          isArabic
+            ? "العنوان الإضافي طويل جدًا."
+            : "Additional address is too long.",
+        ),
+
+      postalCode: z
+        .string()
+        .trim()
+        .max(
+          20,
+          isArabic ? "الرمز البريدي طويل جدًا." : "Postal code is too long.",
+        )
+        .refine(
+          (value) => value === "" || /^[a-zA-Z0-9\- ]+$/.test(value),
+          isArabic ? "الرمز البريدي غير صحيح." : "Invalid postal code.",
+        ),
+
+      orderNote: z
+        .string()
+        .trim()
+        .max(
+          500,
+          isArabic ? "ملاحظات الطلب طويلة جدًا." : "Order note is too long.",
+        ),
+
+      paymentMethod: z.enum(["card", "wallet", "kiosk", "cash"]),
+    })
+
+    .refine(
+      (data) => !data.secondaryPhone || data.phone !== data.secondaryPhone,
+      {
+        message: isArabic
+          ? "الرقم البديل يجب أن يكون مختلفًا."
+          : "Alternate phone must be different.",
+        path: ["secondaryPhone"],
+      },
+    )
+
+    .refine(
+      (data) => data.paymentMethod !== "wallet" || Boolean(data.walletPhone),
+      {
+        message: isArabic ? "رقم المحفظة مطلوب." : "Wallet number is required.",
+        path: ["walletPhone"],
+      },
+    );
 }
 
 function getInputClass(hasError) {
@@ -353,6 +426,7 @@ export default function CheckoutPage() {
   };
 
   const submitOrder = async (values) => {
+    console.log(cartItems);
     if (cartItems.length === 0) {
       return;
     }
@@ -360,9 +434,13 @@ export default function CheckoutPage() {
     setSubmitError("");
 
     try {
+      console.log(values.paymentMethod);
       const payload = {
         customerName: values.customerName.trim(),
-        phone: formatInternationalPhone(values.phoneCountryCode, values.phone),
+        phone:
+          values.paymentMethod === "wallet"
+            ? normalizeDigits(values.walletPhone)
+            : formatInternationalPhone(values.phoneCountryCode, values.phone),
         secondaryPhone: values.secondaryPhone
           ? formatInternationalPhone(
               values.secondaryPhoneCountryCode,
@@ -387,7 +465,9 @@ export default function CheckoutPage() {
         },
         orderNote: values.orderNote.trim(),
         paymentMethod:
-          values.paymentMethod === "cash" ? "cash_on_delivery" : "card",
+          values.paymentMethod === "cash"
+            ? "cash_on_delivery"
+            : values.paymentMethod,
         items: cartItems.map((item) => ({
           productId: item.productId,
 
@@ -397,9 +477,24 @@ export default function CheckoutPage() {
         })),
       };
 
+      const hasExceededStock = cartItems.some(
+        (item) => Number(item.quantity || 0) > Number(item.stock || 0),
+      );
+
+      if (hasExceededStock) {
+        setSubmitError(
+          locale === "ar"
+            ? "بعض المنتجات لم تعد متوفرة بالكمية المطلوبة."
+            : "Some products are no longer available in the requested quantity.",
+        );
+
+        return;
+      }
+
       const result = await createOrder(payload);
       const nextOrder = result?.order || {};
       const nextPayment = result?.payment || {};
+      console.log("NEXT PAYMENT:", nextPayment);
 
       savePendingCheckout({
         orderId: nextOrder._id || "",
@@ -410,6 +505,11 @@ export default function CheckoutPage() {
         orderStatus: nextOrder.orderStatus || "new",
         createdAt: nextOrder.createdAt || new Date().toISOString(),
       });
+      saveOrderReference({
+        orderId: nextOrder._id,
+        merchantOrderId: nextOrder.merchantOrderId,
+        createdAt: nextOrder.createdAt,
+      });
 
       if (nextOrder.paymentMethod === "cash_on_delivery") {
         dispatch(clearCart());
@@ -417,8 +517,18 @@ export default function CheckoutPage() {
         return;
       }
 
-      if (nextPayment.checkoutUrl) {
+      if (nextPayment.mode === "redirect" && nextPayment.checkoutUrl) {
         window.location.assign(nextPayment.checkoutUrl);
+        return;
+      }
+
+      if (nextPayment.mode === "kiosk" && nextPayment.billReference) {
+        dispatch(clearCart());
+
+        router.push(
+          `/kiosk-success?reference=${nextPayment.billReference}&orderId=${nextOrder._id || ""}`,
+        );
+
         return;
       }
 
@@ -428,13 +538,39 @@ export default function CheckoutPage() {
           : "Unable to start online payment. Please verify the Paymob checkout configuration.",
       );
     } catch (error) {
+      const backendMessage =
+        error?.response?.data?.message || error?.message || "";
+
+      let friendlyMessage = backendMessage;
+
+      if (backendMessage.toLowerCase().includes("receiver is not registered")) {
+        friendlyMessage =
+          locale === "ar"
+            ? "رقم المحفظة غير مسجل في خدمة الدفع الإلكتروني."
+            : "This wallet number is not registered for mobile payments.";
+      }
+
       setSubmitError(
-        error?.message || "Failed to create order. Please try again.",
+        friendlyMessage ||
+          (locale === "ar"
+            ? "حدث خطأ أثناء إنشاء الطلب."
+            : "Failed to create order."),
       );
     }
   };
 
   if (cartItems.length === 0) {
+    const invalidVariant = cartItems.some((item) => !item.size);
+
+    if (invalidVariant) {
+      setSubmitError(
+        locale === "ar"
+          ? "يوجد منتج بدون حجم محدد."
+          : "A product variant is missing.",
+      );
+
+      return;
+    }
     return (
       <div className="min-h-screen bg-bg-primary pt-10 pb-20 px-4 md:px-8">
         <div className="max-w-[900px] mx-auto">
@@ -732,6 +868,73 @@ export default function CheckoutPage() {
                     </div>
                     <Banknote className="w-6 h-6" />
                   </label>
+                  <label
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${
+                      paymentMethod === "wallet"
+                        ? "border-brand-mint bg-brand-mint/5"
+                        : "border-border-color bg-bg-primary"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      value="wallet"
+                      {...register("paymentMethod")}
+                      className="sr-only"
+                    />
+
+                    <div className="flex items-center gap-4">
+                      <span className="font-semibold text-sm">Wallet</span>
+                    </div>
+
+                    <Banknote className="w-6 h-6" />
+                  </label>
+                  <label
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${
+                      paymentMethod === "kiosk"
+                        ? "border-brand-mint bg-brand-mint/5"
+                        : "border-border-color bg-bg-primary"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      value="kiosk"
+                      {...register("paymentMethod")}
+                      className="sr-only"
+                    />
+
+                    <div className="flex items-center gap-4">
+                      <span className="font-semibold text-sm">
+                        Fawry / Aman / Masary
+                      </span>
+                    </div>
+
+                    <Banknote className="w-6 h-6" />
+                  </label>
+                  {paymentMethod === "wallet" ? (
+                    <div className="mt-5">
+                      <label className="mb-2 block text-sm font-semibold text-text-primary">
+                        {locale === "ar" ? "رقم المحفظة" : "Wallet Number"}
+                      </label>
+
+                      <input
+                        {...register("walletPhone")}
+                        inputMode="numeric"
+                        onInput={(event) => {
+                          event.currentTarget.value = normalizeDigits(
+                            event.currentTarget.value,
+                          );
+                        }}
+                        placeholder="01012345678"
+                        className={getInputClass(Boolean(errors.walletPhone))}
+                      />
+
+                      {errors.walletPhone ? (
+                        <p className="mt-1.5 text-xs text-status-error">
+                          {errors.walletPhone.message}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
               </section>
 
@@ -762,7 +965,7 @@ export default function CheckoutPage() {
                 className="w-full py-4 cursor-pointer bg-brand-mint text-white text-center font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-opacity-90 transition-all disabled:opacity-60"
               >
                 {isSubmitting
-                  ? paymentMethod === "card"
+                  ? paymentMethod === "card" || paymentMethod === "wallet"
                     ? locale === "ar"
                       ? "جاري تحويلك لصفحة الدفع..."
                       : "Redirecting to payment..."
@@ -804,7 +1007,9 @@ export default function CheckoutPage() {
                       </h4>
                       {item.size ? (
                         <p className="text-text-secondary text-xs mt-0.5">
-                          {item.size}
+                          {locale === "ar"
+                            ? `الحجم: ${item.size}`
+                            : `Size: ${item.size}`}
                         </p>
                       ) : null}
                     </div>

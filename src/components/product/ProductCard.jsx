@@ -38,14 +38,27 @@ export default function ProductCard({ product, priority = false }) {
     event.preventDefault();
     event.stopPropagation();
 
+    const firstVariant =
+      Array.isArray(product.variants) && product.variants.length > 0
+        ? product.variants[0]
+        : null;
+
+    if (!firstVariant) {
+      return;
+    }
     dispatch(
       addToCart({
         id: product.id,
         title: product.title,
         image: product.image,
         category: product.category,
-        price: product.price,
-        priceValue: product.priceNum,
+        price: `EGP ${firstVariant.price}`,
+
+        priceValue: firstVariant.price,
+
+        size: firstVariant.size,
+
+        stock: firstVariant.stock,
         quantity: 1,
       }),
     );
@@ -73,8 +86,8 @@ export default function ProductCard({ product, priority = false }) {
         >
           <Heart
             className={`w-4 h-4 transition-colors duration-300 ${
-              isWishlisted 
-                ? "fill-red-500 text-red-500" 
+              isWishlisted
+                ? "fill-red-500 text-red-500"
                 : "text-gray-400 dark:text-gray-300 hover:text-red-400 dark:hover:text-red-400"
             }`}
           />
@@ -108,9 +121,9 @@ export default function ProductCard({ product, priority = false }) {
       {/* Product Info */}
       <div className="flex flex-col gap-0.5 px-1 pb-2">
         {product.category && (
-        <span className="text-[10px] font-bold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase">
-          {product.category}
-        </span>
+          <span className="text-[10px] font-bold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase">
+            {product.category}
+          </span>
         )}
         <h3 className="font-serif text-sm md:text-base font-semibold text-text-primary leading-snug line-clamp-1 hover:text-brand-accent transition-colors duration-300">
           {product.title}
@@ -134,4 +147,3 @@ export default function ProductCard({ product, priority = false }) {
     </Link>
   );
 }
-
