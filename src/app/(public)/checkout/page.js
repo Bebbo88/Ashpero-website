@@ -883,7 +883,9 @@ export default function CheckoutPage() {
                     />
 
                     <div className="flex items-center gap-4">
-                      <span className="font-semibold text-sm">Wallet</span>
+                      <span className="font-semibold text-sm">
+                        {t("Checkout.wallet")}
+                      </span>{" "}
                     </div>
 
                     <Banknote className="w-6 h-6" />
@@ -904,7 +906,7 @@ export default function CheckoutPage() {
 
                     <div className="flex items-center gap-4">
                       <span className="font-semibold text-sm">
-                        Fawry / Aman / Masary
+                        {t("Checkout.kiosk")}
                       </span>
                     </div>
 
@@ -924,7 +926,7 @@ export default function CheckoutPage() {
                             event.currentTarget.value,
                           );
                         }}
-                        placeholder="01012345678"
+                        placeholder={t("Checkout.walletPlaceholder")}
                         className={getInputClass(Boolean(errors.walletPhone))}
                       />
 
