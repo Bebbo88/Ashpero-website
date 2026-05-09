@@ -6,7 +6,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCheckoutSummary } from "@/hooks/useCheckoutSummary";
-import { confirmPaymobCallback, initializePaymobPayment } from "@/services/paymentService";
+import {
+  confirmPaymobCallback,
+  initializePaymobPayment,
+} from "@/services/paymentService";
 
 export default function FailedPage() {
   const { t, locale } = useLanguage();
@@ -38,7 +41,8 @@ export default function FailedPage() {
           return;
         }
 
-        const targetPath = result.paymentStatus === "paid" ? "/success" : "/failed";
+        const targetPath =
+          result.paymentStatus === "paid" ? "/success" : "/failed";
         router.replace(`${targetPath}?orderId=${result.orderId}&paymob=1`);
       } catch (_error) {
         if (isCancelled) {
@@ -106,7 +110,10 @@ export default function FailedPage() {
       <div className="max-w-[480px] w-full flex flex-col items-center text-center relative z-10 transition-transform mt-[-5%]">
         <div className="w-24 h-24 bg-red-50 rounded-3xl flex items-center justify-center mb-6 shadow-sm border border-red-100 dark:bg-red-500/10 dark:border-red-500/20">
           <div className="w-12 h-12 rounded-full border-2 border-status-error flex items-center justify-center">
-            <AlertCircle className="w-6 h-6 text-status-error" strokeWidth={2.5} />
+            <AlertCircle
+              className="w-6 h-6 text-status-error"
+              strokeWidth={2.5}
+            />
           </div>
         </div>
 
@@ -118,18 +125,20 @@ export default function FailedPage() {
         </p>
 
         <div className="w-full flex flex-col gap-3 mb-10">
-          <button
-            type="button"
-            onClick={handleRetry}
-            disabled={isRetrying}
-            className="w-full py-4 bg-status-error text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-status-error-hover transition-colors shadow-soft disabled:opacity-60"
-          >
-            {isRetrying
-              ? locale === "ar"
-                ? "جاري إعادة التوجيه..."
-                : "Redirecting..."
-              : t("Status.failed.retryBtn")}
-          </button>
+          {summary?.paymentMethod === "card" ? (
+            <button
+              type="button"
+              onClick={handleRetry}
+              disabled={isRetrying}
+              className="w-full py-4 bg-status-error text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-status-error-hover transition-colors shadow-soft disabled:opacity-60"
+            >
+              {isRetrying
+                ? locale === "ar"
+                  ? "جاري إعادة التوجيه..."
+                  : "Redirecting..."
+                : t("Status.failed.retryBtn")}
+            </button>
+          ) : null}
         </div>
 
         {retryError ? (
@@ -167,7 +176,12 @@ export default function FailedPage() {
               <span>{t("Status.failed.subtotal")}</span>
               <span className="font-medium text-text-primary">
                 {currencyFormatter.format(
-                  Number(summary?.finalPrice || summary?.totalPrice || fallbackAmount || 0),
+                  Number(
+                    summary?.finalPrice ||
+                      summary?.totalPrice ||
+                      fallbackAmount ||
+                      0,
+                  ),
                 )}
               </span>
             </div>
@@ -188,7 +202,12 @@ export default function FailedPage() {
               </span>
               <span className="font-bold text-brand-mint text-lg">
                 {currencyFormatter.format(
-                  Number(summary?.finalPrice || summary?.totalPrice || fallbackAmount || 0),
+                  Number(
+                    summary?.finalPrice ||
+                      summary?.totalPrice ||
+                      fallbackAmount ||
+                      0,
+                  ),
                 )}
               </span>
             </div>
