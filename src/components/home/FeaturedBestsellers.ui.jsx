@@ -89,6 +89,13 @@ export function FeaturedBestsellersUI({
                       href={buildProductPath(product.id, product.title)}
                       className="relative w-full rounded-2xl overflow-hidden mb-5 bg-surface-muted dark:bg-white/5"
                     >
+                      {product.hasOffer ? (
+                        <div className="absolute left-4 top-4 z-20 rounded-full bg-red-500 px-3 py-1 text-[11px] font-bold text-white shadow-md">
+                          {product.discountType === "percentage"
+                            ? `${product.discountValue}% OFF`
+                            : `${product.discountValue} EGP OFF`}
+                        </div>
+                      ) : null}
                       {/* Wishlist */}
                       <button
                         aria-label="Toggle Wishlist"
@@ -154,9 +161,19 @@ export function FeaturedBestsellersUI({
                         </h3>
                       </Link>
 
-                      <span className="text-brand-orange font-bold text-sm md:text-base mt-1">
-                        {product.price}
-                      </span>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
+                        <span className="text-brand-orange font-bold text-sm md:text-base">
+                          {product.price}
+                        </span>
+
+                        {product.hasOffer && product.oldPrice ? (
+                          <>
+                            <span className="text-xs md:text-sm text-gray-400 line-through">
+                              {product.oldPrice}
+                            </span>
+                          </>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 </SwiperSlide>

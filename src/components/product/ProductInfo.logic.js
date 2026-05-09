@@ -16,7 +16,7 @@ function parseBulletPoints(content) {
 }
 
 export function useProductInfoLogic(product) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
 
@@ -26,14 +26,6 @@ export function useProductInfoLogic(product) {
     message: "",
   });
 
-  const sizeOptions = useMemo(
-    () =>
-      Array.isArray(product.sizes)
-        ? product.sizes.map((size) => String(size).trim()).filter(Boolean)
-        : [],
-    [product.sizes],
-  );
-
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
   const [openAccordion, setOpenAccordion] = useState("ingredients");
@@ -41,33 +33,94 @@ export function useProductInfoLogic(product) {
   const decrementQty = () => setQuantity((prev) => Math.max(1, prev - 1));
   const incrementQty = () => setQuantity((prev) => Math.min(10, prev + 1));
 
+  const variants = useMemo(
+    () => (Array.isArray(product.variants) ? product.variants : []),
+    [product.variants],
+  );
+
+  const resolvedVariant = useMemo(() => {
+    const normalizedSelectedSize = String(selectedSize || "")
+      .trim()
+      .toLowerCase();
+
+    return (
+      variants.find(
+        (variant) =>
+          String(variant.size).trim().toLowerCase() === normalizedSelectedSize,
+      ) || variants[0]
+    );
+  }, [selectedSize, variants]);
+
+  const displayPrice = useMemo(() => {
+    const variantPrice = Number(resolvedVariant?.price) || 0;
+
+    if (!product.hasOffer) {
+      return resolvedVariant?.priceLabel || product.price;
+    }
+
+    let discountedPrice = variantPrice;
+
+    if (product.discountType === "percentage") {
+      discountedPrice =
+        variantPrice -
+        (variantPrice * Number(product.discountValue || 0)) / 100;
+    }
+
+    if (product.discountType === "fixed") {
+      discountedPrice = variantPrice - Number(product.discountValue || 0);
+    }
+
+    discountedPrice = Math.max(0, discountedPrice);
+
+    return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US", {
+      style: "currency",
+      currency: "EGP",
+      maximumFractionDigits: 0,
+    }).format(discountedPrice);
+  }, [
+    resolvedVariant,
+    product.hasOffer,
+    product.discountType,
+    product.discountValue,
+    product.price,
+  ]);
+  const resolvedPriceValue = useMemo(() => {
+    const variantPrice = Number(resolvedVariant?.price) || 0;
+
+    if (!product.hasOffer) {
+      return variantPrice;
+    }
+
+    if (product.discountType === "percentage") {
+      return Math.max(
+        0,
+        variantPrice -
+          (variantPrice * Number(product.discountValue || 0)) / 100,
+      );
+    }
+
+    if (product.discountType === "fixed") {
+      return Math.max(0, variantPrice - Number(product.discountValue || 0));
+    }
+
+    return variantPrice;
+  }, [
+    resolvedVariant,
+    product.hasOffer,
+    product.discountType,
+    product.discountValue,
+  ]);
+  const availableStock = Number(resolvedVariant?.stock) || 0;
+
   const toggleAccordion = (key) => {
     setOpenAccordion((prev) => (prev === key ? null : key));
   };
 
-  const resolvedSelectedSize =
-    selectedSize && sizeOptions.includes(selectedSize)
-      ? selectedSize
-      : (sizeOptions[0] || "");
-
   const isWishlisted = useMemo(
-    () => wishlistItems.some((item) => item.productId === String(product.id || "")),
+    () =>
+      wishlistItems.some((item) => item.productId === String(product.id || "")),
     [product.id, wishlistItems],
   );
-
-  const displayPrice = useMemo(() => {
-    if (resolvedSelectedSize && Array.isArray(product.sizePrices)) {
-      const match = product.sizePrices.find(
-        (entry) => String(entry.size || "").trim() === resolvedSelectedSize,
-      );
-
-      if (match?.priceLabel) {
-        return match.priceLabel;
-      }
-    }
-
-    return product.price;
-  }, [product.price, product.sizePrices, resolvedSelectedSize]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -110,22 +163,15 @@ export function useProductInfoLogic(product) {
     }
   };
 
-  const resolvedPriceValue = useMemo(() => {
-    if (resolvedSelectedSize && Array.isArray(product.sizePrices)) {
-      const match = product.sizePrices.find(
-        (entry) => String(entry.size || "").trim() === resolvedSelectedSize,
-      );
-
-      if (Number.isFinite(Number(match?.priceValue))) {
-        return Number(match.priceValue);
-      }
+  const handleAddToCart = () => {
+    if (!resolvedVariant) {
+      return;
     }
 
-    const fallback = Number(product.priceValue);
-    return Number.isFinite(fallback) ? fallback : 0;
-  }, [product.priceValue, product.sizePrices, resolvedSelectedSize]);
+    if (quantity > availableStock) {
+      return;
+    }
 
-  const handleAddToCart = () => {
     dispatch(
       addToCart({
         id: product.id,
@@ -134,7 +180,8 @@ export function useProductInfoLogic(product) {
         category: product.category,
         price: displayPrice,
         priceValue: resolvedPriceValue,
-        size: resolvedSelectedSize || "",
+        size: resolvedVariant?.size || "",
+        stock: availableStock,
         quantity,
       }),
     );
@@ -185,13 +232,17 @@ export function useProductInfoLogic(product) {
 
   return {
     t,
-    sizeOptions,
+    variants,
     quantity,
-    selectedSize: resolvedSelectedSize,
+    resolvedVariant,
+    selectedSize: resolvedVariant?.size || "",
     isWishlisted,
     openAccordion,
     accordions,
     displayPrice,
+    oldPrice: resolvedVariant?.priceLabel || "",
+    hasOffer: product.hasOffer,
+    discountValue: product.discountValue,
     shareLinks,
     shareToast,
     handleShareClick,

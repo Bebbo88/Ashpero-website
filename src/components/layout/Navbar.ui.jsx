@@ -13,6 +13,7 @@ import {
   User,
   LogOut,
   Menu,
+  Package,
 } from "lucide-react";
 import TopBanner from "./TopBanner";
 import NavbarSearch from "./NavbarSearch";
@@ -146,6 +147,14 @@ export function NavbarUI({
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative flex items-center justify-center"
                 >
                   <Heart className="w-4 h-4 lg:w-5 lg:h-5" />
+                </Link>
+                <Link
+                  href="/my-orders"
+                  aria-label="My Orders"
+                  title="My Orders"
+                  className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative flex items-center justify-center"
+                >
+                  <Package className="w-4 h-4 lg:w-5 lg:h-5" />
                 </Link>
               </div>
 

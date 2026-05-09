@@ -4,10 +4,14 @@ import React, { useState, useRef } from "react";
 import Image from "@/components/ui/AppImage";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function ProductGallery({ images, productName }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const swiperRef = useRef(null);
+  const { locale } = useLanguage();
+
+  const isArabic = locale === "ar";
 
   const handleThumbnailClick = (idx) => {
     setSelectedIndex(idx);
@@ -46,6 +50,8 @@ export default function ProductGallery({ images, productName }) {
       <div className="relative w-full flex-1 aspect-square md:aspect-[4/5] max-h-[440px] md:max-h-[560px] rounded-2xl overflow-hidden bg-brand-creme dark:bg-white/5 group">
         <Swiper
           ref={swiperRef}
+          key={locale}
+          dir={isArabic ? "rtl" : "ltr"}
           onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
           className="w-full h-full"
           grabCursor
@@ -67,4 +73,3 @@ export default function ProductGallery({ images, productName }) {
     </div>
   );
 }
-

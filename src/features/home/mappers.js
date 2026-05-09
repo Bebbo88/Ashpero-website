@@ -1,4 +1,5 @@
 import { toAbsoluteAssetUrl } from "@/constants/config";
+import { applyOfferToProduct } from "@/utils/applyOffer";
 
 function getLocalizedValue(entity, locale, englishKey, arabicKey, fallbackKey) {
   if (!entity || typeof entity !== "object") {
@@ -30,34 +31,81 @@ function resolveProductId(product, fallbackIndex) {
   return String(product?._id || product?.id || fallbackIndex + 1);
 }
 
-export function mapBestSellerProducts(products = [], locale = "en") {
+export function mapBestSellerProducts(
+  products = [],
+  locale = "en",
+  offers = [],
+) {
   return products
     .map((product, index) => {
-      const image = toAbsoluteAssetUrl(product?.images?.[0]);
+      const normalizedProduct = applyOfferToProduct(product, offers);
+
+      const image = toAbsoluteAssetUrl(normalizedProduct?.images?.[0]);
+
+      const variants = Array.isArray(normalizedProduct?.variants)
+        ? normalizedProduct.variants.map((variant) => ({
+            size: String(variant.size || "").trim(),
+
+            price: Number(variant.price) || 0,
+
+            stock: Number(variant.stock) || 0,
+
+            priceLabel: formatPrice(variant.price, locale),
+          }))
+        : [];
+
+      const lowestPrice =
+        variants.length > 0
+          ? Math.min(...variants.map((variant) => variant.price))
+          : 0;
+
+      const finalPrice = normalizedProduct?.finalPrice || lowestPrice;
 
       return {
-        id: resolveProductId(product, index),
-        image: image || null, // ✅ null بدل ""
+        id: resolveProductId(normalizedProduct, index),
+
+        image: image || null,
+
         category:
           getLocalizedValue(
-            product,
+            normalizedProduct,
             locale,
             "category",
             "category",
             "category",
           ) || "Skincare",
+
         title:
-          getLocalizedValue(product, locale, "name_en", "name_ar", "name") ||
-          "Product",
-        price: formatPrice(product?.price, locale),
-        priceNum: Number(product?.price) || 0,
+          getLocalizedValue(
+            normalizedProduct,
+            locale,
+            "name_en",
+            "name_ar",
+            "name",
+          ) || "Product",
+
+        price: formatPrice(finalPrice, locale),
+
+        priceNum: finalPrice,
+
+        oldPrice: normalizedProduct?.hasOffer
+          ? formatPrice(lowestPrice, locale)
+          : "",
+
+        hasOffer: normalizedProduct?.hasOffer || false,
+
+        discountType: normalizedProduct?.discountType || "",
+
+        discountValue: normalizedProduct?.discountValue || 0,
+
+        variants,
       };
     })
-    .filter((product) => product.image); // 🔥 يشيل أي عنصر مفيهوش صورة
+    .filter((product) => product.image);
 }
 
-export function mapHeroCards(products = [], locale = "en") {
-  return mapBestSellerProducts(products, locale)
+export function mapHeroCards(products = [], locale = "en", offers = []) {
+  return mapBestSellerProducts(products, locale, offers)
     .slice(0, 6)
     .map((product, index) => ({
       ...product,
@@ -78,10 +126,10 @@ export function mapHeroBackgroundSlides(content = {}) {
 
       return {
         id: `hero-${index}`,
-        image: image || null, // ✅ null
+        image: image || null,
       };
     })
-    .filter((slide) => slide.image); // 🔥 مهم جدًا
+    .filter((slide) => slide.image);
 }
 
 function getLatestImagePath(items) {
@@ -101,7 +149,7 @@ export function mapHomeOfferBannerImage(content = {}) {
 
   const image = toAbsoluteAssetUrl(selectedBanner);
 
-  return image || null; // ✅ null
+  return image || null;
 }
 
 export function mapOffersPageBannerImage(content = {}) {
@@ -113,7 +161,7 @@ export function mapOffersPageBannerImage(content = {}) {
 
   const image = toAbsoluteAssetUrl(selectedBanner);
 
-  return image || null; // ✅ null
+  return image || null;
 }
 
 export function mapPrimaryBannerImage(content = {}) {
