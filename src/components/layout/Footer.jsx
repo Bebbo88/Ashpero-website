@@ -3,9 +3,16 @@
 import React from "react";
 import Image from "@/components/ui/AppImage";
 import Link from "next/link";
-import { Send } from "lucide-react";
 import { useLanguage } from "../../hooks/useLanguage";
-import { InstagramIcon, XIcon, WhatsAppIcon } from "@/svgs/Footer.svgs";
+import {
+  InstagramIcon,
+  XIcon,
+  WhatsAppIcon,
+  FacebookIcon,
+  TiktokIcon,
+  LinkedinIcon,
+  YoutubeIcon,
+} from "@/svgs/ContactUsClient.svgs";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -29,27 +36,69 @@ export default function Footer() {
               {t("Footer.description")}
             </p>
             {/* Social Icons */}
-            <div className="flex items-center gap-5 mt-2">
+            <div className="flex flex-wrap items-center gap-4 mt-2">
               <a
-                href="#"
+                href="https://www.facebook.com/Ashperoo1"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="hover:text-brand-orange transition-transform hover:scale-110"
+              >
+                <FacebookIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.instagram.com/ashperoo?igsh=MWo1djBnaGprMjJkMw=="
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="hover:text-brand-orange transition-colors"
+                className="hover:text-brand-orange transition-transform hover:scale-110"
               >
                 <InstagramIcon className="w-5 h-5" />
               </a>
               <a
-                href="#"
-                aria-label="X (Twitter)"
-                className="hover:text-brand-orange transition-colors"
+                href="https://www.tiktok.com/@ashperoo1?_r=1&_t=ZS-95gKOyN0MFU"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+                className="hover:text-brand-orange transition-transform hover:scale-110"
               >
-                <XIcon className="w-4 h-4" />
+                <TiktokIcon className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/company/ashperoo-cosmetics-serum/?viewAsMember=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="hover:text-brand-orange transition-transform hover:scale-110"
+              >
+                <LinkedinIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://wa.me/201108851834"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="WhatsApp"
-                className="hover:text-brand-orange transition-colors"
+                className="hover:text-brand-orange transition-transform hover:scale-110"
               >
                 <WhatsAppIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.youtube.com/@ashperoo1"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                className="hover:text-brand-orange transition-transform hover:scale-110"
+              >
+                <YoutubeIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://x.com/ashperoo"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X (Twitter)"
+                className="hover:text-brand-orange transition-transform hover:scale-110"
+              >
+                <XIcon className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -86,14 +135,14 @@ export default function Footer() {
               {t("Footer.customerCare")}
             </h3>
             <Link
-              href="/contact-us"
+              href="/returns"
               className="text-sm font-medium text-white/80 hover:text-white transition-colors"
             >
               {t("Footer.shippingReturns")}
             </Link>
 
             <Link
-              href="/contact-us"
+              href="/privacy-policy"
               className="text-sm font-medium text-white/80 hover:text-white transition-colors"
             >
               {t("Footer.privacyPolicy")}
@@ -138,14 +187,14 @@ export default function Footer() {
         {/* Bottom Bar with Payment Badges */}
         <div className="border-t border-white/20 pt-8 mt-4 flex flex-col xl:flex-row justify-between items-center gap-8">
           <div className="flex flex-col md:flex-row items-center gap-6 xl:gap-8">
-            <p className="text-[11px] font-semibold text-white/60 tracking-wider uppercase text-center md:text-left rtl:md:text-right">
+            <p className="text-[11px] font-semibold text-white/80 tracking-wider uppercase text-center md:text-left rtl:md:text-right">
               {t("Footer.copyright")}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6"></div>
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-4">
-            <span className="text-[9px] font-bold text-white/50 tracking-[0.2em] uppercase shrink-0">
+            <span className="text-[9px] font-bold text-white/80 tracking-[0.2em] uppercase shrink-0">
               {t("Checkout.securePaymob") || "SECURED VIA PAYMOB"}
             </span>
             <div className="flex items-center flex-wrap justify-center gap-2">

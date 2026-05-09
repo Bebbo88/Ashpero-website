@@ -47,10 +47,13 @@ function normalizeItem(payload = {}) {
     title: String(payload.title || "Product"),
     image: String(payload.image || "/assets/photo1.jpeg"),
     category: String(payload.category || ""),
-    size: String(payload.size || ""),
+    size: String(payload.size || "")
+      .trim()
+      .toLowerCase(),
     priceValue: Math.max(0, toNumber(payload.priceValue, 0)),
     priceLabel: String(payload.price || payload.priceLabel || ""),
     quantity,
+    stock: Math.max(0, toNumber(payload.stock, 0)),
   };
 }
 
@@ -70,7 +73,8 @@ const cartSlice = createSlice({
       }
 
       const existingIndex = state.items.findIndex(
-        (item) => item.productId === nextItem.productId && item.size === nextItem.size,
+        (item) =>
+          item.productId === nextItem.productId && item.size === nextItem.size,
       );
 
       if (existingIndex >= 0) {
@@ -83,11 +87,12 @@ const cartSlice = createSlice({
     },
     updateCartItemQuantity: (state, action) => {
       const { productId, size = "", quantity } = action.payload || {};
+      const normalizedSize = String(size).trim().toLowerCase();
       const targetId = String(productId || "").trim();
       const nextQuantity = Math.max(1, toNumber(quantity, 1));
 
       state.items = state.items.map((item) =>
-        item.productId === targetId && item.size === size
+        item.productId === targetId && item.size === normalizedSize
           ? { ...item, quantity: nextQuantity }
           : item,
       );
@@ -97,9 +102,10 @@ const cartSlice = createSlice({
     removeFromCart: (state, action) => {
       const { productId, size = "" } = action.payload || {};
       const targetId = String(productId || "").trim();
-
+      const normalizedSize = String(size).trim().toLowerCase();
       state.items = state.items.filter(
-        (item) => !(item.productId === targetId && item.size === size),
+        (item) =>
+          !(item.productId === targetId && item.size === normalizedSize),
       );
       persistToStorage(state.items);
     },

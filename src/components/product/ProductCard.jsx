@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cartSlice";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, priority = false }) {
   const { t } = useLanguage();
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
@@ -38,14 +38,27 @@ export default function ProductCard({ product }) {
     event.preventDefault();
     event.stopPropagation();
 
+    const firstVariant =
+      Array.isArray(product.variants) && product.variants.length > 0
+        ? product.variants[0]
+        : null;
+
+    if (!firstVariant) {
+      return;
+    }
     dispatch(
       addToCart({
         id: product.id,
         title: product.title,
         image: product.image,
         category: product.category,
-        price: product.price,
-        priceValue: product.priceNum,
+        price: `EGP ${firstVariant.price}`,
+
+        priceValue: firstVariant.price,
+
+        size: firstVariant.size,
+
+        stock: firstVariant.stock,
         quantity: 1,
       }),
     );
@@ -67,13 +80,14 @@ export default function ProductCard({ product }) {
 
         {/* Wishlist Button */}
         <button
+          aria-label="Toggle Wishlist"
           onClick={handleToggleWishlist}
           className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 cursor-pointer shadow-sm bg-white/90 dark:bg-black/40 backdrop-blur-sm hover:scale-110 hover:bg-white dark:hover:bg-black/60"
         >
           <Heart
             className={`w-4 h-4 transition-colors duration-300 ${
-              isWishlisted 
-                ? "fill-red-500 text-red-500" 
+              isWishlisted
+                ? "fill-red-500 text-red-500"
                 : "text-gray-400 dark:text-gray-300 hover:text-red-400 dark:hover:text-red-400"
             }`}
           />
@@ -87,6 +101,7 @@ export default function ProductCard({ product }) {
             fill
             className="object-cover"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            priority={priority}
           />
         </div>
 
@@ -106,9 +121,9 @@ export default function ProductCard({ product }) {
       {/* Product Info */}
       <div className="flex flex-col gap-0.5 px-1 pb-2">
         {product.category && (
-        <span className="text-[10px] font-bold tracking-[0.15em] text-gray-400 dark:text-gray-500 uppercase">
-          {product.category}
-        </span>
+          <span className="text-[10px] font-bold tracking-[0.15em] text-gray-500 dark:text-gray-400 uppercase">
+            {product.category}
+          </span>
         )}
         <h3 className="font-serif text-sm md:text-base font-semibold text-text-primary leading-snug line-clamp-1 hover:text-brand-accent transition-colors duration-300">
           {product.title}
@@ -118,7 +133,7 @@ export default function ProductCard({ product }) {
             {product.price}
           </span>
           {product.oldPrice && (
-            <span className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm line-through">
+            <span className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm line-through">
               {product.oldPrice}
             </span>
           )}
@@ -132,4 +147,3 @@ export default function ProductCard({ product }) {
     </Link>
   );
 }
-

@@ -15,13 +15,16 @@ function VideoCard({ item, index }) {
 
   // Simplify Cloudinary transformations to avoid 400 errors
   const videoSource = React.useMemo(() => {
-    if (typeof rawVideoSource !== "string" || !rawVideoSource.includes("cloudinary.com")) {
+    if (
+      typeof rawVideoSource !== "string" ||
+      !rawVideoSource.includes("cloudinary.com")
+    ) {
       return rawVideoSource;
     }
     // Change complex transformations to simple f_auto,q_auto
     return rawVideoSource.replace(
       /\/video\/upload\/[^/]+\//,
-      "/video/upload/f_auto,q_auto/"
+      "/video/upload/f_auto,q_auto/",
     );
   }, [rawVideoSource]);
 
@@ -109,7 +112,9 @@ function VideoCard({ item, index }) {
 }
 
 function areEqual(prevProps, nextProps) {
-  return prevProps.item === nextProps.item && prevProps.index === nextProps.index;
+  return (
+    prevProps.item === nextProps.item && prevProps.index === nextProps.index
+  );
 }
 
 export default memo(VideoCard, areEqual);

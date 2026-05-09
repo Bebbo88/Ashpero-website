@@ -8,6 +8,7 @@ import {
   Grid3X3,
   Search,
 } from "lucide-react";
+import Image from "@/components/ui/AppImage";
 import ProductCard from "./ProductCard";
 import ProductFilter from "./ProductFilter";
 import EmptyState from "@/components/ui/EmptyState";
@@ -16,7 +17,7 @@ import { useLanguage } from "../../hooks/useLanguage";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { mapAllProducts } from "@/features/product/mappers";
 import { useProductsQuery } from "@/features/product/queries";
-import Loader from "../loader/loader";
+import { useOffersQuery } from "@/features/offer/queries";
 
 const SORT_OPTIONS = [
   { key: "featured", labelKey: "featured" },
@@ -118,6 +119,7 @@ export default function AllProductsPage() {
   const debouncedSearch = useDebouncedValue(searchInput.trim(), 450);
 
   const facetsQuery = useProductsQuery({ isActive: true });
+  const offersQuery = useOffersQuery();
 
   const productsQuery = useProductsQuery({
     isActive: true,
@@ -133,13 +135,13 @@ export default function AllProductsPage() {
   });
 
   const products = useMemo(
-    () => mapAllProducts(productsQuery.data, locale),
-    [locale, productsQuery.data],
+    () => mapAllProducts(productsQuery.data, locale, offersQuery.data),
+    [locale, productsQuery.data, offersQuery.data],
   );
 
   const facetsProducts = useMemo(
-    () => mapAllProducts(facetsQuery.data, locale),
-    [facetsQuery.data, locale],
+    () => mapAllProducts(facetsQuery.data, locale, offersQuery.data),
+    [facetsQuery.data, locale, offersQuery.data],
   );
 
   const categoryOptions = useMemo(
@@ -253,12 +255,10 @@ export default function AllProductsPage() {
     }
 
     return result.map((product) => ({
-      id: product.id,
-      image: product.image,
+      ...product,
+
       category: resolveCategoryLabel(product.categoryRaw),
-      title: product.title,
-      description: product.description,
-      price: product.price,
+
       priceNum: product.priceValue,
     }));
   }, [filters.priceRange, products, sortBy]);
@@ -268,25 +268,28 @@ export default function AllProductsPage() {
     0,
   );
 
-  const isLoading = productsQuery.isLoading || facetsQuery.isLoading;
-  const isError = productsQuery.isError || facetsQuery.isError;
+  const isLoading =
+    productsQuery.isLoading || facetsQuery.isLoading || offersQuery.isLoading;
+  const isError =
+    productsQuery.isError || facetsQuery.isError || offersQuery.isError;
   const errorMessage =
-    productsQuery.error?.message || facetsQuery.error?.message || "";
+    productsQuery.error?.message ||
+    facetsQuery.error?.message ||
+    offersQuery.error?.message ||
+    "";
 
   return (
     <section className="w-full bg-bg-primary min-h-screen">
-      <div className="w-full all-products-hero-gradient pt-12 pb-8 md:pt-16 md:pb-12">
-        <div className="container mx-auto px-6 lg:px-10">
-          <p className="font-sans text-[11px] font-bold tracking-[0.3em] uppercase text-white/60 mb-2">
-            {t("AllProducts.subtitle")}
-          </p>
-          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-medium text-white tracking-wide">
-            {t("AllProducts.title")}
-          </h1>
-          <p className="mt-2 text-sm text-white/75 max-w-xl leading-relaxed">
-            {t("AllProducts.description")}
-          </p>
-        </div>
+      <div className="w-full">
+        <Image
+          src="/assets/all_prods.jpg"
+          alt="All Products"
+          width={1920}
+          height={1080}
+          priority
+          className="w-full h-auto object-cover"
+          sizes="100vw"
+        />
       </div>
 
       <div className="container mx-auto px-6 lg:px-10 py-10 md:py-14">

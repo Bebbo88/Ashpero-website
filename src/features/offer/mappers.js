@@ -74,12 +74,26 @@ export function mapOfferProducts(offers = [], locale = "en") {
 
   for (const offer of offers) {
     const products = Array.isArray(offer?.productIds) ? offer.productIds : [];
+    console.log(products);
     const badge = buildDiscountLabel(offer, locale);
-    const offerTitle = getLocalizedValue(offer, locale, "title_en", "title_ar", "title");
+    const offerTitle = getLocalizedValue(
+      offer,
+      locale,
+      "title_en",
+      "title_ar",
+      "title",
+    );
 
     for (const product of products) {
       const productId = String(product?._id || product?.id || "").trim();
-      const basePrice = Number(product?.price);
+      const variants = Array.isArray(product?.variants) ? product.variants : [];
+
+      const prices = variants
+        .map((variant) => Number(variant?.price))
+        .filter(Number.isFinite);
+
+      const basePrice =
+        prices.length > 0 ? Math.min(...prices) : Number(product?.price);
 
       if (!productId || !Number.isFinite(basePrice)) {
         continue;
@@ -93,9 +107,13 @@ export function mapOfferProducts(offers = [], locale = "en") {
 
       const nextItem = {
         id: productId,
-        title: getLocalizedValue(product, locale, "name_en", "name_ar", "name") || "Product",
+        title:
+          getLocalizedValue(product, locale, "name_en", "name_ar", "name") ||
+          "Product",
         description: offerTitle || "",
-        image: toAbsoluteAssetUrl(product?.images?.[0] || "") || "/assets/photo1.jpeg",
+        image:
+          toAbsoluteAssetUrl(product?.images?.[0] || "") ||
+          "/assets/photo1.jpeg",
         price: formatCurrency(discountedPrice, locale),
         priceNum: discountedPrice,
         oldPrice: formatCurrency(basePrice, locale),

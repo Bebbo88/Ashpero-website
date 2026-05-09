@@ -20,12 +20,13 @@ export default function HeritageCTA() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-14 items-center">
           {/* Left: Photo with overlay card */}
           <div className="relative mx-auto w-full max-w-[420px] md:max-w-none">
-            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
+            <div className="w-full rounded-2xl overflow-hidden">
               <Image
-                src="/assets/CTA.png"
+                src="/assets/heritage.jpg"
                 alt="Ashpero Heritage"
-                fill
-                className="object-contain p-2 sm:p-3"
+                width={800}
+                height={1000}
+                className="w-full h-auto object-cover p-2 sm:p-3"
                 sizes="(max-width: 768px) 90vw, 50vw"
               />
             </div>
@@ -74,4 +75,3 @@ export default function HeritageCTA() {
     </section>
   );
 }
-

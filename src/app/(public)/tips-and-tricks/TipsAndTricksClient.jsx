@@ -62,14 +62,10 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
               const isReversed = rowIdx % 2 !== 0;
 
               return (
-                <div
-                  key={row.id}
-                  className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-7 lg:gap-8 lg:items-stretch"
-                  style={{
-                    contentVisibility: "auto",
-                    containIntrinsicSize: "1px 780px",
-                  }}
-                >
+                  <div
+                    key={row.id}
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-7 lg:gap-8 lg:items-stretch"
+                  >
                   {/* Video Block */}
                   <div
                     className={`lg:col-span-2 flex flex-col h-full ${

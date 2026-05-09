@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 
 const CHAT_STORAGE_KEY = "ashpero_ai_chat_history";
 
-export default function AIChatBox({ onClose }) {
+export default function AIChatBox({ onClose, alignment = "end" }) {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef(null);
@@ -69,12 +69,18 @@ export default function AIChatBox({ onClose }) {
       ]);
     },
     onError: (error) => {
+      let friendlyError = "Oops, something went wrong. Please try again.";
+      const errStr = error.message?.toLowerCase() || "";
+      if (errStr.includes("503") || errStr.includes("demand") || errStr.includes("quota")) {
+        friendlyError = "I'm currently assisting many customers and my system is very busy. Please try again in a few minutes!";
+      }
+
       setMessages((prev) => [
         ...prev,
         {
           id: `err-${Date.now()}`,
           role: "model",
-          text: `Oops, something went wrong: ${error.message}`,
+          text: friendlyError,
           isError: true,
           timestamp: Date.now(),
         },
@@ -110,13 +116,18 @@ export default function AIChatBox({ onClose }) {
     chatMutation.mutate({ message: userText, history: apiHistory });
   };
 
+  const alignmentClasses =
+    alignment === "start"
+      ? "start-0 origin-bottom-left"
+      : "end-0 origin-bottom-right";
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8, y: 50 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.8, y: 50, transition: { duration: 0.2 } }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
-      className="absolute bottom-20 end-0 w-[340px] md:w-[380px] h-[500px] max-h-[70vh] bg-bg-primary border border-border-color shadow-2xl rounded-2xl flex flex-col overflow-hidden z-[200] origin-bottom-right"
+      className={`absolute bottom-20 w-[340px] md:w-[380px] h-[500px] max-h-[70vh] bg-bg-primary border border-border-color shadow-2xl rounded-2xl flex flex-col overflow-hidden z-[200] ${alignmentClasses}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-brand-mint to-brand-dark text-white">

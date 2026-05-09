@@ -13,8 +13,10 @@ import {
   User,
   LogOut,
   Menu,
+  Package,
 } from "lucide-react";
 import TopBanner from "./TopBanner";
+import NavbarSearch from "./NavbarSearch";
 import {
   GoogleIcon,
   FacebookIcon as FacebookProviderIcon,
@@ -72,6 +74,7 @@ export function NavbarUI({
           <div className="flex items-center justify-between h-20 gap-4 lg:gap-8">
             <button
               onClick={toggleMobileMenu}
+              aria-label={t("Navbar.toggleMenu") || "Toggle mobile menu"}
               className="md:hidden flex items-center gap-2 h-8 w-24 bg-transparent cursor-pointer"
             >
               <Menu className="w-6 h-6 text-text-primary shrink-0" />
@@ -81,7 +84,7 @@ export function NavbarUI({
                   src={logoMobileSrc}
                   alt="Ashpero Mobile Logo"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left rtl:object-right"
                   priority
                   sizes="96px"
                 />
@@ -97,7 +100,7 @@ export function NavbarUI({
                   src={logoSrc}
                   alt="Ashpero Logo"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left rtl:object-right"
                   priority
                   sizes="160px"
                 />
@@ -105,27 +108,20 @@ export function NavbarUI({
 
               <div className="hidden lg:flex items-center gap-2 xl:gap-4 ml-2 overflow-hidden">
                 <div className="w-[1px] h-6 bg-text-primary opacity-20" />
-                <span className="font-playfair italic text-text-primary tracking-[0.1em] xl:tracking-[0.2em] text-[10px] xl:text-xs pt-1 uppercase opacity-80 whitespace-nowrap">
-                  {t("Navbar.madeInEgypt")}
+                <span className="font-playfair italic text-text-primary tracking-[0.1em] xl:tracking-[0.2em] text-[10px] xl:text-xs pt-1 uppercase opacity-100 font-bold whitespace-nowrap">
+                  {t("Navbar.success")}
                 </span>
-
-                <div className="hidden xl:flex items-center gap-4">
-                  <div className="w-[1px] h-6 bg-text-primary opacity-20" />
-                  <span className="font-playfair italic text-text-primary tracking-[0.2em] text-xs pt-1 uppercase opacity-80 whitespace-nowrap">
-                    {t("Navbar.luxurySkincare")}
-                  </span>
-                  <div className="w-[1px] h-6 bg-text-primary opacity-20" />
-                  <span className="font-playfair italic text-text-primary tracking-[0.2em] text-xs pt-1 uppercase opacity-80 whitespace-nowrap">
-                    {t("Navbar.naturalIngredients")}
-                  </span>
-                </div>
               </div>
             </div>
+
+            {/* Middle Search - real-time, bilingual */}
+            <NavbarSearch />
 
             <div className="flex items-center gap-3 lg:gap-6 flex-shrink-0">
               <div className="flex items-center gap-2 lg:gap-4 text-text-primary">
                 <button
                   onClick={toggleDark}
+                  aria-label="Toggle dark mode"
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors"
                 >
                   {isDark ? (
@@ -136,6 +132,7 @@ export function NavbarUI({
                 </button>
                 <button
                   onClick={toggleLang}
+                  aria-label="Toggle language"
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors flex items-center font-bold text-xs lg:text-sm"
                 >
                   <Globe className="w-4 h-4 lg:w-5 lg:h-5 mr-1" />
@@ -146,9 +143,18 @@ export function NavbarUI({
 
                 <Link
                   href="/wishlist"
+                  aria-label="Wishlist"
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative flex items-center justify-center"
                 >
                   <Heart className="w-4 h-4 lg:w-5 lg:h-5" />
+                </Link>
+                <Link
+                  href="/my-orders"
+                  aria-label="My Orders"
+                  title="My Orders"
+                  className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors relative flex items-center justify-center"
+                >
+                  <Package className="w-4 h-4 lg:w-5 lg:h-5" />
                 </Link>
               </div>
 
@@ -176,6 +182,7 @@ export function NavbarUI({
                     </span>
                     <button
                       onClick={logout}
+                      aria-label="Logout"
                       className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-text-primary hover:text-brand-orange"
                       title="Logout"
                     >
@@ -186,6 +193,7 @@ export function NavbarUI({
                   <button
                     onClick={toggleAuthMenu}
                     disabled={isAuthLoading}
+                    aria-label={t("Navbar.login") || "Login"}
                     className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-text-primary hover:text-brand-orange disabled:opacity-60 flex items-center justify-center"
                     title={t("Navbar.login")}
                   >
@@ -258,6 +266,7 @@ export function NavbarUI({
                       closeMobileMenu();
                       logout();
                     }}
+                    aria-label="Logout"
                     className="w-full cursor-pointer flex items-center justify-center gap-2 text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
@@ -270,6 +279,7 @@ export function NavbarUI({
                     toggleAuthMenu();
                   }}
                   disabled={isAuthLoading}
+                  aria-label={t("Navbar.login") || "Login"}
                   className="w-full cursor-pointer flex items-center justify-center gap-2 text-sm font-semibold text-text-primary py-3 rounded-full border border-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors disabled:opacity-60"
                 >
                   <User className="w-4 h-4" />
@@ -292,6 +302,7 @@ export function NavbarUI({
           <div className="relative w-full max-w-md rounded-3xl border border-auth-modal-border auth-modal-surface backdrop-blur-2xl shadow-auth-modal p-6 md:p-7">
             <button
               onClick={closeAuthMenu}
+              aria-label="Close"
               className="absolute top-4 right-4 w-8 h-8 rounded-full border border-auth-modal-close-border text-auth-modal-close-text hover:bg-white flex items-center justify-center cursor-pointer"
             >
               <X className="w-4 h-4" />

@@ -12,8 +12,6 @@ import { useSiteContentQuery } from "@/features/home/queries";
 import { mapOffersPageBannerImage } from "@/features/home/mappers";
 import { mapOfferProducts } from "@/features/offer/mappers";
 import { useOffersQuery } from "@/features/offer/queries";
-import { AnimatePresence } from "framer-motion";
-import HeroLoader from "../home/HearoLoader";
 
 function matchSearch(item, searchTerm) {
   if (!searchTerm) {
@@ -57,27 +55,23 @@ export default function OffersPage() {
   const isLoading = siteContentQuery.isLoading || !headerImage;
 
   return (
-    <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
-      <section className="relative w-full overflow-hidden flex items-center min-h-[320px] md:min-h-[400px]">
-        {/* 🟡 Loader */}
-        {isLoading && (
-          <AnimatePresence>
-            <HeroLoader />
-          </AnimatePresence>
-        )}
-        {!isLoading && (
+    <div className="w-full">
+      <div className="w-full bg-surface-muted">
+        {headerImage && (
           <Image
             src={headerImage}
             alt="Offers Header"
-            fill
-            className="object-cover object-right"
-            priority
+            width={1920}
+            height={1080}
+            className="w-full h-auto object-cover"
+            priority={true}
+            loading="eager"
             sizes="100vw"
           />
         )}
-      </section>
+      </div>
 
-      <div className="mt-10">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 className="text-2xl md:text-3xl font-serif text-text-primary mb-1">
@@ -94,7 +88,7 @@ export default function OffersPage() {
               value={searchValue}
               onChange={(event) => setSearchValue(event.target.value)}
               placeholder={
-                locale === "ar" ? "???? ?? ??????..." : "Search offers..."
+                locale === "ar" ? "ابحث عن عروض..." : "Search offers..."
               }
               className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 ps-9 pe-3 text-sm text-text-primary outline-none focus:border-brand-orange"
             />
@@ -127,7 +121,7 @@ export default function OffersPage() {
           <>
             <div className="mb-5 text-xs tracking-wide text-text-secondary">
               {locale === "ar"
-                ? `??? ???????? ????????: ${filteredProducts.length}`
+                ? `عدد المنتجات المعروضة: ${filteredProducts.length}`
                 : `Showing ${filteredProducts.length} offer products`}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6">

@@ -3,35 +3,38 @@
 import React, { useState, useEffect } from "react";
 import Image from "@/components/ui/AppImage";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMode } from "@/hooks/useMode";
 
-export default function SplashScreen({ children }) {
-  const [showSplash, setShowSplash] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const { isDark } = useMode();
+const SPLASH_COMPLETE_EVENT = "ashperoo:splash-complete";
 
-  useEffect(() => {
-    setIsMounted(true);
-    // Check if the splash was already shown in the current tab session
-    const hasSeenSplash = sessionStorage.getItem("splash_shown");
-    if (!hasSeenSplash) {
-      setShowSplash(true);
-    }
-  }, []);
+export default function SplashScreen({ children, hasSeenSplash }) {
+  const [showSplash, setShowSplash] = useState(!hasSeenSplash);
 
-  const handleAnimationComplete = () => {
+  const markSplashComplete = () => {
+    document.cookie = "splash_shown=true; path=/";
     sessionStorage.setItem("splash_shown", "true");
-    setShowSplash(false);
+    window.dispatchEvent(new Event(SPLASH_COMPLETE_EVENT));
   };
 
-  // Prevent flash of unstyled content wait for client to mount
-  if (!isMounted) {
-    return (
-      <div className="fixed inset-0 z-[100] bg-bg-primary flex items-center justify-center">
-        {/* Silent loading state before hydration captures the layout */}
-      </div>
-    );
-  }
+  useEffect(() => {
+    // Check if the splash was already shown in the current tab session
+    const hasSeenSplashSession = sessionStorage.getItem("splash_shown");
+    if (hasSeenSplashSession && showSplash) {
+      window.dispatchEvent(new Event(SPLASH_COMPLETE_EVENT));
+      const timeoutId = setTimeout(() => setShowSplash(false), 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [showSplash]);
+
+  useEffect(() => {
+    if (!showSplash) {
+      window.dispatchEvent(new Event(SPLASH_COMPLETE_EVENT));
+    }
+  }, [showSplash]);
+
+  const handleAnimationComplete = () => {
+    markSplashComplete();
+    setShowSplash(false);
+  };
 
   return (
     <>
@@ -39,7 +42,7 @@ export default function SplashScreen({ children }) {
         {showSplash && (
           <motion.div
             key="splash-overlay"
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-bg-primary/80 dark:bg-bg-primary/80 backdrop-blur-md"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-bg-primary/80 dark:bg-bg-primary/80 backdrop-blur-md"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -59,22 +62,34 @@ export default function SplashScreen({ children }) {
               <motion.div
                 animate={{ scale: [1, 1, 15], opacity: [1, 1, 0] }}
                 transition={{
-                  duration: 1.6,
-                  times: [0, 0.5, 1], // Waits smoothly at scale 1 before dramatically zooming in (scale 15) and fading out
+                  duration: 2.4,
+                  times: [0, 0.7, 1],
                   ease: [0.4, 0, 0.2, 1],
-                  delay: 1.2, // starts zooming out after the drop is completed
+                  delay: 1.2,
                 }}
                 onAnimationComplete={handleAnimationComplete}
                 className="w-full h-full relative"
               >
-                <Image
-                  src={isDark ? "/assets/logo-white.svg" : "/assets/logo.svg"}
-                  alt="Ashpero Logo"
-                  fill
-                  sizes="(max-width: 768px) 256px, 320px"
-                  className="object-contain"
-                  priority
-                />
+                <div className="w-full h-full relative block dark:hidden">
+                  <Image
+                    src="/assets/logo.svg"
+                    alt="Ashpero Logo"
+                    fill
+                    sizes="(max-width: 768px) 256px, 320px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+                <div className="w-full h-full relative hidden dark:block">
+                  <Image
+                    src="/assets/logo-white.svg"
+                    alt="Ashpero Logo"
+                    fill
+                    sizes="(max-width: 768px) 256px, 320px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
               </motion.div>
             </motion.div>
           </motion.div>

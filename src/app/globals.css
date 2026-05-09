@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --ds-brand-primary: #0c6d6d;
   --ds-brand-accent: #69b578;
@@ -22,8 +24,8 @@
   --ds-newsletter-placeholder: #506a5b;
   --ds-footer-button-hover: #de5c38;
 
-  --ds-social-whatsapp: #25d366;
-  --ds-social-whatsapp-hover: #1ebe5a;
+  --ds-social-whatsapp: #1da851;
+  --ds-social-whatsapp-hover: #168c42;
   --ds-social-facebook: #1877f2;
   --ds-social-x: #1da1f2;
   --ds-social-instagram: #e4405f;
@@ -97,12 +99,12 @@
 }
 
 .dark {
-  --ds-bg-primary: #1f3325;
-  --ds-bg-secondary: #2b4e38;
+  --ds-bg-primary: #0e1510;
+  --ds-bg-secondary: #18281e;
   --ds-text-primary: #f9fafb;
   --ds-text-secondary: #d1d5db;
   --ds-border-color: #374151;
-  --ds-nav-glass: rgba(31, 51, 37, 0.85);
+  --ds-nav-glass: rgba(16, 22, 18, 0.85);
   --ds-input-placeholder: #9ca3af;
 }
 
