@@ -5,18 +5,22 @@ import Image from "@/components/ui/AppImage";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useOffersQuery } from "@/features/offer/queries";
+import { toAbsoluteAssetUrl } from "@/constants/config";
 
-const POPUP_IMAGE_SRC = "/assets/popupp.jpg";
 const SPLASH_COMPLETE_EVENT = "ashperoo:splash-complete";
 
-let popupImagePreloadPromise;
+const popupImagePreloadPromises = new Map();
 
-function preloadPopupImage() {
-  if (popupImagePreloadPromise) {
-    return popupImagePreloadPromise;
+function preloadPopupImage(imageSrc) {
+  if (!imageSrc) {
+    return Promise.resolve();
   }
 
-  popupImagePreloadPromise = new Promise((resolve) => {
+  if (popupImagePreloadPromises.has(imageSrc)) {
+    return popupImagePreloadPromises.get(imageSrc);
+  }
+
+  const preloadPromise = new Promise((resolve) => {
     let timeoutId;
     const resolveOnce = () => {
       clearTimeout(timeoutId);
@@ -26,14 +30,14 @@ function preloadPopupImage() {
     const link = document.createElement("link");
     link.rel = "preload";
     link.as = "image";
-    link.href = POPUP_IMAGE_SRC;
+    link.href = imageSrc;
     link.fetchPriority = "high";
     document.head.appendChild(link);
 
     const image = new window.Image();
     image.onload = resolveOnce;
     image.onerror = resolveOnce;
-    image.src = POPUP_IMAGE_SRC;
+    image.src = imageSrc;
 
     if (image.complete) {
       resolveOnce();
@@ -42,7 +46,9 @@ function preloadPopupImage() {
     }
   });
 
-  return popupImagePreloadPromise;
+  popupImagePreloadPromises.set(imageSrc, preloadPromise);
+
+  return preloadPromise;
 }
 
 export default function HomePopup() {
@@ -51,7 +57,8 @@ export default function HomePopup() {
   const isRtl = locale === "ar";
 
   const { data: offers, isLoading: isOffersLoading } = useOffersQuery();
-  const activeOffer = offers && offers.length > 0 ? offers[0] : null;
+  const activeOffer = offers?.find((offer) => offer?.popupImage) || null;
+  const popupImageSrc = toAbsoluteAssetUrl(activeOffer?.popupImage);
 
   let currentDateTime = "";
   if (activeOffer?.endDate) {
@@ -71,15 +78,15 @@ export default function HomePopup() {
   }
 
   useEffect(() => {
-    preloadPopupImage();
-  }, []);
+    preloadPopupImage(popupImageSrc);
+  }, [popupImageSrc]);
 
   useEffect(() => {
     if (sessionStorage.getItem("home_popup_shown") || isOffersLoading) {
       return;
     }
 
-    if (!activeOffer) {
+    if (!activeOffer || !popupImageSrc) {
       return;
     }
 
@@ -87,7 +94,7 @@ export default function HomePopup() {
     let isCancelled = false;
 
     const showAfterImageReady = async () => {
-      await preloadPopupImage();
+      await preloadPopupImage(popupImageSrc);
 
       if (!isCancelled) {
         timeoutId = setTimeout(() => {
@@ -116,7 +123,7 @@ export default function HomePopup() {
       clearTimeout(timeoutId);
       window.removeEventListener(SPLASH_COMPLETE_EVENT, showAfterImageReady);
     };
-  }, [isOffersLoading, activeOffer]);
+  }, [isOffersLoading, activeOffer, popupImageSrc]);
 
   const closePopup = () => {
     setIsVisible(false);
@@ -186,7 +193,7 @@ export default function HomePopup() {
             {/* Popup Image */}
             <div className="w-full bg-bg-secondary">
               <Image
-                src={POPUP_IMAGE_SRC}
+                src={popupImageSrc}
                 alt="Ashpero Popup Offer"
                 width={800}
                 height={800}
