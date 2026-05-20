@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "@/components/ui/AppImage";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useOffersQuery } from "@/features/offer/queries";
+import { useSiteContentQuery } from "@/features/home/queries";
 import { toAbsoluteAssetUrl } from "@/constants/config";
 
 const SPLASH_COMPLETE_EVENT = "ashperoo:splash-complete";
@@ -56,18 +56,24 @@ export default function HomePopup() {
   const { locale } = useLanguage();
   const isRtl = locale === "ar";
 
-  const { data: offers, isLoading: isOffersLoading } = useOffersQuery();
-  const activeOffer = offers?.find((offer) => offer?.popupImage) || null;
-  const popupImageSrc = toAbsoluteAssetUrl(activeOffer?.popupImage);
+  const { data: content, isLoading: isContentLoading } = useSiteContentQuery({
+    staleTime: 1000 * 30,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+  const popupExpiresAt = content?.popupExpiresAt;
+  const popupExpiryDate = popupExpiresAt ? new Date(popupExpiresAt) : null;
+  const hasValidExpiryDate =
+    popupExpiryDate instanceof Date && !Number.isNaN(popupExpiryDate.getTime());
+  const popupImageSrc = toAbsoluteAssetUrl(content?.popupImage);
 
   let currentDateTime = "";
-  if (activeOffer?.endDate) {
-    const end = new Date(activeOffer.endDate);
+  if (hasValidExpiryDate) {
     const prefix = isRtl ? "ينتهي العرض في: " : "Offer ends at: ";
 
     currentDateTime =
       prefix +
-      end.toLocaleString(isRtl ? "ar-EG" : "en-US", {
+      popupExpiryDate.toLocaleString(isRtl ? "ar-EG" : "en-US", {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -82,11 +88,18 @@ export default function HomePopup() {
   }, [popupImageSrc]);
 
   useEffect(() => {
-    if (sessionStorage.getItem("home_popup_shown") || isOffersLoading) {
+    if (sessionStorage.getItem("home_popup_shown") || isContentLoading) {
       return;
     }
 
-    if (!activeOffer || !popupImageSrc) {
+    const expiryTime = popupExpiresAt ? new Date(popupExpiresAt).getTime() : NaN;
+
+    if (
+      !popupImageSrc ||
+      !hasValidExpiryDate ||
+      !Number.isFinite(expiryTime) ||
+      Date.now() > expiryTime
+    ) {
       return;
     }
 
@@ -123,7 +136,7 @@ export default function HomePopup() {
       clearTimeout(timeoutId);
       window.removeEventListener(SPLASH_COMPLETE_EVENT, showAfterImageReady);
     };
-  }, [isOffersLoading, activeOffer, popupImageSrc]);
+  }, [isContentLoading, popupImageSrc, hasValidExpiryDate, popupExpiresAt]);
 
   const closePopup = () => {
     setIsVisible(false);
@@ -172,23 +185,24 @@ export default function HomePopup() {
               </svg>
             </button>
 
-            {/* Ticker Container */}
-            <div className="w-full bg-brand-primary text-white py-2 overflow-hidden relative z-10 flex items-center">
-              <motion.div
-                animate={{
-                  x: isRtl ? ["-100%", "100%"] : ["100%", "-100%"],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 10,
-                  ease: "linear",
-                }}
-                className="whitespace-nowrap font-medium text-sm md:text-base px-4"
-                style={{ direction: isRtl ? "rtl" : "ltr" }}
-              >
-                {currentDateTime}
-              </motion.div>
-            </div>
+            {currentDateTime ? (
+              <div className="w-full bg-brand-primary text-white py-2 overflow-hidden relative z-10 flex items-center">
+                <motion.div
+                  animate={{
+                    x: isRtl ? ["-100%", "100%"] : ["100%", "-100%"],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 10,
+                    ease: "linear",
+                  }}
+                  className="whitespace-nowrap font-medium text-sm md:text-base px-4"
+                  style={{ direction: isRtl ? "rtl" : "ltr" }}
+                >
+                  {currentDateTime}
+                </motion.div>
+              </div>
+            ) : null}
 
             {/* Popup Image */}
             <div className="w-full bg-bg-secondary">

@@ -13,11 +13,12 @@ const HOME_QUERY_OPTIONS = {
   refetchOnReconnect: false,
 };
 
-export function useSiteContentQuery() {
+export function useSiteContentQuery(options = {}) {
   return useQuery({
     queryKey: homeQueryKeys.content(),
     queryFn: fetchSiteContent,
     ...HOME_QUERY_OPTIONS,
+    ...options,
   });
 }
 
