@@ -23,7 +23,7 @@ export default function HeritageCTA() {
             <div className="w-full rounded-2xl overflow-hidden">
               <Image
                 src="/assets/heritage.jpg"
-                alt="Ashpero Heritage"
+                alt="Ashperoo Heritage"
                 width={800}
                 height={1000}
                 className="w-full h-auto object-cover p-2 sm:p-3"

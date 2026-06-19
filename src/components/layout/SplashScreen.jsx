@@ -73,7 +73,7 @@ export default function SplashScreen({ children, hasSeenSplash }) {
                 <div className="w-full h-full relative block dark:hidden">
                   <Image
                     src="/assets/logo.svg"
-                    alt="Ashpero Logo"
+                    alt="Ashperoo Logo"
                     fill
                     sizes="(max-width: 768px) 256px, 320px"
                     className="object-contain"
@@ -83,7 +83,7 @@ export default function SplashScreen({ children, hasSeenSplash }) {
                 <div className="w-full h-full relative hidden dark:block">
                   <Image
                     src="/assets/logo-white.svg"
-                    alt="Ashpero Logo"
+                    alt="Ashperoo Logo"
                     fill
                     sizes="(max-width: 768px) 256px, 320px"
                     className="object-contain"

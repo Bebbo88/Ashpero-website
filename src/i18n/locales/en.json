@@ -57,7 +57,7 @@
     "location": "Location",
     "subscribeText": "Subscribe for curated skincare rituals and early access to drops.",
     "emailPlaceholder": "Email Address",
-    "copyright": "© 2026 ASHPERO SKINCARE. ALL RIGHTS RESERVED.",
+    "copyright": "© 2026 ASHPEROO SKINCARE. ALL RIGHTS RESERVED.",
     "terms": "TERMS",
     "accessibility": "ACCESSIBILITY",
     "cookies": "COOKIES"
@@ -94,7 +94,7 @@
     }
   },
   "Heritage": {
-    "titleLine1": "The Ashpero",
+    "titleLine1": "The Ashperoo",
     "titleLine2": "Heritage",
     "paragraph1": "We are a company specialized in manufacturing cosmetics to global standards. We believe true beauty begins with self-confidence, so we create products that blend exceptional quality with a luxurious touch to give you a complete experience that reflects your identity and highlights your distinction. Every product we craft is a step toward a deeper sense of success, because we do not offer mere care, we create an experience that makes you feel power, confidence, and the difference you deserve.",
     "paragraph2": "We craft luxury cosmetics to elite standards, giving you a commanding presence, irresistible confidence, and an experience that reflects the essence of true success.",
@@ -108,7 +108,7 @@
     "stat3Label": "Parabens, Aluminum & Formaldehyde"
   },
   "AllProducts": {
-    "subtitle": "ASHPERO COLLECTION",
+    "subtitle": "ASHPEROO COLLECTION",
     "title": "The Collection",
     "description": "Shop cleanly crafted skincare powered by fine botanicals and scientific precision for visible results.",
     "productCount": "products",
@@ -273,7 +273,7 @@
     "phoneTitle": "Phone",
     "phone": "+20 100 123 4567",
     "emailTitle": "Email",
-    "email": "hello@ashpero.com",
+    "email": "hello@ashperoo.com",
     "socialsTitle": "Follow Us",
     "formTitle": "Send us a message",
     "formName": "Full Name",
@@ -291,24 +291,24 @@
     "title": "About Us",
     "heroTitle": "Crafting Pure Radience",
     "heroSubtitle": "Our Journey to Clean Beauty",
-    "heroDesc": "At Ashpero, we believe that true luxury lies in the purity of nature intelligently blended with modern science.",
+    "heroDesc": "At Ashperoo, we believe that true luxury lies in the purity of nature intelligently blended with modern science.",
     "timelineTitle": "Our Roadmap",
     "timelineSubtitle": "A History of Innovation",
     "events": {
       "year2012": {
         "year": "2024",
         "title": "The Idea Was Born",
-        "description": "The idea of Ashpero Cosmetics was born, carrying an innovative vision of beauty that combines quality, innovation, and lasting confidence."
+        "description": "The idea of Ashperoo Cosmetics was born, carrying an innovative vision of beauty that combines quality, innovation, and lasting confidence."
       },
       "year2015": {
         "year": "2025",
         "title": "Foundation & Direction",
-        "description": "Ashpero began laying down its brand foundations and product direction, with a clear beauty vision built on quality, innovation, and enduring trust."
+        "description": "Ashperoo began laying down its brand foundations and product direction, with a clear beauty vision built on quality, innovation, and enduring trust."
       },
       "year2018": {
         "year": "2026",
         "title": "Official Launch",
-        "description": "Ashpero officially launched into reality, marking the true beginning of its journey to deliver cosmetics with quality and innovation worthy of ambition."
+        "description": "Ashperoo officially launched into reality, marking the true beginning of its journey to deliver cosmetics with quality and innovation worthy of ambition."
       },
       "year2023": {
         "year": "2023",
@@ -317,14 +317,14 @@
       }
     },
     "faqTitle": "Frequently Asked Questions",
-    "faqSubtitle": "Everything you need to know about Ashpero",
+    "faqSubtitle": "Everything you need to know about Ashperoo",
     "faqs": {
       "q1": {
         "question": "Are your products cruelty-free and vegan?",
         "answer": "Yes, we are 100% cruelty-free and vegan. We never test on animals and never use animal-derived ingredients."
       },
       "q2": {
-        "question": "Where are Ashpero products made?",
+        "question": "Where are Ashperoo products made?",
         "answer": "All our products are cleanly crafted and manufactured in our dedicated facilities in Egypt under strict quality control."
       },
       "q3": {
@@ -459,8 +459,8 @@
       "processing": "Processing",
       "continueShoppingBtn": "CONTINUE SHOPPING",
       "trackOrderBtn": "Track Order Status",
-      "questionsLine": "Any questions? Contact us at support@ashpero.com",
-      "supportEmail": "support@ashpero.com"
+      "questionsLine": "Any questions? Contact us at support@ashperoo.com",
+      "supportEmail": "support@ashperoo.com"
     }
   },
   "Offers": {

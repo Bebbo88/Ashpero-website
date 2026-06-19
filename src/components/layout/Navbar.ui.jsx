@@ -82,7 +82,7 @@ export function NavbarUI({
               <div className="relative h-full w-full">
                 <Image
                   src={logoMobileSrc}
-                  alt="Ashpero Mobile Logo"
+                  alt="Ashperoo Mobile Logo"
                   fill
                   className="object-contain object-left rtl:object-right"
                   priority
@@ -98,7 +98,7 @@ export function NavbarUI({
               >
                 <Image
                   src={logoSrc}
-                  alt="Ashpero Logo"
+                  alt="Ashperoo Logo"
                   fill
                   className="object-contain object-left rtl:object-right"
                   priority
@@ -309,7 +309,7 @@ export function NavbarUI({
             </button>
 
             <p className="text-[11px] tracking-[0.25em] font-bold uppercase text-text-secondary mb-2">
-              Ashpero Account
+              Ashperoo Account
             </p>
             <h3 className="font-playfair text-2xl md:text-3xl text-auth-modal-title mb-2">
               Continue To Login

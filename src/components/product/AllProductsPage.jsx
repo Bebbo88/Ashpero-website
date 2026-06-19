@@ -282,7 +282,7 @@ export default function AllProductsPage() {
     <section className="w-full bg-bg-primary min-h-screen">
       <div className="w-full">
         <Image
-          src="/assets/all_prods.jpg"
+          src="/assets/all_products.jpg"
           alt="All Products"
           width={1920}
           height={1080}

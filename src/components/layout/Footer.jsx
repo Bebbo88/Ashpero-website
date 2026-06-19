@@ -26,7 +26,7 @@ export default function Footer() {
             <Link href="/" className="relative h-12 w-48">
               <Image
                 src="/assets/logo-white.svg"
-                alt="Ashpero Logo"
+                alt="Ashperoo Logo"
                 fill
                 sizes="192px"
                 className="object-contain object-left rtl:object-right"
@@ -167,7 +167,7 @@ export default function Footer() {
             </address>
             <div className="w-full h-32 bg-neutral-800 rounded-lg overflow-hidden border border-neutral-700  relative opacity-80 hover:opacity-100 transition-opacity duration-300">
               <iframe
-                title="Ashpero Location"
+                title="Ashperoo Location"
                 src="https://www.google.com/maps/embed?pb=!1m24!1m12!1m3!1d587.9715772149435!2d31.249601688401594!3d29.960787771412367!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m9!3e0!4m3!3m2!1d29.9721464!2d31.2474879!4m3!3m2!1d29.960507!2d31.249933!5e0!3m2!1sen!2seg!4v1776512009253!5m2!1sen!2seg"
                 width="100%"
                 height="100%"

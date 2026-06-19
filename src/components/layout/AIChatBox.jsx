@@ -71,8 +71,13 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
     onError: (error) => {
       let friendlyError = "Oops, something went wrong. Please try again.";
       const errStr = error.message?.toLowerCase() || "";
-      if (errStr.includes("503") || errStr.includes("demand") || errStr.includes("quota")) {
-        friendlyError = "I'm currently assisting many customers and my system is very busy. Please try again in a few minutes!";
+      if (
+        errStr.includes("503") ||
+        errStr.includes("demand") ||
+        errStr.includes("quota")
+      ) {
+        friendlyError =
+          "I'm currently assisting many customers and my system is very busy. Please try again in a few minutes!";
       }
 
       setMessages((prev) => [
@@ -225,7 +230,7 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
 
         <div className="text-center mt-2">
           <span className="text-[10px] text-text-secondary">
-            Powered by Ashpero
+            Powered by Ashperoo
           </span>
         </div>
       </div>

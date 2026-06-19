@@ -92,7 +92,9 @@ export default function HomePopup() {
       return;
     }
 
-    const expiryTime = popupExpiresAt ? new Date(popupExpiresAt).getTime() : NaN;
+    const expiryTime = popupExpiresAt
+      ? new Date(popupExpiresAt).getTime()
+      : NaN;
 
     if (
       !popupImageSrc ||
@@ -208,7 +210,7 @@ export default function HomePopup() {
             <div className="w-full bg-bg-secondary">
               <Image
                 src={popupImageSrc}
-                alt="Ashpero Popup Offer"
+                alt="Ashperoo Popup Offer"
                 width={800}
                 height={800}
                 className="w-full h-auto object-cover"

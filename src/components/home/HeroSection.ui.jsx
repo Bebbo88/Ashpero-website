@@ -20,7 +20,7 @@ export function HeroSectionUI({ backgroundSlides, isArabic }) {
         {backgroundSlides.length > 0 ? (
           <Swiper
             // Force Swiper to fully re-initialize when language changes
-            // This is strictly required so Swiper recalculates its internal 
+            // This is strictly required so Swiper recalculates its internal
             // RTL/LTR coordinates and prevents swiping into blank space.
             key={isArabic ? "ar" : "en"}
             dir={isArabic ? "rtl" : "ltr"}
@@ -39,7 +39,7 @@ export function HeroSectionUI({ backgroundSlides, isArabic }) {
                 {slide.image && (
                   <Image
                     src={slide.image}
-                    alt="Ashpero Background"
+                    alt="Ashperoo Background"
                     width={1920}
                     height={1080}
                     sizes="100vw"
