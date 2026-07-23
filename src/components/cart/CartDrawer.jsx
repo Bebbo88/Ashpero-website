@@ -20,7 +20,6 @@ export default function CartDrawer() {
   const isRtl = locale === "ar";
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items || []);
-  console.log(cartItems);
 
   const handleIncrement = (item) => {
     if (item.stock && item.quantity >= item.stock) {

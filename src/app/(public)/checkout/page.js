@@ -426,7 +426,6 @@ export default function CheckoutPage() {
   };
 
   const submitOrder = async (values) => {
-    console.log(cartItems);
     if (cartItems.length === 0) {
       return;
     }
@@ -434,7 +433,6 @@ export default function CheckoutPage() {
     setSubmitError("");
 
     try {
-      console.log(values.paymentMethod);
       const payload = {
         customerName: values.customerName.trim(),
         phone:
@@ -494,7 +492,6 @@ export default function CheckoutPage() {
       const result = await createOrder(payload);
       const nextOrder = result?.order || {};
       const nextPayment = result?.payment || {};
-      console.log("NEXT PAYMENT:", nextPayment);
 
       savePendingCheckout({
         orderId: nextOrder._id || "",

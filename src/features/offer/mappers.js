@@ -74,7 +74,6 @@ export function mapOfferProducts(offers = [], locale = "en") {
 
   for (const offer of offers) {
     const products = Array.isArray(offer?.productIds) ? offer.productIds : [];
-    console.log(products);
     const badge = buildDiscountLabel(offer, locale);
     const offerTitle = getLocalizedValue(
       offer,
