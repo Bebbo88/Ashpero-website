@@ -354,6 +354,15 @@ export default function CheckoutPage() {
 
   const finalTotal = useMemo(() => discountedSubtotal, [discountedSubtotal]);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.fbq && finalTotal > 0) {
+      window.fbq('track', 'InitiateCheckout', {
+        value: finalTotal,
+        currency: 'EGP'
+      });
+    }
+  }, [finalTotal]);
+
   const subtotalLabel = currencyFormatter.format(subtotal);
   const discountLabel = currencyFormatter.format(effectiveDiscount);
   const totalLabel = currencyFormatter.format(finalTotal);

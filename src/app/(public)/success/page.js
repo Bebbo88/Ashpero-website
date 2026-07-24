@@ -98,9 +98,22 @@ export default function SuccessPage() {
     summary?._id ||
     searchParams.get("orderId") ||
     "--";
-  const orderTotal = currencyFormatter.format(
-    Number(summary?.finalPrice || summary?.totalPrice || fallbackAmount || 0),
+  const numericOrderTotal = Number(
+    summary?.finalPrice || summary?.totalPrice || fallbackAmount || 0,
   );
+  const orderTotal = currencyFormatter.format(numericOrderTotal);
+
+  const [trackedPurchase, setTrackedPurchase] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.fbq && numericOrderTotal > 0 && !trackedPurchase) {
+      window.fbq('track', 'Purchase', {
+        value: numericOrderTotal,
+        currency: 'EGP'
+      });
+      setTrackedPurchase(true);
+    }
+  }, [numericOrderTotal, trackedPurchase]);
   const statusLabel = getStatusLabel(summary, locale, t);
   const showPending =
     confirmStatus === "loading" ||

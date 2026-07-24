@@ -12,6 +12,7 @@ import FloatingActions from "@/components/layout/FloatingActions";
 import { CartDrawerProvider } from "@/contexts/CartDrawerContext";
 import CartDrawer from "@/components/cart/CartDrawer";
 import "./globals.css";
+import FacebookPixel from "@/components/MetaPixels/FacebookPixel";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -90,7 +91,7 @@ export default async function RootLayout({ children }) {
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
               
-              fbq('init', '1347029870717903'); 
+              fbq('init', '905165305361057'); 
               fbq('track', 'PageView');
             `,
           }}
@@ -105,7 +106,7 @@ export default async function RootLayout({ children }) {
             height="1"
             width="1"
             style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=1347029870717903&ev=PageView&noscript=1"
+            src="https://www.facebook.com/tr?id=905165305361057&ev=PageView&noscript=1"
             alt=""
           />
         </noscript>
@@ -118,6 +119,7 @@ export default async function RootLayout({ children }) {
                     {/* <SplashScreen hasSeenSplash={hasSeenSplash}> */}
                     {children}
                     {/* </SplashScreen> */}
+                    <FacebookPixel />
                     <FloatingActions />
                     <CartDrawer />
                   </CartDrawerProvider>
