@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useProductDetailsPageLogic } from "./ProductDetailsPage.logic";
 import { ProductDetailsPageUI } from "./ProductDetailsPage.ui";
 
