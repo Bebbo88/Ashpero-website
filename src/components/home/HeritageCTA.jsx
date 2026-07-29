@@ -22,7 +22,7 @@ export default function HeritageCTA() {
           <div className="relative mx-auto w-full max-w-[420px] md:max-w-none">
             <div className="w-full rounded-2xl overflow-hidden">
               <Image
-                src="/assets/heritage.jpg"
+                src="/assets/heritage.png"
                 alt="Ashperoo Heritage"
                 width={800}
                 height={1000}

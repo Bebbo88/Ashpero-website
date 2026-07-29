@@ -17,7 +17,8 @@ export function useSiteContentQuery(options = {}) {
   return useQuery({
     queryKey: homeQueryKeys.content(),
     queryFn: fetchSiteContent,
-    ...HOME_QUERY_OPTIONS,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnMount: true,
     ...options,
   });
 }

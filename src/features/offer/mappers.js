@@ -84,6 +84,10 @@ export function mapOfferProducts(offers = [], locale = "en") {
     );
 
     for (const product of products) {
+      if (product?.isBundle) {
+        continue;
+      }
+
       const productId = String(product?._id || product?.id || "").trim();
       const variants = Array.isArray(product?.variants) ? product.variants : [];
 

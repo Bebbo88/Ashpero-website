@@ -15,6 +15,7 @@ import "swiper/css/pagination";
 import styles from "@/animations/FeaturedBestsellers.animations.module.css";
 import Image from "@/components/ui/AppImage";
 import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
+import PopupGalleryModal, { PopupGalleryTrigger } from "@/components/product/PopupGalleryModal";
 
 export function FeaturedBestsellersUI({
   t,
@@ -27,6 +28,8 @@ export function FeaturedBestsellersUI({
   isError,
   errorMessage,
 }) {
+  const [activeGalleryProduct, setActiveGalleryProduct] = React.useState(null);
+
   return (
     <section
       className={`${styles.root} w-full py-20 md:py-28 bg-bg-primary overflow-hidden`}
@@ -89,7 +92,15 @@ export function FeaturedBestsellersUI({
                       href={buildProductPath(product.id, product.title)}
                       className="relative w-full rounded-2xl overflow-hidden mb-5 bg-surface-muted dark:bg-white/5"
                     >
-                      {product.hasOffer ? (
+                      {/* Popup Gallery Badge/Button */}
+                      {Array.isArray(product.popupGallery) && product.popupGallery.length > 0 ? (
+                        <div className="absolute top-4 left-4 z-20">
+                          <PopupGalleryTrigger
+                            popupGallery={product.popupGallery}
+                            onOpen={() => setActiveGalleryProduct(product)}
+                          />
+                        </div>
+                      ) : product.hasOffer ? (
                         <div className="absolute left-4 top-4 z-20 rounded-full bg-red-500 px-3 py-1 text-[11px] font-bold text-white shadow-md">
                           {product.discountType === "percentage"
                             ? `${product.discountValue}% OFF`
@@ -135,12 +146,13 @@ export function FeaturedBestsellersUI({
                         {/* Add to cart */}
                         <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-400 ease-out z-20">
                           <button
+                            type="button"
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
                               addToCart(product);
                             }}
-                            className="w-full py-3 rounded-xl bg-white dark:bg-black text-black dark:text-white text-sm font-bold tracking-wide flex items-center justify-center gap-2 shadow-soft hover:bg-brand-orange hover:text-white transition-colors duration-200"
+                            className="w-full py-3 rounded-xl bg-white dark:bg-black text-black dark:text-white text-sm font-bold tracking-wide flex items-center justify-center gap-2 shadow-soft hover:bg-brand-mint hover:text-white transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                           >
                             <ShoppingCart className="w-4 h-4" />
                             {t("Bestsellers.addToCart")}
@@ -202,6 +214,13 @@ export function FeaturedBestsellersUI({
           </div>
         ) : null}
       </div>
+
+      {/* Home Page Popup Gallery Modal */}
+      <PopupGalleryModal
+        popupGallery={activeGalleryProduct?.popupGallery}
+        isOpen={Boolean(activeGalleryProduct)}
+        onClose={() => setActiveGalleryProduct(null)}
+      />
     </section>
   );
 }

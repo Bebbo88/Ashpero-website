@@ -185,12 +185,16 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar with Payment Badges */}
-        <div className="border-t border-white/20 pt-8 mt-4 flex flex-col xl:flex-row justify-between items-center gap-8">
-          <div className="flex flex-col md:flex-row items-center gap-6 xl:gap-8">
-            <p className="text-[11px] font-semibold text-white/80 tracking-wider uppercase text-center md:text-left rtl:md:text-right">
+        <div className="border-t border-white/20 pt-8 mt-4 flex flex-col xl:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col items-center md:items-start rtl:md:items-end gap-1.5 text-center md:text-left rtl:md:text-right">
+            <p className="text-[11px] font-semibold text-white/80 tracking-wider uppercase">
               {t("Footer.copyright")}
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-6"></div>
+            <p className="text-xs text-white/70 font-normal leading-relaxed">
+              {t("Footer.licenseInfoLine1")}
+              <br />
+              {t("Footer.licenseInfoLine2")}
+            </p>
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-4">

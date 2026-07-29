@@ -32,6 +32,12 @@ export default function CartDrawer() {
         quantity: Number(item.quantity || 1) + 1,
       }),
     );
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "AddToCart", {
+        value: Number(item.priceValue || 0),
+        currency: "EGP",
+      });
+    }
   };
 
   const handleDecrement = (item) => {
@@ -47,12 +53,24 @@ export default function CartDrawer() {
         quantity: currentQuantity - 1,
       }),
     );
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("trackCustom", "RemoveFromCart", {
+        value: Number(item.priceValue || 0),
+        currency: "EGP",
+      });
+    }
   };
 
   const handleRemove = (item) => {
     dispatch(
       removeFromCart({ productId: item.productId, size: item.size || "" }),
     );
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("trackCustom", "RemoveFromCart", {
+        value: Number(item.priceValue || 0) * Number(item.quantity || 1),
+        currency: "EGP",
+      });
+    }
   };
 
   const subtotal = cartItems.reduce(
@@ -184,6 +202,28 @@ export default function CartDrawer() {
             </div>
 
             <div className="p-6 border-t border-border-color bg-bg-secondary/50">
+              {cartItems.length > 0 && (
+                <div className="mb-4 p-2.5 rounded-xl bg-gradient-to-r from-brand-orange/10 via-amber-500/10 to-brand-mint/10 border border-brand-orange/30 flex items-center gap-2.5 shadow-sm">
+                  <div className="relative w-8 h-8 rounded-lg bg-white dark:bg-neutral-800 p-0.5 shrink-0 border border-amber-500/30 overflow-hidden">
+                    <Image
+                      src="/assets/guasha.jpg"
+                      alt="Free Gua Sha"
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-extrabold text-brand-orange uppercase tracking-wider">
+                      🎁 {t("ProductDetails.freeGiftBadge")}
+                    </span>
+                    <span className="text-xs font-bold text-text-primary">
+                      {t("ProductDetails.freeGuaSha")} + {t("ProductDetails.freeShipping")}
+                    </span>
+                  </div>
+                </div>
+              )}
+
               <div className="flex justify-between items-center mb-4">
                 <span className="font-montserrat text-text-secondary uppercase text-sm tracking-wider">
                   {t("CartDrawer.subtotal")}

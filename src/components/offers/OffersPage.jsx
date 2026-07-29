@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import Image from "@/components/ui/AppImage";
 import { Search } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
+import BundleCard from "@/components/product/BundleCard";
 import EmptyState from "@/components/ui/EmptyState";
 import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -11,7 +12,9 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useSiteContentQuery } from "@/features/home/queries";
 import { mapOffersPageBannerImage } from "@/features/home/mappers";
 import { mapOfferProducts } from "@/features/offer/mappers";
+import { mapAllProducts } from "@/features/product/mappers";
 import { useOffersQuery } from "@/features/offer/queries";
+import { useProductsQuery } from "@/features/product/queries";
 
 function matchSearch(item, searchTerm) {
   if (!searchTerm) {
@@ -41,6 +44,16 @@ export default function OffersPage() {
     () => mapOfferProducts(offersQuery.data, locale),
     [offersQuery.data, locale],
   );
+
+  const bundlesQuery = useProductsQuery({
+    isActive: true,
+    isBundle: true,
+  });
+
+  const bundles = useMemo(() => {
+    if (!bundlesQuery.data) return [];
+    return mapAllProducts(bundlesQuery.data, locale, offersQuery.data || []);
+  }, [bundlesQuery.data, locale, offersQuery.data]);
 
   const filteredProducts = useMemo(
     () => products.filter((item) => matchSearch(item, debouncedSearch)),
@@ -94,6 +107,18 @@ export default function OffersPage() {
             />
           </div>
         </div>
+
+        {/* Bundles Section */}
+        {!searchValue && bundles.length > 0 ? (
+          <div className="mb-16">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+              {bundles.map((bundle) => (
+                <BundleCard key={bundle.id} product={bundle} />
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         {offersQuery.isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6">

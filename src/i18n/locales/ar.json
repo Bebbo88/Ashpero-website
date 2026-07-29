@@ -35,13 +35,13 @@
     "register": "إنشاء حساب",
     "home": "الرئيسية",
     "allProducts": "كل المنتجات",
-    "allOffers": "اكتشف عروضنا",
+    "allOffers": "العروض والباقات",
     "aboutUs": "معلومات عنا",
     "contactUs": "اتصل بنا",
     "tipsAndTricks": "نصائح وحيل",
     "luxurySkincare": "العناية الفاخرة",
     "naturalIngredients": "مكونات طبيعية",
-    "success": "النجاح له شكل"
+    "success": " لكل قطرة حكاية "
   },
   "Footer": {
     "description": "رائدة في مستقبل العناية بالبشرة السريرية النظيفة من خلال الذكاء النباتي والفخامة المستدامة.",
@@ -60,7 +60,16 @@
     "copyright": "© 2026 آشبيرو للعناية بالبشرة. جميع الحقوق محفوظة.",
     "terms": "الشروط",
     "accessibility": "إمكانية الوصول",
-    "cookies": "ملفات تعريف الارتباط"
+    "cookies": "ملفات تعريف الارتباط",
+    "ownershipLabel": "الملكية التجارية",
+    "ownedBy": "المنتجات مملوكة لشركة آشبيرو (Ashperoo)",
+    "edaLabel": "هيئة الدواء المصرية",
+    "edaRegistered": "مسجلة لدى هيئة الدواء المصرية",
+    "taxLabel": "السجل التجاري",
+    "taxNo": "256825",
+    "licenseInfo": "المنتجات مملوكة لـ Ashperoo | مسجلة لدى هيئة الدواء المصرية | السجل التجاري: 256825",
+    "licenseInfoLine1": "المنتجات مملوكة لـ Ashperoo",
+    "licenseInfoLine2": "مسجلة لدى هيئة الدواء المصرية | السجل التجاري: 256825"
   },
   "Bestsellers": {
     "title": "أفضل المبيعات",
@@ -191,6 +200,10 @@
     "allProducts": "كل المنتجات",
     "addToCart": "أضف إلى السلة",
     "freeShipping": "شحن مجاني",
+    "freeShippingSub": "على جميع الطلبات",
+    "freeGuaSha": "هدية جواشا مجاناً",
+    "freeGuaShaSub": "مساج للبشرة مع كل طلب",
+    "freeGiftBadge": "هدية مجانية",
     "easyReturns": "إرجاع خلال 30 يوم",
     "authentic": "أصلي 100%",
     "ingredients": "المكونات",

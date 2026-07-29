@@ -62,14 +62,19 @@ export default function FloatingActions() {
         <motion.div variants={itemVariants} className="relative">
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
-            className="relative flex items-center cursor-pointer justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95 group"
+            className="relative flex items-center cursor-pointer justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95 group overflow-hidden"
             aria-label="Consult AI Skincare Doctor"
           >
             <motion.div
               animate={{ y: [-2, 2, -2] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="w-full h-full rounded-full overflow-hidden relative"
             >
-              <DoctorBotIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 group-hover:drop-shadow-md transition-all" />
+              <img
+                src="/assets/bot.jpeg"
+                alt="Consult AI Skincare Doctor"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
             </motion.div>
             <span className="absolute bottom-0.5 end-0.5 sm:bottom-1 sm:end-1 w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 bg-green-400 border-2 border-brand-dark rounded-full"></span>
           </button>

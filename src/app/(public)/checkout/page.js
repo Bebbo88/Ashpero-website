@@ -271,24 +271,47 @@ function createCheckoutSchema(locale) {
 }
 
 function getInputClass(hasError) {
-  return `w-full px-4 py-3.5 bg-bg-primary border rounded-xl text-sm transition-colors ${
-    hasError
-      ? "border-status-error focus:outline-none focus:ring-2 focus:ring-status-error/15"
-      : "border-border-color focus:outline-none focus:ring-2 focus:ring-brand-mint/15"
-  }`;
+  return `w-full px-4 py-3.5 bg-bg-primary border rounded-xl text-sm transition-colors ${hasError
+    ? "border-status-error focus:outline-none focus:ring-2 focus:ring-status-error/15"
+    : "border-border-color focus:outline-none focus:ring-2 focus:ring-brand-mint/15"
+    }`;
 }
 
 function getPhoneInputClass(hasError) {
-  return `flex-1 px-4 py-3.5 bg-transparent text-sm transition-colors focus:outline-none ${
-    hasError ? "text-status-error" : "text-text-primary"
-  }`;
+  return `flex-1 px-4 py-3.5 bg-transparent text-sm transition-colors focus:outline-none ${hasError ? "text-status-error" : "text-text-primary"
+    }`;
 }
 
 export default function CheckoutPage() {
   const { t, locale } = useLanguage();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const cartItems = useAppSelector((state) => state.cart.items || []);
+  const reduxCartItems = useAppSelector((state) => state.cart.items || []);
+  const [cartItems, setCartItems] = useState([]);
+  const [isBuyNow, setIsBuyNow] = useState(false);
+  const [trackedCheckout, setTrackedCheckout] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const buyNowFlag = urlParams.get("buyNow") === "true";
+      setIsBuyNow(buyNowFlag);
+
+      if (buyNowFlag) {
+        const raw = sessionStorage.getItem("buy_now_checkout_item");
+        if (raw) {
+          try {
+            const parsed = JSON.parse(raw);
+            setCartItems(Array.isArray(parsed) ? parsed : [parsed]);
+            return;
+          } catch (e) {
+            console.error("Failed to parse buyNow checkout item", e);
+          }
+        }
+      }
+    }
+    setCartItems(reduxCartItems);
+  }, [reduxCartItems]);
 
   const [submitError, setSubmitError] = useState("");
   const [promoCode, setPromoCode] = useState("");
@@ -310,6 +333,8 @@ export default function CheckoutPage() {
     mode: "onBlur",
     reValidateMode: "onChange",
   });
+
+
 
   const paymentMethod = watch("paymentMethod");
 
@@ -355,13 +380,14 @@ export default function CheckoutPage() {
   const finalTotal = useMemo(() => discountedSubtotal, [discountedSubtotal]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.fbq && finalTotal > 0) {
+    if (typeof window !== 'undefined' && window.fbq && finalTotal > 0 && !trackedCheckout) {
       window.fbq('track', 'InitiateCheckout', {
         value: finalTotal,
         currency: 'EGP'
       });
+      setTrackedCheckout(true);
     }
-  }, [finalTotal]);
+  }, [finalTotal, trackedCheckout]);
 
   const subtotalLabel = currencyFormatter.format(subtotal);
   const discountLabel = currencyFormatter.format(effectiveDiscount);
@@ -427,9 +453,9 @@ export default function CheckoutPage() {
       setPromoStatus("error");
       setPromoMessage(
         error?.message ||
-          (locale === "ar"
-            ? "الكود غير صحيح أو منتهي الصلاحية."
-            : "Invalid or expired promo code."),
+        (locale === "ar"
+          ? "الكود غير صحيح أو منتهي الصلاحية."
+          : "Invalid or expired promo code."),
       );
     }
   };
@@ -450,9 +476,9 @@ export default function CheckoutPage() {
             : formatInternationalPhone(values.phoneCountryCode, values.phone),
         secondaryPhone: values.secondaryPhone
           ? formatInternationalPhone(
-              values.secondaryPhoneCountryCode,
-              values.secondaryPhone,
-            )
+            values.secondaryPhoneCountryCode,
+            values.secondaryPhone,
+          )
           : "",
         email: values.email.trim(),
         address:
@@ -518,7 +544,11 @@ export default function CheckoutPage() {
       });
 
       if (nextOrder.paymentMethod === "cash_on_delivery") {
-        dispatch(clearCart());
+        if (!isBuyNow) {
+          dispatch(clearCart());
+        } else {
+          sessionStorage.removeItem("buy_now_checkout_item");
+        }
         router.push(`/success?orderId=${nextOrder._id || ""}&source=cod`);
         return;
       }
@@ -529,7 +559,11 @@ export default function CheckoutPage() {
       }
 
       if (nextPayment.mode === "kiosk" && nextPayment.billReference) {
-        dispatch(clearCart());
+        if (!isBuyNow) {
+          dispatch(clearCart());
+        } else {
+          sessionStorage.removeItem("buy_now_checkout_item");
+        }
 
         router.push(
           `/kiosk-success?reference=${nextPayment.billReference}&orderId=${nextOrder._id || ""}`,
@@ -558,9 +592,9 @@ export default function CheckoutPage() {
 
       setSubmitError(
         friendlyMessage ||
-          (locale === "ar"
-            ? "حدث خطأ أثناء إنشاء الطلب."
-            : "Failed to create order."),
+        (locale === "ar"
+          ? "حدث خطأ أثناء إنشاء الطلب."
+          : "Failed to create order."),
       );
     }
   };
@@ -657,11 +691,10 @@ export default function CheckoutPage() {
 
                   <div>
                     <div
-                      className={`flex items-center mt-6 rounded-xl border overflow-hidden ${
-                        errors.phone || errors.phoneCountryCode
-                          ? "border-status-error"
-                          : "border-border-color"
-                      }`}
+                      className={`flex items-center mt-6 rounded-xl border overflow-hidden ${errors.phone || errors.phoneCountryCode
+                        ? "border-status-error"
+                        : "border-border-color"
+                        }`}
                     >
                       <select
                         {...register("phoneCountryCode")}
@@ -708,12 +741,11 @@ export default function CheckoutPage() {
                       </span>
                     </div>
                     <div
-                      className={`flex items-center rounded-xl border overflow-hidden ${
-                        errors.secondaryPhone ||
+                      className={`flex items-center rounded-xl border overflow-hidden ${errors.secondaryPhone ||
                         errors.secondaryPhoneCountryCode
-                          ? "border-status-error"
-                          : "border-border-color"
-                      }`}
+                        ? "border-status-error"
+                        : "border-border-color"
+                        }`}
                     >
                       <select
                         {...register("secondaryPhoneCountryCode")}
@@ -746,7 +778,7 @@ export default function CheckoutPage() {
                       />
                     </div>
                     {errors.secondaryPhone ||
-                    errors.secondaryPhoneCountryCode ? (
+                      errors.secondaryPhoneCountryCode ? (
                       <p className="mt-1.5 text-xs text-status-error">
                         {errors.secondaryPhone?.message ||
                           errors.secondaryPhoneCountryCode?.message}
@@ -834,11 +866,10 @@ export default function CheckoutPage() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${
-                      paymentMethod === "card"
-                        ? "border-brand-mint bg-brand-mint/5"
-                        : "border-border-color bg-bg-primary"
-                    }`}
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "card"
+                      ? "border-brand-mint bg-brand-mint/5"
+                      : "border-border-color bg-bg-primary"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -855,11 +886,10 @@ export default function CheckoutPage() {
                   </label>
 
                   <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${
-                      paymentMethod === "cash"
-                        ? "border-brand-mint bg-brand-mint/5"
-                        : "border-border-color bg-bg-primary"
-                    }`}
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "cash"
+                      ? "border-brand-mint bg-brand-mint/5"
+                      : "border-border-color bg-bg-primary"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -875,11 +905,10 @@ export default function CheckoutPage() {
                     <Banknote className="w-6 h-6" />
                   </label>
                   <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${
-                      paymentMethod === "wallet"
-                        ? "border-brand-mint bg-brand-mint/5"
-                        : "border-border-color bg-bg-primary"
-                    }`}
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "wallet"
+                      ? "border-brand-mint bg-brand-mint/5"
+                      : "border-border-color bg-bg-primary"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -896,12 +925,12 @@ export default function CheckoutPage() {
 
                     <Banknote className="w-6 h-6" />
                   </label>
+                  {/* Fawry Payment Option (Commented Out)
                   <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${
-                      paymentMethod === "kiosk"
-                        ? "border-brand-mint bg-brand-mint/5"
-                        : "border-border-color bg-bg-primary"
-                    }`}
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "kiosk"
+                      ? "border-brand-mint bg-brand-mint/5"
+                      : "border-border-color bg-bg-primary"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -918,6 +947,7 @@ export default function CheckoutPage() {
 
                     <Banknote className="w-6 h-6" />
                   </label>
+                  */}
                   {paymentMethod === "wallet" ? (
                     <div className="mt-5">
                       <label className="mb-2 block text-sm font-semibold text-text-primary">
@@ -1024,7 +1054,7 @@ export default function CheckoutPage() {
                     <div className="text-text-primary font-bold text-sm shrink-0">
                       {currencyFormatter.format(
                         Number(item.priceValue || 0) *
-                          Number(item.quantity || 1),
+                        Number(item.quantity || 1),
                       )}
                     </div>
                   </div>

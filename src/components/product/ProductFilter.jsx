@@ -12,7 +12,7 @@ const DEFAULT_FILTER_SECTIONS = [
   { key: "skinType", options: [] },
   {
     key: "priceRange",
-    options: ["under30", "from30to60", "from60to100", "over100"],
+    options: ["under100", "from100to300", "from300to500", "from500to700", "over700"],
   },
 ];
 

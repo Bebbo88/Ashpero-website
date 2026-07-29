@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "@/components/ui/AppImage";
 import {
   Minus,
   Plus,
@@ -12,6 +13,8 @@ import {
   Share2,
   Truck,
   ShieldCheck,
+  Sparkles,
+  Zap,
 } from "lucide-react";
 import {
   FacebookIcon,
@@ -41,11 +44,13 @@ export function ProductInfoUI({
   shareToast,
   handleShareClick,
   handleAddToCart,
+  handleBuyNow,
   handleToggleWishlist,
   decrementQty,
   incrementQty,
   toggleAccordion,
 }) {
+  const isArabic = t("ProductDetails.home") === "الرئيسية";
   return (
     <div className="flex flex-col gap-6">
       <nav className="flex items-center gap-2 text-xs text-text-secondary">
@@ -102,15 +107,14 @@ export function ProductInfoUI({
         {BENEFITS.map((benefit, idx) => (
           <div
             key={benefit}
-            className={`w-12 h-12 rounded-full flex items-center justify-center text-[8px] font-bold tracking-tighter text-white shadow-sm ${
-              idx === 0
+            className={`w-12 h-12 rounded-full flex items-center justify-center text-[8px] font-bold tracking-tighter text-white shadow-sm ${idx === 0
                 ? "bg-benefit-1"
                 : idx === 1
                   ? "bg-benefit-2"
                   : idx === 2
                     ? "bg-benefit-3"
                     : "bg-benefit-4"
-            }`}
+              }`}
           >
             {benefit}
           </div>
@@ -127,11 +131,10 @@ export function ProductInfoUI({
               <button
                 key={variant.size}
                 onClick={() => setSelectedSize(variant.size)}
-                className={`px-4 py-2 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
-                  selectedSize === variant.size
+                className={`px-4 py-2 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${selectedSize === variant.size
                     ? "border-brand-orange bg-brand-orange text-white"
                     : "border-border-color text-text-primary hover:border-brand-orange hover:text-brand-orange"
-                }`}
+                  }`}
               >
                 {variant.size}
               </button>
@@ -140,22 +143,22 @@ export function ProductInfoUI({
         </div>
       ) : null}
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-2">
-        <div className="flex items-center border border-border-color w-[160px]  rounded-xl overflow-hidden">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2">
+        <div className="flex items-center border border-border-color w-full sm:w-[150px] rounded-xl overflow-hidden justify-between">
           <button
             onClick={decrementQty}
             aria-label="Decrease quantity"
-            className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            className="px-3 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
           >
             <Minus className="w-4 h-4 text-text-primary" />
           </button>
-          <span className="px-6 py-3 text-sm font-bold text-text-primary border-x border-border-color min-w-[60px] text-center">
+          <span className="px-4 py-3 text-sm font-bold text-text-primary border-x border-border-color min-w-[50px] text-center">
             {quantity}
           </span>
           <button
             onClick={incrementQty}
             aria-label="Increase quantity"
-            className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            className="px-3 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4 text-text-primary" />
           </button>
@@ -163,123 +166,82 @@ export function ProductInfoUI({
 
         <button
           onClick={handleAddToCart}
-          className="flex-1 flex items-center justify-center gap-3 px-8 py-3.5 rounded-xl bg-brand-mint dark:bg-brand-dark text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-brand-dark/20 dark:shadow-brand-mint/20"
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-brand-mint dark:bg-brand-dark text-white font-bold text-xs sm:text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer shadow-md"
         >
           <ShoppingCart className="w-4 h-4" />
           {t("ProductDetails.addToCart")}
         </button>
 
+        {/* Direct Buy Now Button with 5s Heavy Shake Animation */}
+        <button
+          type="button"
+          onClick={handleBuyNow}
+          className="heavy-shake-btn flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-orange-500/25 hover:scale-105 active:scale-95 cursor-pointer group relative overflow-hidden"
+        >
+          <Zap className="w-4 h-4 text-yellow-200 fill-yellow-200 animate-bounce" />
+          <span>{isArabic ? "شراء مباشر " : "Buy Now "}</span>
+        </button>
+
         <button
           onClick={handleToggleWishlist}
           aria-label="Toggle Wishlist"
-          className={`w-12 h-12 shrink-0 rounded-xl border flex items-center justify-center transition-all duration-300 cursor-pointer ${
-            isWishlisted
+          className={`w-12 h-12 shrink-0 rounded-xl border flex items-center justify-center transition-all duration-300 cursor-pointer ${isWishlisted
               ? "bg-red-500 border-red-500 text-white"
               : "border-border-color text-text-secondary hover:border-red-400 hover:text-red-400"
-          }`}
+            }`}
         >
           <Heart className={`w-5 h-5 ${isWishlisted ? "fill-white" : ""}`} />
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mt-2">
-        <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-brand-creme/50 dark:bg-white/5">
-          <Truck className="w-5 h-5 text-brand-mint" />
-          <span className="text-[10px] font-bold tracking-wider uppercase text-text-secondary text-center">
-            {t("ProductDetails.freeShipping")}
-          </span>
-        </div>
-        <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-brand-creme/50 dark:bg-white/5">
-          <ShieldCheck className="w-5 h-5 text-brand-mint" />
-          <span className="text-[10px] font-bold tracking-wider uppercase text-text-secondary text-center">
-            {t("ProductDetails.authentic")}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex flex-col divide-y divide-border-color border-t border-border-color mt-2">
-        {accordions.map((accordionItem) => (
-          <div key={accordionItem.key}>
-            <button
-              onClick={() => toggleAccordion(accordionItem.key)}
-              className="w-full flex items-center justify-between py-4 cursor-pointer group"
-            >
-              <span className="text-sm font-bold text-text-primary group-hover:text-brand-orange transition-colors">
-                {accordionItem.title}
-              </span>
-              {openAccordion === accordionItem.key ? (
-                <ChevronUp className="w-4 h-4 text-text-secondary" />
-              ) : (
-                <ChevronDown className="w-4 h-4 text-text-secondary" />
-              )}
-            </button>
-            {openAccordion === accordionItem.key ? (
-              <div className="pb-4 -mt-1">
-                {Array.isArray(accordionItem.points) &&
-                accordionItem.points.length > 0 ? (
-                  <ul className="space-y-1.5 ps-5 list-disc marker:text-brand-orange">
-                    {accordionItem.points.map((point, index) => (
-                      <li
-                        key={`${accordionItem.key}-point-${index}`}
-                        className="text-sm text-text-secondary leading-relaxed"
-                      >
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-text-secondary leading-relaxed">
-                    {accordionItem.content}
-                  </p>
-                )}
+      {/* Exclusive Perks & Free Gift Showcase */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+        {/* Free Shipping Perk Card */}
+        <div className="group relative overflow-hidden rounded-2xl border border-brand-mint/30 bg-gradient-to-br from-brand-mint/10 via-emerald-500/5 to-transparent p-3.5 transition-all duration-300 hover:border-brand-mint hover:shadow-lg hover:shadow-brand-mint/10">
+          <div className="flex items-center gap-3">
+            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-brand-mint/30 bg-white/80 dark:bg-black/30 text-brand-mint shadow-inner transition-transform duration-300 group-hover:scale-105">
+              <Truck className="h-6 w-6 stroke-[2.2]" />
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="inline-block rounded-full bg-brand-mint/20 px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-brand-mint uppercase">
+                  {t("ProductDetails.freeShippingSub") || "ON ALL ORDERS"}
+                </span>
               </div>
-            ) : null}
+              <span className="mt-0.5 text-xs font-extrabold text-text-primary">
+                {t("ProductDetails.freeShipping")}
+              </span>
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
 
-      <div className="flex items-center gap-4 mt-1">
-        <Share2 className="w-4 h-4 text-text-secondary" />
-        <span className="text-xs font-bold tracking-wider uppercase text-text-secondary">
-          {t("ProductDetails.share")}
-        </span>
-        <div className="flex items-center gap-3">
-          <a
-            href={shareLinks.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => handleShareClick("facebook")}
-            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-social-facebook transition-colors"
-          >
-            <FacebookIcon className="w-4 h-4 transition-colors group-hover:text-social-facebook" />
-          </a>
-          <a
-            href={shareLinks.x}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => handleShareClick("x")}
-            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-social-x transition-colors"
-          >
-            <XIcon className="w-4 h-4 transition-colors group-hover:text-social-x" />
-          </a>
-          <a
-            href={shareLinks.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => handleShareClick("instagram")}
-            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-social-instagram transition-colors"
-          >
-            <InstagramIcon className="w-4 h-4 transition-colors group-hover:text-social-instagram" />
-          </a>
-          <a
-            href={shareLinks.tiktok}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => handleShareClick("tiktok")}
-            className="group w-8 h-8 rounded-full border border-border-color flex items-center justify-center text-text-secondary hover:border-brand-mint transition-colors"
-          >
-            <TikTokIcon className="w-4 h-4 transition-colors group-hover:text-brand-mint" />
-          </a>
+        {/* Free Gua Sha Gift Card */}
+        <div className="group relative overflow-hidden rounded-2xl border border-brand-orange/40 bg-gradient-to-br from-brand-orange/10 via-amber-500/5 to-transparent p-3.5 transition-all duration-300 hover:border-brand-orange hover:shadow-lg hover:shadow-brand-orange/10">
+          {/* Shimmering Gift Badge */}
+          <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 z-10 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-orange to-amber-500 px-2 py-0.5 text-[9px] font-black text-white shadow-md tracking-wider uppercase">
+            <Sparkles className="h-2.5 w-2.5" />
+            {t("ProductDetails.freeGiftBadge")}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-brand-orange/30 bg-white dark:bg-neutral-900 p-1 shadow-inner transition-transform duration-300 group-hover:scale-110">
+              <Image
+                src="/assets/guasha.jpg"
+                alt="Free Gift Gua Sha"
+                width={40}
+                height={40}
+                className="h-full w-full object-contain filter drop-shadow-sm"
+              />
+            </div>
+            <div className="flex flex-col pr-10 rtl:pr-0 rtl:pl-10 sm:pr-0 sm:rtl:pl-0">
+              <span className="text-[9px] font-extrabold tracking-wider text-brand-orange uppercase">
+                {t("ProductDetails.freeGuaShaSub") || "FACIAL TOOL WITH ORDER"}
+              </span>
+              <span className="mt-0.5 text-xs font-extrabold text-text-primary leading-tight">
+                {t("ProductDetails.freeGuaSha")}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 

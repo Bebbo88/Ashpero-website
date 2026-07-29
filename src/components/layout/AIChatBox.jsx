@@ -137,8 +137,14 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-brand-mint to-brand-dark text-white">
         <div className="flex items-center gap-2">
-          <Bot className="w-6 h-6" />
-          <h3 className="font-playfair font-bold text-lg">Dr. Skincare</h3>
+          <div className="w-8 h-8 rounded-full overflow-hidden relative shrink-0 border border-white/20">
+            <img
+              src="/assets/bot.jpeg"
+              alt="Dr. Skincare Bot"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <h3 className="font-playfair font-bold text-lg">Dr. ASH</h3>
         </div>
         <button
           onClick={onClose}
@@ -156,32 +162,33 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
           return (
             <div
               key={msg.id}
-              className={`flex items-start gap-2 max-w-[85%] ${
-                isUser ? "self-end flex-row-reverse" : "self-start"
-              }`}
+              className={`flex items-start gap-2 max-w-[85%] ${isUser ? "self-end flex-row-reverse" : "self-start"
+                }`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm ${
-                  isUser
-                    ? "bg-brand-orange text-white"
-                    : "bg-bg-primary border border-border-color text-brand-mint"
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm overflow-hidden ${isUser
+                  ? "bg-brand-mint text-white"
+                  : "bg-bg-primary border border-border-color"
+                  }`}
               >
                 {isUser ? (
                   <User className="w-4 h-4" />
                 ) : (
-                  <Bot className="w-4 h-4" />
+                  <img
+                    src="/assets/bot.jpeg"
+                    alt="Dr. Skincare Bot"
+                    className="w-full h-full object-cover"
+                  />
                 )}
               </div>
 
               <div
-                className={`px-4 py-2.5 rounded-2xl text-sm font-montserrat shadow-sm ${
-                  isUser
-                    ? "bg-brand-orange text-white rounded-tr-sm"
-                    : msg.isError
-                      ? "bg-status-error-soft text-status-error border border-status-error/20 rounded-tl-sm"
-                      : "bg-bg-primary text-text-primary border border-border-color rounded-tl-sm"
-                }`}
+                className={`px-4 py-2.5 rounded-2xl text-sm font-montserrat shadow-sm ${isUser
+                  ? "bg-brand-mint text-white rounded-tr-sm"
+                  : msg.isError
+                    ? "bg-status-error-soft text-status-error border border-status-error/20 rounded-tl-sm"
+                    : "bg-bg-primary text-text-primary border border-border-color rounded-tl-sm"
+                  }`}
               >
                 {msg.text}
               </div>
@@ -191,8 +198,12 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
 
         {chatMutation.isPending && (
           <div className="flex items-start gap-2 max-w-[85%] self-start text-brand-mint">
-            <div className="w-8 h-8 rounded-full bg-bg-primary border border-border-color flex items-center justify-center shrink-0 shadow-sm">
-              <Bot className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-full bg-bg-primary border border-border-color flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+              <img
+                src="/assets/bot.jpeg"
+                alt="Dr. Skincare Bot"
+                className="w-full h-full object-cover"
+              />
             </div>
 
             <div className="px-4 py-3 bg-bg-primary border border-border-color rounded-2xl font-montserrat rounded-tl-sm flex items-center gap-2 shadow-sm">

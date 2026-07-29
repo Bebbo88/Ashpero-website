@@ -36,6 +36,7 @@ export function useFeaturedBestsellersLogic() {
   );
 
   const toggleWishlistByProduct = (product) => {
+    const isWishlisted = wishlistIds.includes(String(product.id || ""));
     dispatch(
       toggleWishlistItem({
         id: product.id,
@@ -46,6 +47,12 @@ export function useFeaturedBestsellersLogic() {
         priceValue: product.priceNum,
       }),
     );
+    if (!isWishlisted && typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "AddToWishlist", {
+        value: Number(product.priceNum || 0),
+        currency: "EGP",
+      });
+    }
   };
 
   const addProductToCart = (product) => {
@@ -76,6 +83,13 @@ export function useFeaturedBestsellersLogic() {
         stock: firstVariant.stock,
       }),
     );
+
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "AddToCart", {
+        value: Number(firstVariant.price || 0),
+        currency: "EGP",
+      });
+    }
   };
 
   return {

@@ -85,6 +85,26 @@ const cartSlice = createSlice({
 
       persistToStorage(state.items);
     },
+    setBuyNowItem: (state, action) => {
+      const nextItem = normalizeItem(action.payload);
+
+      if (!nextItem.id) {
+        return;
+      }
+
+      const existingIndex = state.items.findIndex(
+        (item) =>
+          item.productId === nextItem.productId && item.size === nextItem.size,
+      );
+
+      if (existingIndex >= 0) {
+        state.items[existingIndex].quantity = nextItem.quantity;
+      } else {
+        state.items.push(nextItem);
+      }
+
+      persistToStorage(state.items);
+    },
     updateCartItemQuantity: (state, action) => {
       const { productId, size = "", quantity } = action.payload || {};
       const normalizedSize = String(size).trim().toLowerCase();
@@ -121,6 +141,7 @@ const cartSlice = createSlice({
 
 export const {
   addToCart,
+  setBuyNowItem,
   updateCartItemQuantity,
   removeFromCart,
   clearCart,

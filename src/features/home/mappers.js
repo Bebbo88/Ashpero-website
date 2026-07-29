@@ -99,6 +99,16 @@ export function mapBestSellerProducts(
         discountValue: normalizedProduct?.discountValue || 0,
 
         variants,
+
+        beforeAfterImages: normalizedProduct?.beforeAfterImages || null,
+
+        popupGallery: Array.isArray(normalizedProduct?.popupGallery)
+          ? normalizedProduct.popupGallery
+          : [],
+
+        customerReviewVideos: Array.isArray(normalizedProduct?.customerReviewVideos)
+          ? normalizedProduct.customerReviewVideos
+          : [],
       };
     })
     .filter((product) => product.image);

@@ -26,18 +26,26 @@ const SORT_OPTIONS = [
   { key: "newest", labelKey: "newest" },
 ];
 
-const PRICE_RANGE_OPTIONS = ["under30", "from30to60", "from60to100", "over100"];
+const PRICE_RANGE_OPTIONS = [
+  "under100",
+  "from100to300",
+  "from300to500",
+  "from500to700",
+  "over700",
+];
 
 const priceRangeCheck = (priceNum, range) => {
   switch (range) {
-    case "under30":
-      return priceNum < 30;
-    case "from30to60":
-      return priceNum >= 30 && priceNum <= 60;
-    case "from60to100":
-      return priceNum >= 60 && priceNum <= 100;
-    case "over100":
-      return priceNum > 100;
+    case "under100":
+      return priceNum < 100;
+    case "from100to300":
+      return priceNum >= 100 && priceNum <= 300;
+    case "from300to500":
+      return priceNum >= 300 && priceNum <= 500;
+    case "from500to700":
+      return priceNum >= 500 && priceNum <= 700;
+    case "over700":
+      return priceNum > 700;
     default:
       return true;
   }
@@ -90,16 +98,20 @@ function formatTokenLabel(token) {
 
 function getPriceRangeLabel(range, locale) {
   if (locale === "ar") {
-    if (range === "under30") return "أقل من 30 EGP";
-    if (range === "from30to60") return "30 إلى 60 EGP";
-    if (range === "from60to100") return "60 إلى 100 EGP";
-    if (range === "over100") return "أكثر من 100 EGP";
+    if (range === "under100") return "أقل من 100 ج.م";
+    if (range === "from100to300") return "100 إلى 300 ج.م";
+    if (range === "from300to500") return "300 إلى 500 ج.م";
+    if (range === "from500to700") return "500 إلى 700 ج.م";
+    if (range === "over700") return "أكثر من 700 ج.م";
   }
 
-  if (range === "under30") return "Under 30 EGP";
-  if (range === "from30to60") return "30 - 60 EGP";
-  if (range === "from60to100") return "60 - 100 EGP";
-  return "Over 100 EGP";
+  if (range === "under100") return "Under 100 EGP";
+  if (range === "from100to300") return "100 - 300 EGP";
+  if (range === "from300to500") return "300 - 500 EGP";
+  if (range === "from500to700") return "500 - 700 EGP";
+  if (range === "over700") return "Above 700 EGP";
+
+  return range;
 }
 
 export default function AllProductsPage() {
@@ -118,11 +130,12 @@ export default function AllProductsPage() {
 
   const debouncedSearch = useDebouncedValue(searchInput.trim(), 450);
 
-  const facetsQuery = useProductsQuery({ isActive: true });
+  const facetsQuery = useProductsQuery({ isActive: true, isBundle: false });
   const offersQuery = useOffersQuery();
 
   const productsQuery = useProductsQuery({
     isActive: true,
+    isBundle: false,
     search: debouncedSearch || undefined,
     category:
       filters.category.length > 0 ? filters.category.join(",") : undefined,
@@ -282,7 +295,7 @@ export default function AllProductsPage() {
     <section className="w-full bg-bg-primary min-h-screen">
       <div className="w-full">
         <Image
-          src="/assets/all_products.jpg"
+          src="/assets/all_productss.jpg"
           alt="All Products"
           width={1920}
           height={1080}
@@ -352,11 +365,10 @@ export default function AllProductsPage() {
                           setSortBy(opt.key);
                           setIsSortOpen(false);
                         }}
-                        className={`w-full text-left rtl:text-right px-4 py-3 text-sm transition-colors cursor-pointer ${
-                          sortBy === opt.key
-                            ? "bg-brand-creme dark:bg-brand-dark/30 text-brand-orange font-semibold"
-                            : "text-text-primary hover:bg-gray-50 dark:hover:bg-white/5"
-                        }`}
+                        className={`w-full text-left rtl:text-right px-4 py-3 text-sm transition-colors cursor-pointer ${sortBy === opt.key
+                          ? "bg-brand-creme dark:bg-brand-dark/30 text-brand-orange font-semibold"
+                          : "text-text-primary hover:bg-gray-50 dark:hover:bg-white/5"
+                          }`}
                       >
                         {t(`AllProducts.sort.${opt.labelKey}`)}
                       </button>
@@ -369,21 +381,19 @@ export default function AllProductsPage() {
             <div className="hidden md:flex items-center gap-1 border border-border-color rounded-lg p-0.5">
               <button
                 onClick={() => setGridCols(3)}
-                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
-                  gridCols === 3
-                    ? "bg-brand-dark dark:bg-brand-mint text-white"
-                    : "text-text-secondary hover:text-text-primary"
-                }`}
+                className={`p-1.5 rounded-md transition-colors cursor-pointer ${gridCols === 3
+                  ? "bg-brand-dark dark:bg-brand-mint text-white"
+                  : "text-text-secondary hover:text-text-primary"
+                  }`}
               >
                 <Grid2X2 className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setGridCols(4)}
-                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
-                  gridCols === 4
-                    ? "bg-brand-dark dark:bg-brand-mint text-white"
-                    : "text-text-secondary hover:text-text-primary"
-                }`}
+                className={`p-1.5 rounded-md transition-colors cursor-pointer ${gridCols === 4
+                  ? "bg-brand-dark dark:bg-brand-mint text-white"
+                  : "text-text-secondary hover:text-text-primary"
+                  }`}
               >
                 <Grid3X3 className="w-4 h-4" />
               </button>
@@ -405,11 +415,10 @@ export default function AllProductsPage() {
           <div className="flex-1">
             {isLoading ? (
               <div
-                className={`grid gap-x-5 gap-y-10 grid-cols-2 ${
-                  gridCols === 3
-                    ? "md:grid-cols-2 lg:grid-cols-3"
-                    : "md:grid-cols-3 lg:grid-cols-4"
-                }`}
+                className={`grid gap-x-5 gap-y-10 grid-cols-2 ${gridCols === 3
+                  ? "md:grid-cols-2 lg:grid-cols-3"
+                  : "md:grid-cols-3 lg:grid-cols-4"
+                  }`}
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                   <ProductCardSkeleton key={i} />
@@ -431,11 +440,10 @@ export default function AllProductsPage() {
 
             {!isLoading && !isError && filteredProducts.length > 0 ? (
               <div
-                className={`grid gap-x-5 gap-y-10 grid-cols-2 ${
-                  gridCols === 3
-                    ? "md:grid-cols-2 lg:grid-cols-3"
-                    : "md:grid-cols-3 lg:grid-cols-4"
-                }`}
+                className={`grid gap-x-5 gap-y-10 grid-cols-2 ${gridCols === 3
+                  ? "md:grid-cols-2 lg:grid-cols-3"
+                  : "md:grid-cols-3 lg:grid-cols-4"
+                  }`}
               >
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />

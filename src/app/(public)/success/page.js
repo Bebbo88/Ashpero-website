@@ -76,7 +76,12 @@ export default function SuccessPage() {
     }
 
     if (summary.paymentMethod === "cash_on_delivery" || summary.paymentStatus === "paid") {
-      dispatch(clearCart());
+      const isBuyNow = typeof window !== "undefined" && sessionStorage.getItem("buy_now_checkout_item");
+      if (isBuyNow) {
+        sessionStorage.removeItem("buy_now_checkout_item");
+      } else {
+        dispatch(clearCart());
+      }
       clearPendingCheckout();
     }
   }, [dispatch, summary]);

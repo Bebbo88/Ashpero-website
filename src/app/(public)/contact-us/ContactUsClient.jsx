@@ -125,6 +125,9 @@ export default function ContactUsPage() {
       }
 
       reset();
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "Contact");
+      }
       setSubmitState({
         type: "success",
         message:

@@ -35,13 +35,13 @@
     "register": "Register",
     "home": "HOME",
     "allProducts": "ALL PRODUCTS",
-    "allOffers": "Discover Our Offers",
+    "allOffers": "Offers & Bundles",
     "aboutUs": "ABOUT US",
     "contactUs": "CONTACT US",
     "tipsAndTricks": "TIPS & TRICKS",
     "luxurySkincare": "Luxury Skincare",
     "naturalIngredients": "Natural Ingredients",
-    "success": "Success has a shape"
+    "success": " every drop has a story "
   },
   "Footer": {
     "description": "Pioneering the future of clean, clinical skincare through botanical intelligence and sustainable luxury.",
@@ -60,7 +60,16 @@
     "copyright": "© 2026 ASHPEROO SKINCARE. ALL RIGHTS RESERVED.",
     "terms": "TERMS",
     "accessibility": "ACCESSIBILITY",
-    "cookies": "COOKIES"
+    "cookies": "COOKIES",
+    "ownershipLabel": "Brand Ownership",
+    "ownedBy": "Products are owned by Ashperoo",
+    "edaLabel": "Regulatory Authority",
+    "edaRegistered": "Registered with Egyptian Drug Authority",
+    "taxLabel": "Commercial Registration No",
+    "taxNo": "Commercial Registration No: 256825",
+    "licenseInfo": "Products are owned by Ashperoo | Registered with the Egyptian Drug Authority | Commercial Registration No: 256825",
+    "licenseInfoLine1": "Products are owned by Ashperoo",
+    "licenseInfoLine2": "Registered with the Egyptian Drug Authority | Commercial Registration No: 256825"
   },
   "Bestsellers": {
     "title": "Featured Bestsellers",
@@ -191,6 +200,10 @@
     "allProducts": "All Products",
     "addToCart": "Add to Cart",
     "freeShipping": "Free Shipping",
+    "freeShippingSub": "On All Orders",
+    "freeGuaSha": "Free Gua Sha Gift",
+    "freeGuaShaSub": "Facial Tool with Order",
+    "freeGiftBadge": "FREE GIFT",
     "easyReturns": "30-Day Returns",
     "authentic": "100% Authentic",
     "ingredients": "Ingredients",

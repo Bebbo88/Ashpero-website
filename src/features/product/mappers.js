@@ -73,6 +73,10 @@ export function mapAllProducts(products = [], locale = "en", offers = []) {
         : Number(normalizedProduct?.price) || 0;
 
     const finalPrice = normalizedProduct?.finalPrice || lowestPrice;
+    let oldPriceVal = normalizedProduct?.oldPrice || 0;
+    if (!oldPriceVal && normalizedProduct?.hasOffer) {
+      oldPriceVal = lowestPrice;
+    }
 
     return {
       id: String(
@@ -85,6 +89,10 @@ export function mapAllProducts(products = [], locale = "en", offers = []) {
         toAbsoluteAssetUrl(normalizedProduct?.images?.[0] || "") ||
         "/assets/photo1.jpeg",
 
+      images: Array.isArray(normalizedProduct?.images)
+        ? normalizedProduct.images.map((img) => toAbsoluteAssetUrl(img))
+        : [],
+
       categoryRaw: String(normalizedProduct?.category || "").trim(),
 
       title: resolveProductTitle(normalizedProduct, locale),
@@ -95,11 +103,10 @@ export function mapAllProducts(products = [], locale = "en", offers = []) {
 
       price: formatPrice(finalPrice, locale),
 
-      oldPrice: normalizedProduct?.hasOffer
-        ? formatPrice(lowestPrice, locale)
-        : "",
+      oldPrice: oldPriceVal > 0 ? formatPrice(oldPriceVal, locale) : "",
+      oldPriceValue: oldPriceVal,
 
-      hasOffer: normalizedProduct?.hasOffer || false,
+      hasOffer: normalizedProduct?.hasOffer || oldPriceVal > 0,
 
       discountType: normalizedProduct?.discountType || "",
 
@@ -117,6 +124,19 @@ export function mapAllProducts(products = [], locale = "en", offers = []) {
         ? normalizedProduct.skinType
             .map((value) => String(value).trim())
             .filter(Boolean)
+        : [],
+
+      beforeAfterImages: normalizedProduct?.beforeAfterImages || null,
+      popupGallery: Array.isArray(normalizedProduct?.popupGallery)
+        ? normalizedProduct.popupGallery
+        : [],
+      customerReviewVideos: Array.isArray(normalizedProduct?.customerReviewVideos)
+        ? normalizedProduct.customerReviewVideos
+        : [],
+
+      isBundle: normalizedProduct?.isBundle || false,
+      bundleIncludes: Array.isArray(normalizedProduct?.bundleIncludes)
+        ? normalizedProduct.bundleIncludes
         : [],
 
       createdAt: normalizedProduct?.createdAt || "",
@@ -149,6 +169,10 @@ export function mapProductDetails(product, locale = "en", offers = []) {
       : Number(normalizedProduct?.price) || 0;
 
   const finalPrice = normalizedProduct?.finalPrice || lowestPrice;
+  let oldPriceVal = normalizedProduct?.oldPrice || 0;
+  if (!oldPriceVal && normalizedProduct?.hasOffer) {
+    oldPriceVal = lowestPrice;
+  }
 
   return {
     id: String(normalizedProduct._id || normalizedProduct.id || ""),
@@ -170,11 +194,10 @@ export function mapProductDetails(product, locale = "en", offers = []) {
 
     price: formatPrice(finalPrice, locale),
 
-    oldPrice: normalizedProduct?.hasOffer
-      ? formatPrice(lowestPrice, locale)
-      : "",
+    oldPrice: oldPriceVal > 0 ? formatPrice(oldPriceVal, locale) : "",
+    oldPriceValue: oldPriceVal,
 
-    hasOffer: normalizedProduct?.hasOffer || false,
+    hasOffer: normalizedProduct?.hasOffer || oldPriceVal > 0,
 
     discountType: normalizedProduct?.discountType || "",
 
@@ -199,6 +222,21 @@ export function mapProductDetails(product, locale = "en", offers = []) {
       "howToUse_ar",
       "howToUse",
     ),
+
+    beforeAfterImages: normalizedProduct?.beforeAfterImages || null,
+
+    popupGallery: Array.isArray(normalizedProduct?.popupGallery)
+      ? normalizedProduct.popupGallery
+      : [],
+
+    customerReviewVideos: Array.isArray(normalizedProduct?.customerReviewVideos)
+      ? normalizedProduct.customerReviewVideos
+      : [],
+
+    isBundle: normalizedProduct?.isBundle || false,
+    bundleIncludes: Array.isArray(normalizedProduct?.bundleIncludes)
+      ? normalizedProduct.bundleIncludes
+      : [],
   };
 }
 

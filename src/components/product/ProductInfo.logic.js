@@ -1,7 +1,8 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addToCart } from "@/store/slices/cartSlice";
+import { addToCart, setBuyNowItem } from "@/store/slices/cartSlice";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 
 function parseBulletPoints(content) {
@@ -17,6 +18,7 @@ function parseBulletPoints(content) {
 
 export function useProductInfoLogic(product) {
   const { t, locale } = useLanguage();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
 
@@ -95,7 +97,7 @@ export function useProductInfoLogic(product) {
       return Math.max(
         0,
         variantPrice -
-          (variantPrice * Number(product.discountValue || 0)) / 100,
+        (variantPrice * Number(product.discountValue || 0)) / 100,
       );
     }
 
@@ -185,6 +187,53 @@ export function useProductInfoLogic(product) {
         quantity,
       }),
     );
+
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'AddToCart', {
+        value: Number(resolvedPriceValue || 0) * (quantity || 1),
+        currency: 'EGP'
+      });
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (quantity > availableStock) {
+      return;
+    }
+
+    const itemPriceNum = Number(resolvedPriceValue || 0);
+    const totalItemValue = itemPriceNum * (quantity || 1);
+
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(
+        "buy_now_checkout_item",
+        JSON.stringify({
+          id: product.id,
+          productId: product.id,
+          title: product.title,
+          image: product.images?.[0] || "/assets/photo1.jpeg",
+          category: product.category,
+          price: displayPrice,
+          priceValue: resolvedPriceValue,
+          size: resolvedVariant?.size || "",
+          stock: availableStock,
+          quantity,
+        })
+      );
+    }
+
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'AddToCart', {
+        value: totalItemValue,
+        currency: 'EGP'
+      });
+      window.fbq('track', 'InitiateCheckout', {
+        value: totalItemValue,
+        currency: 'EGP'
+      });
+    }
+
+    router.push("/checkout?buyNow=true");
   };
 
   const handleToggleWishlist = () => {
@@ -198,6 +247,13 @@ export function useProductInfoLogic(product) {
         priceValue: resolvedPriceValue,
       }),
     );
+
+    if (!isWishlisted && typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "AddToWishlist", {
+        value: Number(resolvedPriceValue || 0),
+        currency: "EGP",
+      });
+    }
   };
 
   useEffect(() => {
@@ -247,6 +303,7 @@ export function useProductInfoLogic(product) {
     shareToast,
     handleShareClick,
     handleAddToCart,
+    handleBuyNow,
     handleToggleWishlist,
     setSelectedSize,
     decrementQty,
