@@ -35,6 +35,7 @@ export default function Footer() {
             <p className="text-sm leading-relaxed text-white/90 pr-4 rtl:pr-0 rtl:pl-4">
               {t("Footer.description")}
             </p>
+
             {/* Social Icons */}
             <div className="flex flex-wrap items-center gap-4 mt-2">
               <a
@@ -184,16 +185,32 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Dedicated Standalone License & Egyptian Drug Authority Section (سكشن التراخيص المخصص) */}
+        <div className="w-full my-8 py-6  px-6 flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left rtl:sm:text-right shadow-inner">
+          <div className="relative w-40 h-40 shrink-0 bg-white rounded-2xl p-1.5 overflow-hidden shadow-lg flex items-center justify-center border-2 border-white/40">
+            <Image
+              src="/assets/medic.jpeg"
+              alt="Egyptian Drug Authority - هيئة الدواء المصرية"
+              width={80}
+              height={80}
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="flex flex-col justify-center text-white">
+            <h4 className="font-extrabold text-base sm:text-lg md:text-xl text-white tracking-wide">
+              {t("Footer.licenseInfoLine1")}
+            </h4>
+            <p className="text-xs sm:text-sm text-white/90 font-medium mt-1 leading-relaxed">
+              {t("Footer.licenseInfoLine2")}
+            </p>
+          </div>
+        </div>
+
         {/* Bottom Bar with Payment Badges */}
         <div className="border-t border-white/20 pt-8 mt-4 flex flex-col xl:flex-row justify-between items-center gap-6">
-          <div className="flex flex-col items-center md:items-start rtl:md:items-end gap-1.5 text-center md:text-left rtl:md:text-right">
-            <p className="text-[11px] font-semibold text-white/80 tracking-wider uppercase">
+          <div className="flex flex-col items-center md:items-start rtl:md:items-end gap-1 text-center md:text-left rtl:md:text-right">
+            <p className="text-xs font-semibold text-white/80 tracking-wider uppercase">
               {t("Footer.copyright")}
-            </p>
-            <p className="text-xs text-white/70 font-normal leading-relaxed">
-              {t("Footer.licenseInfoLine1")}
-              <br />
-              {t("Footer.licenseInfoLine2")}
             </p>
           </div>
 

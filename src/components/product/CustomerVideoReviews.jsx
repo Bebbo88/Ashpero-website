@@ -38,13 +38,13 @@ export default function CustomerVideoReviews({ customerReviewVideos }) {
         </div>
 
         {/* Video Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {videos.map((videoUrl, index) => (
             <div
               key={index}
-              className="group relative rounded-2xl overflow-hidden bg-black/90 border border-border-color shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
+              className="group relative rounded-xl md:rounded-2xl overflow-hidden bg-black/90 border border-border-color shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
             >
-              <div className="relative aspect-[9/16] w-full max-h-[460px] bg-slate-900 overflow-hidden flex items-center justify-center">
+              <div className="relative aspect-[6/9] w-full max-h-[220px] sm:max-h-[300px] md:max-h-[400px] bg-slate-900 overflow-hidden flex items-center justify-center">
                 <video
                   src={videoUrl}
                   preload="metadata"

@@ -54,15 +54,12 @@ const initialFormValues = {
   customerName: "",
   phoneCountryCode: DEFAULT_DIAL_CODE,
   phone: "",
-  walletPhone: "",
   secondaryPhoneCountryCode: DEFAULT_DIAL_CODE,
   secondaryPhone: "",
-  email: "",
   city: "",
   state: "",
   address1: "",
   address2: "",
-  postalCode: "",
   orderNote: "",
   paymentMethod: "card",
 };
@@ -84,14 +81,6 @@ function formatInternationalPhone(dialCode, localPhone) {
 
 function createCheckoutSchema(locale) {
   const isArabic = locale === "ar";
-
-  const blockedDomains = [
-    "mailinator.com",
-    "tempmail.com",
-    "10minutemail.com",
-    "guerrillamail.com",
-    "fakeinbox.com",
-  ];
 
   return z
     .object({
@@ -131,17 +120,6 @@ function createCheckoutSchema(locale) {
           isArabic ? "أدخل رقم هاتف صحيح." : "Enter a valid phone number.",
         ),
 
-      walletPhone: z
-        .string()
-        .trim()
-        .transform(normalizeDigits)
-        .refine(
-          (value) => value === "" || /^[0-9]{7,15}$/.test(value),
-          isArabic ? "أدخل رقم محفظة صحيح." : "Enter a valid wallet number.",
-        )
-        .optional()
-        .default(""),
-
       secondaryPhoneCountryCode: z
         .string()
         .trim()
@@ -160,32 +138,6 @@ function createCheckoutSchema(locale) {
         )
         .optional()
         .default(""),
-
-      email: z
-        .string()
-        .trim()
-        .min(1, isArabic ? "البريد الإلكتروني مطلوب." : "Email is required.")
-        .email(
-          isArabic
-            ? "أدخل بريد إلكتروني صحيح."
-            : "Enter a valid email address.",
-        )
-        .max(
-          120,
-          isArabic ? "البريد الإلكتروني طويل جدًا." : "Email is too long.",
-        )
-        .refine(
-          (value) => {
-            const domain = value.split("@")[1]?.toLowerCase();
-
-            return !blockedDomains.includes(domain);
-          },
-          {
-            message: isArabic
-              ? "البريد الإلكتروني المؤقت غير مسموح."
-              : "Disposable email addresses are not allowed.",
-          },
-        ),
 
       city: z
         .string()
@@ -228,18 +180,6 @@ function createCheckoutSchema(locale) {
             : "Additional address is too long.",
         ),
 
-      postalCode: z
-        .string()
-        .trim()
-        .max(
-          20,
-          isArabic ? "الرمز البريدي طويل جدًا." : "Postal code is too long.",
-        )
-        .refine(
-          (value) => value === "" || /^[a-zA-Z0-9\- ]+$/.test(value),
-          isArabic ? "الرمز البريدي غير صحيح." : "Invalid postal code.",
-        ),
-
       orderNote: z
         .string()
         .trim()
@@ -248,7 +188,7 @@ function createCheckoutSchema(locale) {
           isArabic ? "ملاحظات الطلب طويلة جدًا." : "Order note is too long.",
         ),
 
-      paymentMethod: z.enum(["card", "wallet", "kiosk", "cash"]),
+      paymentMethod: z.enum(["card", "kiosk", "cash"]),
     })
 
     .refine(
@@ -258,14 +198,6 @@ function createCheckoutSchema(locale) {
           ? "الرقم البديل يجب أن يكون مختلفًا."
           : "Alternate phone must be different.",
         path: ["secondaryPhone"],
-      },
-    )
-
-    .refine(
-      (data) => data.paymentMethod !== "wallet" || Boolean(data.walletPhone),
-      {
-        message: isArabic ? "رقم المحفظة مطلوب." : "Wallet number is required.",
-        path: ["walletPhone"],
       },
     );
 }
@@ -470,17 +402,14 @@ export default function CheckoutPage() {
     try {
       const payload = {
         customerName: values.customerName.trim(),
-        phone:
-          values.paymentMethod === "wallet"
-            ? normalizeDigits(values.walletPhone)
-            : formatInternationalPhone(values.phoneCountryCode, values.phone),
+        phone: formatInternationalPhone(values.phoneCountryCode, values.phone),
         secondaryPhone: values.secondaryPhone
           ? formatInternationalPhone(
             values.secondaryPhoneCountryCode,
             values.secondaryPhone,
           )
           : "",
-        email: values.email.trim(),
+        email: "",
         address:
           `${values.address1} ${values.address2}`.trim() ||
           values.address1.trim(),
@@ -490,9 +419,9 @@ export default function CheckoutPage() {
           city: values.city.trim(),
           street: values.address1.trim(),
           area: values.address2.trim(),
-          postalCode: values.postalCode.trim(),
+          postalCode: "",
           fullAddress:
-            `${values.address1} ${values.address2} ${values.city} ${values.state} ${values.postalCode}`
+            `${values.address1} ${values.address2} ${values.city} ${values.state}`
               .replace(/\s+/g, " ")
               .trim(),
         },
@@ -581,17 +510,8 @@ export default function CheckoutPage() {
       const backendMessage =
         error?.response?.data?.message || error?.message || "";
 
-      let friendlyMessage = backendMessage;
-
-      if (backendMessage.toLowerCase().includes("receiver is not registered")) {
-        friendlyMessage =
-          locale === "ar"
-            ? "رقم المحفظة غير مسجل في خدمة الدفع الإلكتروني."
-            : "This wallet number is not registered for mobile payments.";
-      }
-
       setSubmitError(
-        friendlyMessage ||
+        backendMessage ||
         (locale === "ar"
           ? "حدث خطأ أثناء إنشاء الطلب."
           : "Failed to create order."),
@@ -662,7 +582,7 @@ export default function CheckoutPage() {
                   {t("Checkout.contactInfo")}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
+                  <div className="md:col-span-2">
                     <input
                       {...register("customerName")}
                       placeholder={t("Checkout.fullNameHolder")}
@@ -676,22 +596,11 @@ export default function CheckoutPage() {
                   </div>
 
                   <div>
-                    <input
-                      {...register("email")}
-                      type="email"
-                      placeholder={t("Checkout.emailHolder")}
-                      className={getInputClass(Boolean(errors.email))}
-                    />
-                    {errors.email ? (
-                      <p className="mt-1.5 text-xs text-status-error">
-                        {errors.email.message}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div>
+                    <span className="text-xs text-text-secondary">
+                      {locale === "ar" ? "رقم التليفون" : " Phone Number"}
+                    </span>
                     <div
-                      className={`flex items-center mt-6 rounded-xl border overflow-hidden ${errors.phone || errors.phoneCountryCode
+                      className={`flex items-center rounded-xl border overflow-hidden ${errors.phone || errors.phoneCountryCode
                         ? "border-status-error"
                         : "border-border-color"
                         }`}
@@ -709,6 +618,7 @@ export default function CheckoutPage() {
                           </option>
                         ))}
                       </select>
+
                       <input
                         {...register("phone")}
                         inputMode="numeric"
@@ -844,19 +754,6 @@ export default function CheckoutPage() {
                       </p>
                     ) : null}
                   </div>
-
-                  <div>
-                    <input
-                      {...register("postalCode")}
-                      placeholder={t("Checkout.postalHolder")}
-                      className={getInputClass(Boolean(errors.postalCode))}
-                    />
-                    {errors.postalCode ? (
-                      <p className="mt-1.5 text-xs text-status-error">
-                        {errors.postalCode.message}
-                      </p>
-                    ) : null}
-                  </div>
                 </div>
               </section>
 
@@ -904,75 +801,6 @@ export default function CheckoutPage() {
                     </div>
                     <Banknote className="w-6 h-6" />
                   </label>
-                  <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "wallet"
-                      ? "border-brand-mint bg-brand-mint/5"
-                      : "border-border-color bg-bg-primary"
-                      }`}
-                  >
-                    <input
-                      type="radio"
-                      value="wallet"
-                      {...register("paymentMethod")}
-                      className="sr-only"
-                    />
-
-                    <div className="flex items-center gap-4">
-                      <span className="font-semibold text-sm">
-                        {t("Checkout.wallet")}
-                      </span>{" "}
-                    </div>
-
-                    <Banknote className="w-6 h-6" />
-                  </label>
-                  {/* Fawry Payment Option (Commented Out)
-                  <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "kiosk"
-                      ? "border-brand-mint bg-brand-mint/5"
-                      : "border-border-color bg-bg-primary"
-                      }`}
-                  >
-                    <input
-                      type="radio"
-                      value="kiosk"
-                      {...register("paymentMethod")}
-                      className="sr-only"
-                    />
-
-                    <div className="flex items-center gap-4">
-                      <span className="font-semibold text-sm">
-                        {t("Checkout.kiosk")}
-                      </span>
-                    </div>
-
-                    <Banknote className="w-6 h-6" />
-                  </label>
-                  */}
-                  {paymentMethod === "wallet" ? (
-                    <div className="mt-5">
-                      <label className="mb-2 block text-sm font-semibold text-text-primary">
-                        {locale === "ar" ? "رقم المحفظة" : "Wallet Number"}
-                      </label>
-
-                      <input
-                        {...register("walletPhone")}
-                        inputMode="numeric"
-                        onInput={(event) => {
-                          event.currentTarget.value = normalizeDigits(
-                            event.currentTarget.value,
-                          );
-                        }}
-                        placeholder={t("Checkout.walletPlaceholder")}
-                        className={getInputClass(Boolean(errors.walletPhone))}
-                      />
-
-                      {errors.walletPhone ? (
-                        <p className="mt-1.5 text-xs text-status-error">
-                          {errors.walletPhone.message}
-                        </p>
-                      ) : null}
-                    </div>
-                  ) : null}
                 </div>
               </section>
 

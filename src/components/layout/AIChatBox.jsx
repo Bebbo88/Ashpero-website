@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { X, Send, Bot, User, Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { DoctorBotIcon } from "@/svgs/FloatingActions.svgs";
 
 const CHAT_STORAGE_KEY = "ashpero_ai_chat_history";
 
@@ -25,7 +26,7 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
         {
           id: "sys-1",
           role: "model",
-          text: "Hello! I'm Dr. Skincare, your AI assistant. How can I help you elevate your skincare ritual today?",
+          text: "أهلاً بك! أنا Dr. ASH، مساعدك الذكي للعناية بالبشرة. كيف يمكنني مساعدتك اليوم؟",
           timestamp: Date.now(),
         },
       ]);
@@ -137,12 +138,8 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-brand-mint to-brand-dark text-white">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full overflow-hidden relative shrink-0 border border-white/20">
-            <img
-              src="/assets/bot.jpeg"
-              alt="Dr. Skincare Bot"
-              className="w-full h-full object-cover"
-            />
+          <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 border border-white/20 bg-white/10">
+            <DoctorBotIcon className="w-5 h-5 text-white" />
           </div>
           <h3 className="font-playfair font-bold text-lg">Dr. ASH</h3>
         </div>
@@ -166,19 +163,15 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
                 }`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm overflow-hidden ${isUser
+                className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm ${isUser
                   ? "bg-brand-mint text-white"
-                  : "bg-bg-primary border border-border-color"
+                  : "bg-bg-primary border border-border-color text-brand-mint"
                   }`}
               >
                 {isUser ? (
                   <User className="w-4 h-4" />
                 ) : (
-                  <img
-                    src="/assets/bot.jpeg"
-                    alt="Dr. Skincare Bot"
-                    className="w-full h-full object-cover"
-                  />
+                  <DoctorBotIcon className="w-4 h-4" />
                 )}
               </div>
 
@@ -198,18 +191,14 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
 
         {chatMutation.isPending && (
           <div className="flex items-start gap-2 max-w-[85%] self-start text-brand-mint">
-            <div className="w-8 h-8 rounded-full bg-bg-primary border border-border-color flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
-              <img
-                src="/assets/bot.jpeg"
-                alt="Dr. Skincare Bot"
-                className="w-full h-full object-cover"
-              />
+            <div className="w-8 h-8 rounded-full bg-bg-primary border border-border-color flex items-center justify-center shrink-0 shadow-sm text-brand-mint">
+              <DoctorBotIcon className="w-4 h-4" />
             </div>
 
             <div className="px-4 py-3 bg-bg-primary border border-border-color rounded-2xl font-montserrat rounded-tl-sm flex items-center gap-2 shadow-sm">
               <Loader2 className="w-4 h-4 animate-spin text-brand-mint" />
               <span className="text-xs text-text-secondary">
-                Dr. Skincare is thinking...
+                Ash is thinking...
               </span>
             </div>
           </div>

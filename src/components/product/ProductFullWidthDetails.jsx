@@ -90,8 +90,8 @@ export default function ProductFullWidthDetails({ product }) {
           </div>
         </div>
 
-        {/* 2. How to Use Column */}
-        <div className="flex-1 w-full flex flex-col">
+        {/* 2. How to Use Column (Double Flex Width - flex-[2]) */}
+        <div className="flex-[2] w-full flex flex-col">
           <div className="flex items-center gap-2 mb-3 text-brand-mint border-b border-border-color/60 pb-2">
             <Sparkles className="w-4 h-4" />
             <h3 className="font-playfair font-bold text-base text-text-primary">

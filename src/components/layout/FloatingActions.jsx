@@ -59,25 +59,26 @@ export default function FloatingActions() {
         </motion.div>
 
         {/* AI Agent (Doctor Bot) */}
-        <motion.div variants={itemVariants} className="relative">
+        <motion.div variants={itemVariants} className="relative group">
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
-            className="relative flex items-center cursor-pointer justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95 group overflow-hidden"
+            className="relative flex items-center cursor-pointer justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95"
             aria-label="Consult AI Skincare Doctor"
           >
             <motion.div
               animate={{ y: [-2, 2, -2] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="w-full h-full rounded-full overflow-hidden relative"
+              className="w-full h-full rounded-full flex items-center justify-center relative"
             >
-              <img
-                src="/assets/bot.jpeg"
-                alt="Consult AI Skincare Doctor"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
+              <DoctorBotIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
             </motion.div>
-            <span className="absolute bottom-0.5 end-0.5 sm:bottom-1 sm:end-1 w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 bg-green-400 border-2 border-brand-dark rounded-full"></span>
           </button>
+
+          {/* Online Status Indicator */}
+          <span className="absolute top-0 end-0 flex h-3.5 w-3.5 sm:h-4 sm:w-4 -mt-0.5 -me-0.5 pointer-events-none z-10">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 bg-emerald-500 border-2 border-white dark:border-slate-900 shadow-sm"></span>
+          </span>
 
           <AnimatePresence>
             {isChatOpen && (

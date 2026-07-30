@@ -108,12 +108,12 @@ export function ProductInfoUI({
           <div
             key={benefit}
             className={`w-12 h-12 rounded-full flex items-center justify-center text-[8px] font-bold tracking-tighter text-white shadow-sm ${idx === 0
-                ? "bg-benefit-1"
-                : idx === 1
-                  ? "bg-benefit-2"
-                  : idx === 2
-                    ? "bg-benefit-3"
-                    : "bg-benefit-4"
+              ? "bg-benefit-1"
+              : idx === 1
+                ? "bg-benefit-2"
+                : idx === 2
+                  ? "bg-benefit-3"
+                  : "bg-benefit-4"
               }`}
           >
             {benefit}
@@ -132,8 +132,8 @@ export function ProductInfoUI({
                 key={variant.size}
                 onClick={() => setSelectedSize(variant.size)}
                 className={`px-4 py-2 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${selectedSize === variant.size
-                    ? "border-brand-orange bg-brand-orange text-white"
-                    : "border-border-color text-text-primary hover:border-brand-orange hover:text-brand-orange"
+                  ? "border-brand-orange bg-brand-orange text-white"
+                  : "border-border-color text-text-primary hover:border-brand-orange hover:text-brand-orange"
                   }`}
               >
                 {variant.size}
@@ -186,8 +186,8 @@ export function ProductInfoUI({
           onClick={handleToggleWishlist}
           aria-label="Toggle Wishlist"
           className={`w-12 h-12 shrink-0 rounded-xl border flex items-center justify-center transition-all duration-300 cursor-pointer ${isWishlisted
-              ? "bg-red-500 border-red-500 text-white"
-              : "border-border-color text-text-secondary hover:border-red-400 hover:text-red-400"
+            ? "bg-red-500 border-red-500 text-white"
+            : "border-border-color text-text-secondary hover:border-red-400 hover:text-red-400"
             }`}
         >
           <Heart className={`w-5 h-5 ${isWishlisted ? "fill-white" : ""}`} />

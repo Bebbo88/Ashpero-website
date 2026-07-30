@@ -1,4 +1,5 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import Image from "@/components/ui/AppImage";
 import { motion } from "framer-motion";
 import { Play, Pause } from "lucide-react";
 
@@ -13,7 +14,15 @@ function VideoCard({ item, index }) {
   const rawVideoSource = item?.video?.src || item?.video || "";
   const posterSource = item?.video?.poster || item?.cards?.[0]?.image || "";
 
-  // Simplify Cloudinary transformations to avoid 400 errors
+  const isImageMedia = React.useMemo(() => {
+    if (!rawVideoSource || typeof rawVideoSource !== "string") return false;
+    return (
+      /\.(jpg|jpeg|png|webp|gif|avif|svg)(\?.*)?$/i.test(rawVideoSource) ||
+      rawVideoSource.includes("/image/upload/")
+    );
+  }, [rawVideoSource]);
+
+  // Simplify Cloudinary transformations to avoid 400 errors for both images and videos
   const videoSource = React.useMemo(() => {
     if (
       typeof rawVideoSource !== "string" ||
@@ -21,12 +30,21 @@ function VideoCard({ item, index }) {
     ) {
       return rawVideoSource;
     }
-    // Change complex transformations to simple f_auto,q_auto
+
+    if (isImageMedia) {
+      // Remove video-specific transformations (vc_auto, br_auto) from image URLs
+      return rawVideoSource.replace(
+        /\/image\/upload\/[^/]+\//,
+        "/image/upload/f_auto,q_auto/",
+      );
+    }
+
+    // Change complex transformations to simple f_auto,q_auto for videos
     return rawVideoSource.replace(
       /\/video\/upload\/[^/]+\//,
       "/video/upload/f_auto,q_auto/",
     );
-  }, [rawVideoSource]);
+  }, [rawVideoSource, isImageMedia]);
 
   const togglePlay = useCallback(async () => {
     const videoElement = videoRef.current;
@@ -56,36 +74,47 @@ function VideoCard({ item, index }) {
       }}
       className="group w-full h-full flex flex-col bg-bg-primary rounded-xl md:rounded-[24px] overflow-hidden shadow-card border border-border-color hover:shadow-[var(--ds-shadow-brand-primary)] hover:border-brand-mint/50 transition-all duration-500"
     >
-      <div className="relative w-full flex-1 overflow-hidden shrink-0 bg-gray-100">
-        <video
-          ref={videoRef}
-          poster={posterSource || undefined}
-          playsInline
-          preload="metadata"
-          controls
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onEnded={() => setIsPlaying(false)}
-          className="absolute inset-0 w-full h-full object-cover z-0"
-        >
-          <source src={videoSource} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-
-        {/* Custom Play Overlay - disappears when playing to allow native controls interaction */}
-        {!isPlaying && (
-          <div
-            className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors duration-300 cursor-pointer"
-            onClick={togglePlay}
-          >
-            <button
-              type="button"
-              className="w-14 h-14 md:w-16 md:h-16 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center text-brand-mint shadow-xl transform transition-transform hover:scale-110"
-              aria-label="Play video"
+      <div className="relative w-full flex-1 min-h-[250px] overflow-hidden shrink-0 bg-gray-100">
+        {isImageMedia ? (
+          <Image
+            src={videoSource}
+            alt={item.video?.title || item.title || "Media"}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <>
+            <video
+              ref={videoRef}
+              poster={posterSource || undefined}
+              playsInline
+              preload="metadata"
+              controls
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onEnded={() => setIsPlaying(false)}
+              className="absolute inset-0 w-full h-full object-cover z-0"
             >
-              <Play className="w-6 h-6 md:w-8 md:h-8 fill-current ml-1" />
-            </button>
-          </div>
+              <source src={videoSource} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+
+            {/* Custom Play Overlay - disappears when playing to allow native controls interaction */}
+            {!isPlaying && (
+              <div
+                className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 group-hover:bg-black/20 transition-colors duration-300 cursor-pointer"
+                onClick={togglePlay}
+              >
+                <button
+                  type="button"
+                  className="w-14 h-14 md:w-16 md:h-16 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center text-brand-mint shadow-xl transform transition-transform hover:scale-110"
+                  aria-label="Play video"
+                >
+                  <Play className="w-6 h-6 md:w-8 md:h-8 fill-current ml-1" />
+                </button>
+              </div>
+            )}
+          </>
         )}
 
         {item.badge ? (
