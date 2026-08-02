@@ -183,9 +183,13 @@ export default function BundleCard({ product, priority = false }) {
 
           {/* Description */}
           {product.description && (
-            <p className="text-xs text-text-secondary line-clamp-2 mb-4 leading-relaxed">
-              {product.description}
-            </p>
+            <div className="text-xs text-text-secondary line-clamp-2 mb-4 leading-relaxed [&_b]:font-bold [&_strong]:font-bold">
+              {typeof product.description === "string" && (product.description.includes("<") || product.description.includes("&")) ? (
+                <span dangerouslySetInnerHTML={{ __html: product.description }} />
+              ) : (
+                <span>{product.description}</span>
+              )}
+            </div>
           )}
 
           {/* Bundle Contents List (bundleIncludes) */}

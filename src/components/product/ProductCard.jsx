@@ -169,7 +169,9 @@ export default function ProductCard({ product, priority = false }) {
         </div>
         {product.description && (
           <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 mt-1">
-            {product.description}
+            {typeof product.description === "string"
+              ? product.description.replace(/<[^>]*>?/gm, "").trim()
+              : product.description}
           </p>
         )}
       </div>

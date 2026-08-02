@@ -99,9 +99,16 @@ export function ProductInfoUI({
         </p>
       </div>
 
-      <p className="text-sm text-text-secondary leading-relaxed">
-        {product.description}
-      </p>
+      {typeof product?.description === "string" && (product.description.includes("<") || product.description.includes("&")) ? (
+        <div
+          className="text-sm text-text-secondary leading-relaxed [&_b]:font-bold [&_strong]:font-bold"
+          dangerouslySetInnerHTML={{ __html: product.description }}
+        />
+      ) : (
+        <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-line">
+          {product?.description}
+        </p>
+      )}
 
       <div className="flex items-center gap-3 mt-2">
         {BENEFITS.map((benefit, idx) => (
