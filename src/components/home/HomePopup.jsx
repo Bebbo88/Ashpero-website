@@ -7,8 +7,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useSiteContentQuery } from "@/features/home/queries";
 import { toAbsoluteAssetUrl } from "@/constants/config";
 
-const SPLASH_COMPLETE_EVENT = "ashperoo:splash-complete";
-
 const popupImagePreloadPromises = new Map();
 
 function preloadPopupImage(imageSrc) {
@@ -120,23 +118,11 @@ export default function HomePopup() {
       }
     };
 
-    // Check both sessionStorage and cookie, because if the user opens a new tab,
-    // the splash screen might be skipped (cookie is true), but sessionStorage is empty.
-    const splashDoneInSession = sessionStorage.getItem("splash_shown");
-    const splashDoneInCookie = document.cookie.includes("splash_shown=true");
-
-    if (splashDoneInSession || splashDoneInCookie) {
-      showAfterImageReady();
-    } else {
-      window.addEventListener(SPLASH_COMPLETE_EVENT, showAfterImageReady, {
-        once: true,
-      });
-    }
+    showAfterImageReady();
 
     return () => {
       isCancelled = true;
       clearTimeout(timeoutId);
-      window.removeEventListener(SPLASH_COMPLETE_EVENT, showAfterImageReady);
     };
   }, [isContentLoading, popupImageSrc, hasValidExpiryDate, popupExpiresAt]);
 

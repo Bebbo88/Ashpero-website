@@ -25,11 +25,17 @@ export function PopupGalleryTrigger({ popupGallery, onOpen }) {
         e.stopPropagation();
         onOpen();
       }}
-      title={isArabic ? "عرض صور الجاليري" : "View Gallery"}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-mint text-white font-bold text-xs shadow-md hover:bg-brand-dark hover:scale-105 active:scale-95 transition-all cursor-pointer z-30"
+      title={isArabic ? `عرض صور الجاليري (${images.length})` : `View Gallery (${images.length})`}
+      aria-label={isArabic ? "عرض صور الجاليري" : "View Gallery"}
+      className="inline-flex items-center justify-center gap-1.5 p-2 sm:px-3 sm:py-1.5 rounded-full bg-brand-mint text-white font-bold text-xs shadow-md hover:bg-brand-dark hover:scale-105 active:scale-95 transition-all cursor-pointer z-30"
     >
-      <Images className="w-4 h-4" />
-      <span>{isArabic ? `معرض الصور (${images.length})` : `Gallery (${images.length})`}</span>
+      <Images className="w-4 h-4 shrink-0" />
+      <span className="hidden sm:inline">
+        {isArabic ? `معرض الصور (${images.length})` : `Gallery (${images.length})`}
+      </span>
+      <span className="sm:hidden text-[10px] font-extrabold leading-none bg-white/20 px-1 py-0.5 rounded-full">
+        {images.length}
+      </span>
     </button>
   );
 }

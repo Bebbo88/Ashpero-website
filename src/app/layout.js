@@ -7,7 +7,6 @@ import { ModeProvider } from "../hooks/useMode";
 import AuthSessionProvider from "@/components/providers/AuthSessionProvider";
 import ReduxProvider from "@/components/providers/ReduxProvider";
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
-import SplashScreen from "@/components/layout/SplashScreen";
 import FloatingActions from "@/components/layout/FloatingActions";
 import { CartDrawerProvider } from "@/contexts/CartDrawerContext";
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -64,7 +63,6 @@ const THEME_INIT_SCRIPT = `
 export default async function RootLayout({ children }) {
   const cookieStore = await cookies();
   const locale = cookieStore.get("NEXT_LOCALE")?.value || "en";
-  const hasSeenSplash = cookieStore.get("splash_shown")?.value === "true";
   const dictionary = await getDictionary(locale);
 
   return (
@@ -116,9 +114,7 @@ export default async function RootLayout({ children }) {
               <AuthSessionProvider>
                 <ModeProvider>
                   <CartDrawerProvider>
-                    {/* <SplashScreen hasSeenSplash={hasSeenSplash}> */}
                     {children}
-                    {/* </SplashScreen> */}
                     <FacebookPixel />
                     <FloatingActions />
                     <CartDrawer />

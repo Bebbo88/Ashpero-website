@@ -42,8 +42,7 @@ export const LangProvider = ({ children, initialLocale, dictionary }) => {
       setDict(newDict);
 
       // 4. Tell Next.js to re-run server components with the new cookie
-      //    This refreshes the RSC payload without a full browser reload,
-      //    so the splash screen won't re-appear.
+      //    This refreshes the RSC payload without a full browser reload.
       router.refresh();
     } catch {
       // Fallback: if dynamic import fails for some reason, do a hard reload
