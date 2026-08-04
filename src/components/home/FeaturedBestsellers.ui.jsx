@@ -78,9 +78,8 @@ export function FeaturedBestsellersUI({
               768: { slidesPerView: 3, spaceBetween: 24 },
               1280: { slidesPerView: 4, spaceBetween: 28 },
             }}
-            className={`w-full bestsellers-swiper ${
-              products.length === 0 || isError ? "hidden" : ""
-            }`}
+            className={`w-full bestsellers-swiper ${products.length === 0 || isError ? "hidden" : ""
+              }`}
           >
             {products.map((product, index) => {
               const isWishlisted = wishlist.includes(product.id);
@@ -92,21 +91,22 @@ export function FeaturedBestsellersUI({
                       href={buildProductPath(product.id, product.title)}
                       className="relative w-full rounded-2xl overflow-hidden mb-5 bg-surface-muted dark:bg-white/5"
                     >
-                      {/* Popup Gallery Badge/Button */}
-                      {Array.isArray(product.popupGallery) && product.popupGallery.length > 0 ? (
-                        <div className="absolute top-4 left-4 z-20">
+                      {/* Top Left Indicators */}
+                      <div className="absolute top-4 left-4 z-20 flex gap-2 justify-between items-center">
+                        {product.hasOffer && (
+                          <div className="rounded-full bg-red-500 px-3 py-1 text-[11px] font-bold text-white shadow-md">
+                            {product.discountType === "percentage"
+                              ? `${product.discountValue}% OFF`
+                              : `${product.discountValue} EGP OFF`}
+                          </div>
+                        )}
+                        {Array.isArray(product.popupGallery) && product.popupGallery.length > 0 && (
                           <PopupGalleryTrigger
                             popupGallery={product.popupGallery}
                             onOpen={() => setActiveGalleryProduct(product)}
                           />
-                        </div>
-                      ) : product.hasOffer ? (
-                        <div className="absolute left-4 top-4 z-20 rounded-full bg-red-500 px-3 py-1 text-[11px] font-bold text-white shadow-md">
-                          {product.discountType === "percentage"
-                            ? `${product.discountValue}% OFF`
-                            : `${product.discountValue} EGP OFF`}
-                        </div>
-                      ) : null}
+                        )}
+                      </div>
                       {/* Wishlist */}
                       <button
                         aria-label="Toggle Wishlist"
@@ -115,16 +115,14 @@ export function FeaturedBestsellersUI({
                           e.stopPropagation();
                           toggleWishlist(product);
                         }}
-                        className={`absolute top-4 right-4 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${
-                          isWishlisted
-                            ? "bg-red-500 text-white scale-110"
-                            : "bg-white/80 dark:bg-black/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-black/60 hover:scale-110"
-                        }`}
+                        className={`absolute top-4 right-4 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${isWishlisted
+                          ? "bg-red-500 text-white scale-110"
+                          : "bg-white/80 dark:bg-black/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-black/60 hover:scale-110"
+                          }`}
                       >
                         <Heart
-                          className={`w-4 h-4 ${
-                            isWishlisted ? "fill-white" : ""
-                          }`}
+                          className={`w-4 h-4 ${isWishlisted ? "fill-white" : ""
+                            }`}
                         />
                       </button>
 

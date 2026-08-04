@@ -83,6 +83,7 @@ export default function ProductCard({ product, priority = false }) {
     }
   };
 
+
   return (
     <Link
       href={buildProductPath(product.id, product.title)}
@@ -90,12 +91,27 @@ export default function ProductCard({ product, priority = false }) {
     >
       {/* Image Card */}
       <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-muted dark:bg-white/5">
-        {/* Badge */}
-        {product.badge && (
-          <div className="absolute top-3 left-3 z-30 px-2 py-0.5 bg-white text-[10px] font-bold uppercase tracking-wider text-black shadow-sm">
-            {product.badge}
-          </div>
-        )}
+        {/* Top Left Indicators: Badge, Offer & Popup Gallery */}
+        <div className="absolute top-3 left-3 z-30 flex  gap-2 justify-between items-center">
+          {product.badge && (
+            <div className="px-2 py-0.5 bg-white text-[10px] font-bold uppercase tracking-wider text-black shadow-sm">
+              {product.badge}
+            </div>
+          )}
+          {product.hasOffer && (
+            <div className="rounded-full bg-red-500 px-2 py-1 text-[10px] font-bold text-white shadow-md">
+              {product.discountType === "percentage"
+                ? `${product.discountValue}% OFF`
+                : `${product.discountValue} EGP OFF`}
+            </div>
+          )}
+          {Array.isArray(product.popupGallery) && product.popupGallery.length > 0 && (
+            <PopupGalleryTrigger
+              popupGallery={product.popupGallery}
+              onOpen={() => setIsGalleryOpen(true)}
+            />
+          )}
+        </div>
 
         {/* Wishlist Button */}
         <button
@@ -123,15 +139,7 @@ export default function ProductCard({ product, priority = false }) {
           />
         </div>
 
-        {/* Popup Gallery Badge/Button */}
-        {Array.isArray(product.popupGallery) && product.popupGallery.length > 0 && (
-          <div className="absolute top-3 left-3 z-30">
-            <PopupGalleryTrigger
-              popupGallery={product.popupGallery}
-              onOpen={() => setIsGalleryOpen(true)}
-            />
-          </div>
-        )}
+
 
         {/* Hover Overlay with Add to Cart */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 z-10" />

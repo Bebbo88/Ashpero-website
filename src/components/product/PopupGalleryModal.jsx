@@ -30,9 +30,9 @@ export function PopupGalleryTrigger({ popupGallery, onOpen }) {
       className="inline-flex items-center justify-center gap-1.5 p-2 sm:px-3 sm:py-1.5 rounded-full bg-brand-mint text-white font-bold text-xs shadow-md hover:bg-brand-dark hover:scale-105 active:scale-95 transition-all cursor-pointer z-30"
     >
       <Images className="w-4 h-4 shrink-0" />
-      <span className="hidden sm:inline">
+      {/* <span className="hidden sm:inline">
         {isArabic ? `معرض الصور (${images.length})` : `Gallery (${images.length})`}
-      </span>
+      </span> */}
       <span className="sm:hidden text-[10px] font-extrabold leading-none bg-white/20 px-1 py-0.5 rounded-full">
         {images.length}
       </span>
@@ -171,11 +171,10 @@ export default function PopupGalleryModal({ popupGallery, isOpen, onClose }) {
                   e.stopPropagation();
                   setSelectedIndex(idx);
                 }}
-                className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
-                  idx === selectedIndex
+                className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${idx === selectedIndex
                     ? "border-brand-mint ring-2 ring-brand-mint/30 scale-105 shadow-sm"
                     : "border-transparent opacity-60 hover:opacity-100"
-                }`}
+                  }`}
               >
                 <Image src={imgUrl} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
               </button>
