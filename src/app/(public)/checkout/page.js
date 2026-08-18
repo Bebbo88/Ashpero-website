@@ -762,25 +762,7 @@ export default function CheckoutPage() {
                   {t("Checkout.paymentMethod")}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <label
-                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "card"
-                      ? "border-brand-mint bg-brand-mint/5"
-                      : "border-border-color bg-bg-primary"
-                      }`}
-                  >
-                    <input
-                      type="radio"
-                      value="card"
-                      {...register("paymentMethod")}
-                      className="sr-only"
-                    />
-                    <div className="flex items-center gap-4">
-                      <span className="font-semibold text-sm">
-                        {t("Checkout.creditCard")}
-                      </span>
-                    </div>
-                    <CreditCard className="w-6 h-6" />
-                  </label>
+               
 
                   <label
                     className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "cash"
@@ -800,6 +782,26 @@ export default function CheckoutPage() {
                       </span>
                     </div>
                     <Banknote className="w-6 h-6" />
+                  </label>
+
+                           <label
+                    className={`relative flex items-center justify-between p-5 cursor-pointer rounded-xl border-2 transition-all shadow-sm ${paymentMethod === "card"
+                      ? "border-brand-mint bg-brand-mint/5"
+                      : "border-border-color bg-bg-primary"
+                      }`}
+                  >
+                    <input
+                      type="radio"
+                      value="card"
+                      {...register("paymentMethod")}
+                      className="sr-only"
+                    />
+                    <div className="flex items-center gap-4">
+                      <span className="font-semibold text-sm">
+                        {t("Checkout.creditCard")}
+                      </span>
+                    </div>
+                    <CreditCard className="w-6 h-6" />
                   </label>
                 </div>
               </section>
