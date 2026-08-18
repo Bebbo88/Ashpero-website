@@ -92,8 +92,8 @@ export default function ProductCard({ product, priority = false }) {
       {/* Image Card */}
       <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-muted dark:bg-white/5">
         {/* Top Left Indicators: Badge, Offer & Popup Gallery */}
-        <div className="absolute top-3 left-3 z-30 flex  gap-2 justify-between items-center">
-          {product.badge && (
+<div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-30 flex flex-col sm:flex-row gap-1.5 sm:gap-2 items-start">   
+  {product.badge && (
             <div className="px-2 py-0.5 bg-white text-[10px] font-bold uppercase tracking-wider text-black shadow-sm">
               {product.badge}
             </div>
