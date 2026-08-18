@@ -61,7 +61,7 @@ const initialFormValues = {
   address1: "",
   address2: "",
   orderNote: "",
-  paymentMethod: "card",
+  paymentMethod: "cash",
 };
 
 function normalizeDigits(value) {
