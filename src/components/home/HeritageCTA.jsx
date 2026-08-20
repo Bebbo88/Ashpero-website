@@ -26,6 +26,7 @@ export default function HeritageCTA() {
                 alt="Ashperoo Heritage"
                 width={800}
                 height={1000}
+                loading="lazy"
                 className="w-full h-auto object-cover p-2 sm:p-3"
                 sizes="(max-width: 768px) 90vw, 50vw"
               />

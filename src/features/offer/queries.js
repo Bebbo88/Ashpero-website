@@ -6,8 +6,9 @@ export function useOffersQuery() {
   return useQuery({
     queryKey: offerQueryKeys.list(),
     queryFn: fetchOffers,
-    staleTime: 1000 * 30,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
+    staleTime: 1000 * 60 * 15, // 15 minutes
+    gcTime: 1000 * 60 * 60, // 1 hour
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }

@@ -54,11 +54,7 @@ export default function HomePopup() {
   const { locale } = useLanguage();
   const isRtl = locale === "ar";
 
-  const { data: content, isLoading: isContentLoading } = useSiteContentQuery({
-    staleTime: 1000 * 30,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
-  });
+  const { data: content, isLoading: isContentLoading } = useSiteContentQuery();
   const popupExpiresAt = content?.popupExpiresAt;
   const popupExpiryDate = popupExpiresAt ? new Date(popupExpiresAt) : null;
   const hasValidExpiryDate =

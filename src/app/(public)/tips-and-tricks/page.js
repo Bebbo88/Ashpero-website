@@ -1,28 +1,37 @@
 import React from "react";
-import { cookies } from "next/headers";
-import { fetchTips } from "@/services/tipService";
 import TipsAndTricksClient from "./TipsAndTricksClient";
-import { unstable_noStore as noStore } from "next/cache";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { fetchTips } from "@/services/tipService";
+import { tipQueryKeys } from "@/features/tips/queryKeys";
 
-// Force the page to be dynamic to ensure fresh data fetching on every request
-export const dynamic = "force-dynamic";
+// ISR: Revalidate cached tips daily
+export const revalidate = 86400;
 
 export default async function TipsAndTricksPage() {
-  // 1. Opt out of the Next.js Data Cache for this request
-  noStore();
+  const queryClient = new QueryClient();
 
-  // 2. Get current locale from cookies (set by our LangProvider)
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value || "en";
-
-  // 2. Fetch data directly on the server
-  let initialTips = [];
   try {
-    initialTips = await fetchTips(locale);
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: tipQueryKeys.list("en"),
+        queryFn: () => fetchTips("en"),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: tipQueryKeys.list("ar"),
+        queryFn: () => fetchTips("ar"),
+      }),
+    ]);
   } catch (error) {
-    console.error("Error fetching tips on server:", error);
+    console.error("Error prefetching tips:", error);
   }
 
-  // 3. Pass data to the Client Component for interactive UI
-  return <TipsAndTricksClient initialTips={initialTips} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <TipsAndTricksClient />
+    </HydrationBoundary>
+  );
 }

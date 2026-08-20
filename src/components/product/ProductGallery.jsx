@@ -39,6 +39,7 @@ export default function ProductGallery({ images, productName }) {
               src={img}
               alt={`${productName} ${idx + 1}`}
               fill
+              loading="lazy"
               className="object-cover"
               sizes="80px"
             />
@@ -65,6 +66,7 @@ export default function ProductGallery({ images, productName }) {
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
                 priority={idx === 0}
+                loading={idx === 0 ? "eager" : "lazy"}
               />
             </SwiperSlide>
           ))}

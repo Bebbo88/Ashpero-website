@@ -54,11 +54,17 @@ function injectCloudinaryTransformations(url, transformations) {
 }
 
 function toOptimizedCloudinaryVideoUrl(url) {
+  if (!url || typeof url !== "string") return "";
+  // If the media is an image (jpg, png, webp, /image/upload/), don't inject video-specific codec transformations
+  if (/\.(jpg|jpeg|png|webp|gif|avif)(\?.*)?$/i.test(url) || url.includes("/image/upload/")) {
+    return url;
+  }
   return injectCloudinaryTransformations(url, "f_auto,q_auto:good,vc_auto,br_auto");
 }
 
 function toOptimizedCloudinaryPosterUrl(url) {
-  return injectCloudinaryTransformations(url, "f_auto,q_auto:eco,w_960,c_limit");
+  if (!url || typeof url !== "string") return "";
+  return url;
 }
 
 function mapTipContainer(tip, locale = "en", index = 0) {

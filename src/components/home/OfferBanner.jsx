@@ -28,8 +28,7 @@ export default function OfferBanner() {
               alt="Offer Background"
               width={1920}
               height={1080}
-              priority={true}
-              loading="eager"
+              loading="lazy"
               className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               sizes="100vw"
             />

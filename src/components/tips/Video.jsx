@@ -22,29 +22,7 @@ function VideoCard({ item, index }) {
     );
   }, [rawVideoSource]);
 
-  // Simplify Cloudinary transformations to avoid 400 errors for both images and videos
-  const videoSource = React.useMemo(() => {
-    if (
-      typeof rawVideoSource !== "string" ||
-      !rawVideoSource.includes("cloudinary.com")
-    ) {
-      return rawVideoSource;
-    }
-
-    if (isImageMedia) {
-      // Remove video-specific transformations (vc_auto, br_auto) from image URLs
-      return rawVideoSource.replace(
-        /\/image\/upload\/[^/]+\//,
-        "/image/upload/f_auto,q_auto/",
-      );
-    }
-
-    // Change complex transformations to simple f_auto,q_auto for videos
-    return rawVideoSource.replace(
-      /\/video\/upload\/[^/]+\//,
-      "/video/upload/f_auto,q_auto/",
-    );
-  }, [rawVideoSource, isImageMedia]);
+  const videoSource = rawVideoSource;
 
   const togglePlay = useCallback(async () => {
     const videoElement = videoRef.current;
@@ -80,12 +58,16 @@ function VideoCard({ item, index }) {
             src={videoSource}
             alt={item.video?.title || item.title || "Media"}
             fill
+            priority={index === 0}
+            loading={index === 0 ? "eager" : "lazy"}
+            sizes="(max-width: 1024px) 100vw, 66vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <>
             <video
               ref={videoRef}
+              src={videoSource}
               poster={posterSource || undefined}
               playsInline
               preload="none"

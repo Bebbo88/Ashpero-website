@@ -32,7 +32,6 @@ function SmallCard({ item, onOpen, imageLoading = "lazy", index }) {
           fill
           sizes={CARD_IMAGE_SIZES}
           loading={imageLoading}
-          quality={70}
           className="object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700 ease-out"
         />
         <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />

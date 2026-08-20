@@ -5,6 +5,9 @@ export const metadata = {
   description: "Learn more about Ashpero, our values, and our mission.",
 };
 
+export const dynamic = "force-static";
+export const revalidate = 86400;
+
 export default function AboutUsPage() {
   return <AboutUsClient />;
 }

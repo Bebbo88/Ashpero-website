@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchBestSellers, fetchSiteContent } from "@/services/homeService";
 import { homeQueryKeys } from "./queryKeys";
 
-const HOME_CACHE_STALE_TIME = 1000 * 60 * 60 * 24 * 7; // 7 days
-const HOME_CACHE_GC_TIME = 1000 * 60 * 60 * 24 * 30; // 30 days
+const HOME_CACHE_STALE_TIME = 1000 * 60 * 60 * 24; // 24 hours
+const HOME_CACHE_GC_TIME = 1000 * 60 * 60 * 24 * 7; // 7 days (safe 32-bit integer)
 
 const HOME_QUERY_OPTIONS = {
   staleTime: HOME_CACHE_STALE_TIME,
@@ -17,8 +17,7 @@ export function useSiteContentQuery(options = {}) {
   return useQuery({
     queryKey: homeQueryKeys.content(),
     queryFn: fetchSiteContent,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    refetchOnMount: true,
+    ...HOME_QUERY_OPTIONS,
     ...options,
   });
 }

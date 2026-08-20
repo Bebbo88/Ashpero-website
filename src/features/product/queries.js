@@ -13,7 +13,9 @@ export function useProductsQuery(params = {}) {
   return useQuery({
     queryKey: productQueryKeys.list(paramsKey),
     queryFn: () => fetchProducts(params),
-    staleTime: 1000 * 15,
+    staleTime: 1000 * 60 * 10, // 10 minutes
+    gcTime: 1000 * 60 * 60, // 1 hour
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -22,7 +24,9 @@ export function useProductDetailsQuery(productId) {
     queryKey: productQueryKeys.details(productId),
     queryFn: () => fetchProductById(productId),
     enabled: Boolean(productId),
-    staleTime: 1000 * 30,
+    staleTime: 1000 * 60 * 15, // 15 minutes
+    gcTime: 1000 * 60 * 60, // 1 hour
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -31,7 +35,8 @@ export function useProductReviewsQuery(productId) {
     queryKey: productQueryKeys.reviews(productId),
     queryFn: () => fetchProductReviews(productId),
     enabled: Boolean(productId),
-    staleTime: 1000 * 15,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
   });
 }
 

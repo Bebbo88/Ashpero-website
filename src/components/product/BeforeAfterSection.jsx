@@ -66,6 +66,7 @@ export default function BeforeAfterSection({ beforeAfterImages }) {
               src={after}
               alt="After Result"
               fill
+              loading="lazy"
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 800px"
             />
@@ -84,6 +85,7 @@ export default function BeforeAfterSection({ beforeAfterImages }) {
                 src={before}
                 alt="Before Result"
                 fill
+                loading="lazy"
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 800px"
               />

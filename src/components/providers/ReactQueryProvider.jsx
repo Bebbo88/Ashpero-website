@@ -7,7 +7,7 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 import { queryClient } from "@/queries/queryClient";
 
 const CACHE_PERSIST_KEY = "ashperoo-react-query-cache-v1";
-const CACHE_MAX_AGE = 1000 * 60 * 60 * 24 * 30; // 30 days
+const CACHE_MAX_AGE = 1000 * 60 * 60 * 24 * 7; // 7 days (safe 32-bit integer)
 
 export default function ReactQueryProvider({ children }) {
   useEffect(() => {

@@ -12,7 +12,6 @@ import HeroLoader from "./HeroLoader";
 
 export function HeroSectionUI({ backgroundSlides, isArabic }) {
   const canLoop = backgroundSlides.length > 1;
-  const startIdx = canLoop ? 1 : 0;
 
   return (
     <section className={`${styles.root} relative w-full`}>
@@ -31,7 +30,7 @@ export function HeroSectionUI({ backgroundSlides, isArabic }) {
               canLoop ? { delay: 5000, disableOnInteraction: false } : false
             }
             allowTouchMove={false}
-            initialSlide={startIdx}
+            initialSlide={0}
             className="w-full"
           >
             {backgroundSlides.map((slide, idx) => (
@@ -44,6 +43,7 @@ export function HeroSectionUI({ backgroundSlides, isArabic }) {
                     height={1080}
                     sizes="100vw"
                     priority={idx === 0}
+                    loading={idx === 0 ? "eager" : "lazy"}
                     className="w-full h-auto object-cover"
                   />
                 )}

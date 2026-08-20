@@ -33,6 +33,7 @@ export default function Loader({
             alt="Loading dropper"
             fill
             sizes="32px"
+            unoptimized
             className="object-contain object-bottom"
             priority
           />

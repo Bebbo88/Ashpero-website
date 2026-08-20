@@ -6,12 +6,18 @@ function isValidSrc(src) {
 
 // Custom loader to offload image optimization to Cloudinary
 const cloudinaryLoader = ({ src, width, quality }) => {
-  const urlParts = src.split("/upload/");
-  if (urlParts.length === 2) {
-    // Inject Cloudinary transformations: width, quality, and auto-format (WebP/AVIF)
-    return `${urlParts[0]}/upload/w_${width},q_${quality || "auto"},f_auto/${urlParts[1]}`;
+  if (typeof src !== "string" || !src.includes("/upload/")) {
+    return src;
   }
-  return src;
+  const [prefix, suffix] = src.split("/upload/");
+  if (!prefix || !suffix) {
+    return src;
+  }
+
+  // If suffix already has transformations, clean them safely without touching version (v123...)
+  const cleanSuffix = suffix.replace(/^(?:[a-z0-9_:,]+,?)+\/(?!v\d+)/i, "");
+
+  return `${prefix}/upload/w_${width},q_${quality || "auto"},f_auto/${cleanSuffix}`;
 };
 
 export default function AppImage({ src, unoptimized = false, ...props }) {

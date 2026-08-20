@@ -21,7 +21,7 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-        pathname: "/doxa1kqur/**",
+        pathname: "/**",
       },
       {
         protocol: "https",
@@ -35,8 +35,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "pbs.twimg.com",
-        pathname: "/**",
+        hostname: "**",
       },
     ],
   },

@@ -43,7 +43,7 @@ export default function AboutUsPage() {
     <div className="min-h-screen bg-bg-primary overflow-hidden">
       <div className="w-full">
         <Image
-          src="/assets/about us.jpg"
+          src="/assets/about-us.jpg"
           alt="About Ashperoo"
           width={1920}
           height={1080}

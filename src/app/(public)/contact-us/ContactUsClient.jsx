@@ -151,7 +151,7 @@ export default function ContactUsPage() {
     <div className="min-h-screen bg-bg-primary pb-20 overflow-hidden relative">
       <div className="w-full">
         <Image
-          src="/assets/contact us.jpg"
+          src="/assets/contact-us.jpg"
           alt="Contact Ashperoo"
           width={1920}
           height={1080}

@@ -10,12 +10,15 @@ import { setActiveTipItem, clearActiveTipItem } from "@/store/slices/tipsSlice";
 import VideoCard from "@/components/tips/Video";
 import SmallCard from "@/components/tips/Image";
 
+import { useTipsQuery } from "@/features/tips/queries";
+
 const MODAL_IMAGE_SIZES = "(max-width: 768px) 100vw, 80vw";
 
-export default function TipsAndTricksClient({ initialTips = [] }) {
+export default function TipsAndTricksClient() {
   const { t, locale } = useLanguage();
   const dispatch = useDispatch();
   const activeItem = useSelector((state) => state.tips.activeTipItem);
+  const { data: tips = [] } = useTipsQuery(locale);
 
   const isRtl = locale === "ar";
   const handleOpenTipCard = useCallback(
@@ -51,14 +54,14 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
       {/* Content Section */}
       <section className="px-4">
         <div className="container mx-auto max-w-[1400px] flex flex-col gap-10 lg:gap-12">
-          {initialTips.length === 0 ? (
+          {tips.length === 0 ? (
             <div className="rounded-2xl border border-border-color bg-bg-primary px-6 py-10 text-sm text-text-secondary">
               {locale === "ar"
                 ? "لا توجد Tips متاحة حالياً."
                 : "No tips are available right now."}
             </div>
           ) : (
-            initialTips.map((row, rowIdx) => {
+            tips.map((row, rowIdx) => {
               const isReversed = rowIdx % 2 !== 0;
 
               return (
@@ -88,7 +91,7 @@ export default function TipsAndTricksClient({ initialTips = [] }) {
                       >
                         <SmallCard
                           item={item}
-                          imageLoading={rowIdx === 0 && cardIdx === 0 ? "eager" : "lazy"}
+                          imageLoading={rowIdx === 0 ? "eager" : "lazy"}
                           onOpen={handleOpenTipCard}
                           index={rowIdx + cardIdx + 1}
                         />
