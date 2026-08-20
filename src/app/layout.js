@@ -8,6 +8,7 @@ import AuthSessionProvider from "@/components/providers/AuthSessionProvider";
 import ReduxProvider from "@/components/providers/ReduxProvider";
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 import FloatingActions from "@/components/layout/FloatingActions";
+import NextTopLoader from "nextjs-toploader";
 import { CartDrawerProvider } from "@/contexts/CartDrawerContext";
 import CartDrawer from "@/components/cart/CartDrawer";
 import "./globals.css";
@@ -99,6 +100,18 @@ export default async function RootLayout({ children }) {
         className={`${montserrat.variable} ${playfair.variable} antialiased`}
         suppressHydrationWarning
       >
+        <NextTopLoader
+          color="#4cead2ff"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 12px #4cead2ff,0 0 6px #62b7efff"
+          zIndex={99999}
+        />
         <noscript>
           <img
             height="1"
@@ -125,7 +138,7 @@ export default async function RootLayout({ children }) {
           </ReduxProvider>
         </LangProvider>
 
-              <Script id="microsoft-clarity" strategy="afterInteractive">
+        <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
