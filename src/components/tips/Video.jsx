@@ -88,7 +88,7 @@ function VideoCard({ item, index }) {
               ref={videoRef}
               poster={posterSource || undefined}
               playsInline
-              preload="metadata"
+              preload="none"
               controls
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}

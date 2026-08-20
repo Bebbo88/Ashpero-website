@@ -47,7 +47,8 @@ export default function CustomerVideoReviews({ customerReviewVideos }) {
               <div className="relative aspect-[6/9] w-full max-h-[220px] sm:max-h-[300px] md:max-h-[400px] bg-slate-900 overflow-hidden flex items-center justify-center">
                 <video
                   src={videoUrl}
-                  preload="metadata"
+                  preload="none"
+                  playsInline
                   controls
                   className="w-full h-full object-cover"
                 />

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../hooks/useLanguage";
 import ScrollAnimationWrapper from "../ui/ScrollAnimationWrapper";
 
@@ -31,6 +31,92 @@ const products = [
   },
 ];
 
+function LazyVideoCard({ product, t }) {
+  const containerRef = useRef(null);
+  const videoRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          if (videoRef.current) {
+            videoRef.current.play().catch(() => {});
+          }
+        } else {
+          if (videoRef.current) {
+            videoRef.current.pause();
+          }
+        }
+      },
+      { rootMargin: "200px 0px", threshold: 0.15 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="flex justify-center"
+      style={{ perspective: "600px", perspectiveOrigin: "50% 50%" }}
+    >
+      <div
+        className="relative w-full max-w-[240px] md:max-w-[300px] lg:max-w-[340px] group cursor-pointer"
+        style={{
+          transformStyle: "preserve-3d",
+          transform: "rotateY(-10deg) rotateX(3deg)",
+          transition: "transform 0.4s cubic-bezier(0.23, 1, 0.32, 1)",
+        }}
+        onMouseEnter={(event) => {
+          event.currentTarget.style.transform =
+            "rotateY(-2deg) rotateX(1deg) translateY(-8px)";
+        }}
+        onMouseLeave={(event) => {
+          event.currentTarget.style.transform =
+            "rotateY(-10deg) rotateX(3deg)";
+        }}
+      >
+        <div
+          className="relative w-full aspect-[9/16] rounded-2xl overflow-hidden shadow-2xl bg-slate-950 border border-white/10"
+          style={{ transform: "translateZ(0px)" }}
+        >
+          {isVisible ? (
+            <video
+              ref={videoRef}
+              src={product.video}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full bg-slate-900 animate-pulse flex items-center justify-center">
+              <span className="text-white/30 text-xs font-montserrat">Ashperoo</span>
+            </div>
+          )}
+
+          <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none rounded-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 text-center">
+            <p className="text-white font-playfair text-lg md:text-xl font-medium drop-shadow-lg">
+              {t(`UseItFeelIt.products.${product.nameKey}`)}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function UseItFeelIt() {
   const { t } = useLanguage();
 
@@ -53,65 +139,7 @@ export default function UseItFeelIt() {
               animation={index < 2 ? "slide-from-right" : "slide-from-left"}
               delay={index * 0.1}
             >
-              <div
-                className="flex justify-center"
-              style={{ perspective: "600px", perspectiveOrigin: "50% 50%" }}
-            >
-              <div
-                className="relative w-full max-w-[240px] md:max-w-[300px] lg:max-w-[340px] group cursor-pointer"
-                style={{
-                  transformStyle: "preserve-3d",
-                  transform: "rotateY(-14deg) rotateX(4deg)",
-                  transition: "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)",
-                }}
-                onMouseEnter={(event) => {
-                  event.currentTarget.style.transform =
-                    "rotateY(-2deg) rotateX(1deg) translateY(-8px)";
-                }}
-                onMouseLeave={(event) => {
-                  event.currentTarget.style.transform =
-                    "rotateY(-14deg) rotateX(4deg)";
-                }}
-              >
-                {[...Array(10)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="absolute inset-0 rounded-2xl"
-                    style={{
-                      transform: `translateZ(${-(index + 1) * 3}px)`,
-                      backgroundColor:
-                        index < 5
-                          ? `rgba(var(--ds-video-depth-rgb), ${0.12 + index * 0.04})`
-                          : `rgba(var(--ds-video-depth-rgb), ${0.4 - index * 0.02})`,
-                    }}
-                  />
-                ))}
-
-                <div
-                  className="relative w-full aspect-[9/16] rounded-2xl overflow-hidden video-card-shadow"
-                  style={{ transform: "translateZ(0px)" }}
-                >
-                  <video
-                    src={product.video}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="none"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none rounded-2xl" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                  <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 text-center">
-                    <p className="text-white font-playfair text-lg md:text-xl font-medium drop-shadow-lg">
-                      {t(`UseItFeelIt.products.${product.nameKey}`)}
-                    </p>
-                  </div>
-                </div>
-                </div>
-              </div>
+              <LazyVideoCard product={product} t={t} />
             </ScrollAnimationWrapper>
           ))}
         </div>
@@ -119,3 +147,4 @@ export default function UseItFeelIt() {
     </section>
   );
 }
+

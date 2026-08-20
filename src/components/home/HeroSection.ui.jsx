@@ -43,12 +43,7 @@ export function HeroSectionUI({ backgroundSlides, isArabic }) {
                     width={1920}
                     height={1080}
                     sizes="100vw"
-                    // 🔥 ROOT SOLUTION FOR SWIPER WHITE FLASH 🔥
-                    // Setting ALL slides to priority={true} (eager loading) is required.
-                    // Swiper loop mode clones slides as raw DOM nodes. If images are lazy-loaded,
-                    // the browser often fails to trigger the load when the clone enters the viewport,
-                    // resulting in a blank white image until the next swipe forces a layout recalc.
-                    priority={true}
+                    priority={idx === 0}
                     className="w-full h-auto object-cover"
                   />
                 )}
