@@ -13,6 +13,7 @@ import ProductCard from "./ProductCard";
 import ProductFilter from "./ProductFilter";
 import EmptyState from "@/components/ui/EmptyState";
 import ProductCardSkeleton from "./ProductCardSkeleton";
+import Loader from "@/components/loader/loader";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { mapAllProducts } from "@/features/product/mappers";
@@ -283,6 +284,11 @@ export default function AllProductsPage() {
 
   const isLoading =
     productsQuery.isLoading || facetsQuery.isLoading || offersQuery.isLoading;
+
+  if (isLoading && products.length === 0) {
+    return <Loader fullScreen />;
+  }
+
   const isError =
     productsQuery.isError || facetsQuery.isError || offersQuery.isError;
   const errorMessage =

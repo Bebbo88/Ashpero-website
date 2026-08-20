@@ -7,6 +7,7 @@ import ProductCard from "@/components/product/ProductCard";
 import BundleCard from "@/components/product/BundleCard";
 import EmptyState from "@/components/ui/EmptyState";
 import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
+import Loader from "@/components/loader/loader";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useSiteContentQuery } from "@/features/home/queries";
@@ -65,7 +66,11 @@ export default function OffersPage() {
     [siteContentQuery.data],
   );
 
-  const isLoading = siteContentQuery.isLoading || !headerImage;
+  const isLoading = (offersQuery.isLoading || siteContentQuery.isLoading) && products.length === 0;
+
+  if (isLoading) {
+    return <Loader fullScreen />;
+  }
 
   return (
     <div className="w-full">

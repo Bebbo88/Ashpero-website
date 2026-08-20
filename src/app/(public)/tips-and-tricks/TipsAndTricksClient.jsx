@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActiveTipItem, clearActiveTipItem } from "@/store/slices/tipsSlice";
 import VideoCard from "@/components/tips/Video";
 import SmallCard from "@/components/tips/Image";
+import Loader from "@/components/loader/loader";
 
 import { useTipsQuery } from "@/features/tips/queries";
 
@@ -18,7 +19,11 @@ export default function TipsAndTricksClient() {
   const { t, locale } = useLanguage();
   const dispatch = useDispatch();
   const activeItem = useSelector((state) => state.tips.activeTipItem);
-  const { data: tips = [] } = useTipsQuery(locale);
+  const { data: tips = [], isLoading } = useTipsQuery(locale);
+
+  if (isLoading && tips.length === 0) {
+    return <Loader fullScreen />;
+  }
 
   const isRtl = locale === "ar";
   const handleOpenTipCard = useCallback(

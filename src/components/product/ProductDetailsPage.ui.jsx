@@ -21,13 +21,7 @@ export function ProductDetailsPageUI({
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   if (isLoading) {
-    return (
-      <section className="w-full bg-bg-primary min-h-screen py-8 md:py-40">
-        <div className="container mx-auto px-6 lg:px-10">
-          <Loader />
-        </div>
-      </section>
-    );
+    return <Loader fullScreen />;
   }
 
   if (isError || !product) {

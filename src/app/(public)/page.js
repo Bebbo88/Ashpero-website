@@ -4,6 +4,7 @@ import OfferBanner from "@/components/home/OfferBanner";
 import UseItFeelIt from "@/components/home/UseItFeelIt";
 import HeritageCTA from "../../components/home/HeritageCTA";
 import HomePopup from "@/components/home/HomePopup";
+import HomeDropperLoader from "@/components/home/HomeDropperLoader";
 import ScrollAnimationWrapper from "@/components/ui/ScrollAnimationWrapper";
 import {
   dehydrate,
@@ -38,6 +39,7 @@ export default async function Home() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <HomeDropperLoader />
       <HomePopup />
       <div className="overflow-x-hidden w-full">
         <ScrollAnimationWrapper mode="load" animation="fade-up">
