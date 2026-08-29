@@ -72,10 +72,17 @@ export default async function RootLayout({ children }) {
       dir={locale === "ar" ? "rtl" : "ltr"}
       suppressHydrationWarning
     >
-      <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {THEME_INIT_SCRIPT}
-        </Script>
+      <body
+        className={`${montserrat.variable} ${playfair.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: THEME_INIT_SCRIPT,
+          }}
+        />
         <Script
           id="meta-pixel"
           strategy="afterInteractive"
@@ -95,11 +102,6 @@ export default async function RootLayout({ children }) {
             `,
           }}
         />
-      </head>
-      <body
-        className={`${montserrat.variable} ${playfair.variable} antialiased`}
-        suppressHydrationWarning
-      >
         <NextTopLoader
           color="#4cead2ff"
           initialPosition={0.08}

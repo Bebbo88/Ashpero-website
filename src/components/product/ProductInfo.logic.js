@@ -165,8 +165,14 @@ export function useProductInfoLogic(product) {
     }
   };
 
+  const isProductAvailable =
+    product?.inStock !== false &&
+    (resolvedVariant
+      ? Number(resolvedVariant.stock) > 0 || resolvedVariant.stock === undefined
+      : true);
+
   const handleAddToCart = () => {
-    if (!resolvedVariant) {
+    if (!resolvedVariant || !isProductAvailable) {
       return;
     }
 
@@ -197,7 +203,7 @@ export function useProductInfoLogic(product) {
   };
 
   const handleBuyNow = () => {
-    if (quantity > availableStock) {
+    if (!isProductAvailable || quantity > availableStock) {
       return;
     }
 
@@ -299,6 +305,7 @@ export function useProductInfoLogic(product) {
     oldPrice: resolvedVariant?.priceLabel || "",
     hasOffer: product.hasOffer,
     discountValue: product.discountValue,
+    isProductAvailable,
     shareLinks,
     shareToast,
     handleShareClick,

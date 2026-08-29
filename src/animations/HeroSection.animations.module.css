@@ -1,26 +1,45 @@
-.root :global(.hero-swiper) {
-  overflow: visible !important;
+.root :global(.hero-banner-swiper .swiper-pagination) {
+  bottom: 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 20;
 }
 
-.root :global(.hero-swiper .swiper-pagination-bullet) {
-  background-color: var(--ds-swiper-bullet);
-  opacity: 1;
-}
-
-.root :global(.hero-swiper .swiper-pagination-bullet-active) {
-  background-color: var(--color-brand-mint);
-  width: 24px;
-  border-radius: 4px;
-}
-
-.root :global(.hero-swiper .swiper-pagination) {
-  bottom: -40px !important;
-}
-
-@media (max-width: 640px) {
-  .root :global(.hero-swiper .swiper-pagination) {
-    bottom: -28px !important;
+@media (min-width: 768px) {
+  .root :global(.hero-banner-swiper .swiper-pagination) {
+    bottom: 24px !important;
+    gap: 10px;
   }
+}
+
+.root :global(.hero-banner-swiper .swiper-pagination-bullet) {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  opacity: 0.8;
+  border-radius: 9999px;
+  margin: 0 !important;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  outline: none;
+}
+
+.root :global(.hero-banner-swiper .swiper-pagination-bullet:hover) {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+.root :global(.hero-banner-swiper .swiper-pagination-bullet-active) {
+  width: 28px;
+  background: var(--color-brand-mint, #55aa90) !important;
+  border-color: var(--color-brand-mint, #55aa90) !important;
+  opacity: 1;
+  box-shadow: 0 0 12px rgba(85, 170, 144, 0.6);
 }
 
 .fadeInUp {

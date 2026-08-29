@@ -1,29 +1,14 @@
-"use client";
-
-import React from "react";
-import Link from "next/link";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "@/components/ui/AppImage";
+import { useLanguage } from "@/hooks/useLanguage";
 import {
   Minus,
   Plus,
   Heart,
   ShoppingCart,
-  ChevronDown,
-  ChevronUp,
-  Share2,
-  Truck,
-  ShieldCheck,
   Sparkles,
   Zap,
 } from "lucide-react";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  XIcon,
-  TikTokIcon,
-} from "@/svgs/ProductInfo.svgs";
-
-const BENEFITS = ["VEGAN", "CLEAN", "PURE", "ETHIC"];
 
 export function ProductInfoUI({
   product,
@@ -36,38 +21,48 @@ export function ProductInfoUI({
   hasOffer,
   discountValue,
   isWishlisted,
-  openAccordion,
-  accordions,
+  isProductAvailable,
   setSelectedSize,
   resolvedVariant,
-  shareLinks,
   shareToast,
-  handleShareClick,
   handleAddToCart,
   handleBuyNow,
   handleToggleWishlist,
   decrementQty,
   incrementQty,
-  toggleAccordion,
 }) {
-  const isArabic = t("ProductDetails.home") === "الرئيسية";
+  const { locale } = useLanguage();
+  const [isStickyVisible, setIsStickyVisible] = useState(false);
+  const mainButtonRef = useRef(null);
+
+  const badgeText =
+    (locale === "ar"
+      ? product?.badgeText_ar || product?.badgeText
+      : product?.badgeText_en || product?.badgeText || product?.badgeText_ar) ||
+    "";
+
+  useEffect(() => {
+    const target = mainButtonRef.current;
+    if (!target || typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsStickyVisible(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="flex flex-col gap-6">
-      <nav className="flex items-center gap-2 text-xs text-text-secondary">
-        <Link href="/" className="hover:text-brand-orange transition-colors">
-          {t("ProductDetails.home")}
-        </Link>
-        <span>/</span>
-        <Link
-          href="/all-products"
-          className="hover:text-brand-orange transition-colors"
-        >
-          {t("ProductDetails.allProducts")}
-        </Link>
-        <span>/</span>
-        <span className="text-text-primary font-medium">{product.title}</span>
-      </nav>
-
       <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-mint">
         {product.category}
       </span>
@@ -94,9 +89,26 @@ export function ProductInfoUI({
           </>
         ) : null}
 
-        <p className="text-sm text-text-secondary">
-          Stock: {resolvedVariant?.stock || 0}
-        </p>
+        {/* Localized Stock Status */}
+        {(() => {
+          const isAvailable =
+            product?.inStock !== false &&
+            (resolvedVariant
+              ? Number(resolvedVariant.stock) > 0 || resolvedVariant.stock === undefined
+              : true);
+
+          return isAvailable ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              {t("ProductDetails.inStock") || "متاح في المخزن"}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-bold border border-red-500/20 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-red-500" />
+              {t("ProductDetails.outOfStock") || "غير متاح"}
+            </span>
+          );
+        })()}
       </div>
 
       {typeof product?.description === "string" && (product.description.includes("<") || product.description.includes("&")) ? (
@@ -110,26 +122,8 @@ export function ProductInfoUI({
         </p>
       )}
 
-      <div className="flex items-center gap-3 mt-2">
-        {BENEFITS.map((benefit, idx) => (
-          <div
-            key={benefit}
-            className={`w-12 h-12 rounded-full flex items-center justify-center text-[8px] font-bold tracking-tighter text-white shadow-sm ${idx === 0
-              ? "bg-benefit-1"
-              : idx === 1
-                ? "bg-benefit-2"
-                : idx === 2
-                  ? "bg-benefit-3"
-                  : "bg-benefit-4"
-              }`}
-          >
-            {benefit}
-          </div>
-        ))}
-      </div>
-
       {variants.length > 0 ? (
-        <div className="flex flex-col gap-3 mt-2">
+        <div className="flex flex-col gap-3 mt-1">
           <span className="text-xs font-bold tracking-wider uppercase text-text-secondary">
             {t("ProductDetails.selectSize")}
           </span>
@@ -137,6 +131,7 @@ export function ProductInfoUI({
             {variants.map((variant) => (
               <button
                 key={variant.size}
+                type="button"
                 onClick={() => setSelectedSize(variant.size)}
                 className={`px-4 py-2 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${selectedSize === variant.size
                   ? "border-brand-orange bg-brand-orange text-white"
@@ -150,80 +145,111 @@ export function ProductInfoUI({
         </div>
       ) : null}
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2">
-        <div className="flex items-center border border-border-color w-full sm:w-[150px] rounded-xl overflow-hidden justify-between">
+      <div className="flex flex-col gap-2 mt-1">
+        <span className="text-xs font-bold tracking-wider uppercase text-text-secondary">
+          {t("ProductDetails.selectQuantity")}
+        </span>
+
+        <div ref={mainButtonRef} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="flex items-center border border-border-color w-full sm:w-[150px] rounded-xl overflow-hidden justify-between">
+            <button
+              type="button"
+              onClick={decrementQty}
+              aria-label="Decrease quantity"
+              className="px-3 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <Minus className="w-4 h-4 text-text-primary" />
+            </button>
+            <span className="px-4 py-3 text-sm font-bold text-text-primary border-x border-border-color min-w-[50px] text-center">
+              {quantity}
+            </span>
+            <button
+              type="button"
+              onClick={incrementQty}
+              aria-label="Increase quantity"
+              className="px-3 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4 text-text-primary" />
+            </button>
+          </div>
+
           <button
-            onClick={decrementQty}
-            aria-label="Decrease quantity"
-            className="px-3 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            type="button"
+            onClick={handleAddToCart}
+            disabled={isProductAvailable === false}
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-white font-bold text-xs sm:text-sm tracking-wide shadow-md transition-all ${
+              isProductAvailable === false
+                ? "bg-slate-400 opacity-60 cursor-not-allowed"
+                : "bg-brand-mint dark:bg-brand-dark hover:opacity-90 cursor-pointer"
+            }`}
           >
-            <Minus className="w-4 h-4 text-text-primary" />
+            <ShoppingCart className="w-4 h-4" />
+            <span>
+              {isProductAvailable === false
+                ? t("ProductDetails.outOfStock") || "غير متاح"
+                : t("ProductDetails.addToCart")}
+            </span>
           </button>
-          <span className="px-4 py-3 text-sm font-bold text-text-primary border-x border-border-color min-w-[50px] text-center">
-            {quantity}
-          </span>
+
+          {/* Direct Buy Now Button with 5s Heavy Shake Animation */}
+          {isProductAvailable !== false ? (
+            <button
+              type="button"
+              onClick={handleBuyNow}
+              className="heavy-shake-btn flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-orange-500/25 hover:scale-105 active:scale-95 cursor-pointer group relative overflow-hidden"
+            >
+              <Zap className="w-4 h-4 text-yellow-200 fill-yellow-200 animate-bounce" />
+              <span>{t("ProductDetails.buyNow")}</span>
+            </button>
+          ) : null}
+
           <button
-            onClick={incrementQty}
-            aria-label="Increase quantity"
-            className="px-3 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            type="button"
+            onClick={handleToggleWishlist}
+            aria-label="Toggle Wishlist"
+            className={`w-12 h-12 shrink-0 rounded-xl border flex items-center justify-center transition-all duration-300 cursor-pointer ${isWishlisted
+              ? "bg-red-500 border-red-500 text-white"
+              : "border-border-color text-text-secondary hover:border-red-400 hover:text-red-400"
+              }`}
           >
-            <Plus className="w-4 h-4 text-text-primary" />
+            <Heart className={`w-5 h-5 ${isWishlisted ? "fill-white" : ""}`} />
           </button>
         </div>
-
-        <button
-          onClick={handleAddToCart}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-brand-mint dark:bg-brand-dark text-white font-bold text-xs sm:text-sm tracking-wide hover:opacity-90 transition-opacity cursor-pointer shadow-md"
-        >
-          <ShoppingCart className="w-4 h-4" />
-          {t("ProductDetails.addToCart")}
-        </button>
-
-        {/* Direct Buy Now Button with 5s Heavy Shake Animation */}
-        <button
-          type="button"
-          onClick={handleBuyNow}
-          className="heavy-shake-btn flex-1 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg shadow-orange-500/25 hover:scale-105 active:scale-95 cursor-pointer group relative overflow-hidden"
-        >
-          <Zap className="w-4 h-4 text-yellow-200 fill-yellow-200 animate-bounce" />
-          <span>{isArabic ? "شراء مباشر " : "Buy Now "}</span>
-        </button>
-
-        <button
-          onClick={handleToggleWishlist}
-          aria-label="Toggle Wishlist"
-          className={`w-12 h-12 shrink-0 rounded-xl border flex items-center justify-center transition-all duration-300 cursor-pointer ${isWishlisted
-            ? "bg-red-500 border-red-500 text-white"
-            : "border-border-color text-text-secondary hover:border-red-400 hover:text-red-400"
-            }`}
-        >
-          <Heart className={`w-5 h-5 ${isWishlisted ? "fill-white" : ""}`} />
-        </button>
       </div>
 
       {/* Exclusive Perks & Free Gift Showcase */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-        {/* Free Shipping Perk Card */}
-        <div className="group relative overflow-hidden rounded-2xl border border-brand-mint/30 bg-gradient-to-br from-brand-mint/10 via-emerald-500/5 to-transparent p-3.5 transition-all duration-300 hover:border-brand-mint hover:shadow-lg hover:shadow-brand-mint/10">
-          <div className="flex items-center gap-3">
-            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-brand-mint/30 bg-white/80 dark:bg-black/30 text-brand-mint shadow-inner transition-transform duration-300 group-hover:scale-105">
-              <Truck className="h-6 w-6 stroke-[2.2]" />
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="inline-block rounded-full bg-brand-mint/20 px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-brand-mint uppercase">
-                  {t("ProductDetails.freeShippingSub") || "ON ALL ORDERS"}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+        {/* Dynamic Custom Product Badge Card */}
+        {badgeText ? (
+          <div className="group relative overflow-hidden rounded-2xl border border-teal-500/30 bg-gradient-to-br from-teal-500/10 via-emerald-500/5 to-transparent p-3.5 transition-all duration-300 hover:border-teal-500 hover:shadow-lg hover:shadow-teal-500/10">
+            <div className="flex items-center gap-3">
+              <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-teal-500/30 bg-white dark:bg-neutral-900 p-1 shadow-inner transition-transform duration-300 group-hover:scale-110 overflow-hidden">
+                <Image
+                  src="/assets/medic.jpeg"
+                  alt="Egyptian Drug Authority Certified"
+                  width={44}
+                  height={44}
+                  className="h-full w-full object-contain filter drop-shadow-sm rounded-lg"
+                />
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-block rounded-full bg-teal-500/20 px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-teal-700 dark:text-teal-300 uppercase">
+                    {t("ProductDetails.officialBadge") || "ASHPEROO OFFICIAL"}
+                  </span>
+                </div>
+                <span className="mt-0.5 text-xs font-extrabold text-text-primary leading-tight">
+                  {badgeText}
                 </span>
               </div>
-              <span className="mt-0.5 text-xs font-extrabold text-text-primary">
-                {t("ProductDetails.freeShipping")}
-              </span>
             </div>
           </div>
-        </div>
+        ) : null}
 
         {/* Free Gua Sha Gift Card */}
-        <div className="group relative overflow-hidden rounded-2xl border border-brand-orange/40 bg-gradient-to-br from-brand-orange/10 via-amber-500/5 to-transparent p-3.5 transition-all duration-300 hover:border-brand-orange hover:shadow-lg hover:shadow-brand-orange/10">
+        <div className={`group relative overflow-hidden rounded-2xl border border-brand-orange/40 bg-gradient-to-br from-brand-orange/10 via-amber-500/5 to-transparent p-3.5 transition-all duration-300 hover:border-brand-orange hover:shadow-lg hover:shadow-brand-orange/10 ${
+          !badgeText ? "sm:col-span-2" : ""
+        }`}>
           {/* Shimmering Gift Badge */}
           <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2 z-10 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-orange to-amber-500 px-2 py-0.5 text-[9px] font-black text-white shadow-md tracking-wider uppercase">
             <Sparkles className="h-2.5 w-2.5" />
@@ -257,6 +283,71 @@ export function ProductInfoUI({
           {shareToast.message}
         </div>
       ) : null}
+
+      {/* Mobile-Only Sticky Bottom Add to Cart Bar */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-40 md:hidden bg-bg-primary/95 backdrop-blur-md border-t border-border-color shadow-2xl px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] transition-all duration-300 ease-in-out transform ${
+          isStickyVisible
+            ? "translate-y-0 opacity-100 pointer-events-auto"
+            : "translate-y-full opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3">
+          {/* Price & Quantity Controls */}
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center border border-border-color rounded-lg overflow-hidden bg-bg-secondary">
+              <button
+                type="button"
+                onClick={decrementQty}
+                aria-label="Decrease quantity"
+                className="px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                <Minus className="w-3 h-3 text-text-primary" />
+              </button>
+              <span className="px-2 text-xs font-bold text-text-primary min-w-[24px] text-center">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={incrementQty}
+                aria-label="Increase quantity"
+                className="px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                <Plus className="w-3 h-3 text-text-primary" />
+              </button>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-[9px] text-text-secondary uppercase font-semibold">
+                {t("ProductDetails.total")}
+              </span>
+              <span className="text-xs font-bold text-brand-orange">
+                {displayPrice}
+              </span>
+            </div>
+          </div>
+
+          {/* Add to Cart CTA Button */}
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={isProductAvailable === false}
+            className={`flex-1 flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl font-bold text-xs tracking-wider shadow-md transition-all ${
+              isProductAvailable === false
+                ? "bg-slate-400 opacity-60 cursor-not-allowed text-white"
+                : "bg-brand-mint text-white active:scale-95 cursor-pointer"
+            }`}
+          >
+            <ShoppingCart className="w-3.5 h-3.5" />
+            <span>
+              {isProductAvailable === false
+                ? t("ProductDetails.outOfStock") || "غير متاح"
+                : t("ProductDetails.addToCart")}
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
+

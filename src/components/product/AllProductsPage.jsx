@@ -19,6 +19,8 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { mapAllProducts } from "@/features/product/mappers";
 import { useProductsQuery } from "@/features/product/queries";
 import { useOffersQuery } from "@/features/offer/queries";
+import { useSiteContentQuery } from "@/features/home/queries";
+import { mapProductsPageBannerImage } from "@/features/home/mappers";
 
 const SORT_OPTIONS = [
   { key: "featured", labelKey: "featured" },
@@ -133,6 +135,12 @@ export default function AllProductsPage() {
 
   const facetsQuery = useProductsQuery({ isActive: true, isBundle: false });
   const offersQuery = useOffersQuery();
+  const siteContentQuery = useSiteContentQuery();
+
+  const headerBannerImage = useMemo(
+    () => mapProductsPageBannerImage(siteContentQuery.data),
+    [siteContentQuery.data],
+  );
 
   const productsQuery = useProductsQuery({
     isActive: true,
@@ -300,15 +308,17 @@ export default function AllProductsPage() {
   return (
     <section className="w-full bg-bg-primary min-h-screen">
       <div className="w-full">
-        <Image
-          src="/assets/all_productss.jpg"
-          alt="All Products"
-          width={1920}
-          height={1080}
-          priority
-          className="w-full h-auto object-cover"
-          sizes="100vw"
-        />
+        {headerBannerImage && (
+          <Image
+            src={headerBannerImage}
+            alt="All Products"
+            width={1920}
+            height={1080}
+            priority
+            className="w-full h-auto object-cover"
+            sizes="100vw"
+          />
+        )}
       </div>
 
       <div className="container mx-auto px-6 lg:px-10 py-10 md:py-14">

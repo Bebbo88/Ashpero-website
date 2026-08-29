@@ -13,6 +13,7 @@ import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 
 export default function ProductCard({ product, priority = false }) {
   const { t } = useLanguage();
+  const { locale } = useLanguage()
   const dispatch = useAppDispatch();
   const [isGalleryOpen, setIsGalleryOpen] = React.useState(false);
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
@@ -52,7 +53,7 @@ export default function ProductCard({ product, priority = false }) {
         ? product.variants[0]
         : null;
 
-    if (!firstVariant) {
+    if (!firstVariant || product.inStock === false) {
       return;
     }
     dispatch(
@@ -92,17 +93,22 @@ export default function ProductCard({ product, priority = false }) {
       {/* Image Card */}
       <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-muted dark:bg-white/5">
         {/* Top Left Indicators: Badge, Offer & Popup Gallery */}
-<div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-30 flex flex-col sm:flex-row gap-1.5 sm:gap-2 items-start">   
-  {product.badge && (
-            <div className="px-2 py-0.5 bg-white text-[10px] font-bold uppercase tracking-wider text-black shadow-sm">
-              {product.badge}
+        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-30 flex flex-col sm:flex-row gap-1.5 sm:gap-2 items-start flex-wrap">
+          {/* {(product.badgeText || product.badge) && (
+            <div className="px-2 py-0.5 rounded-md bg-amber-500 text-white text-[10px] font-bold tracking-wider shadow-sm flex items-center gap-1">
+              ★ {product.badgeText || product.badge}
             </div>
           )}
+          {product.inStock === false && (
+            <div className="px-2 py-0.5 rounded-md bg-red-600 text-white text-[10px] font-bold tracking-wider shadow-sm">
+              {t("ProductDetails.outOfStock") || "غير متاح"}
+            </div>
+          )} */}
           {product.hasOffer && (
-            <div className="rounded-full bg-red-500 px-2 py-1 text-[10px] font-bold text-white shadow-md">
+            <div className="rounded-full bg-red-500 px-2.5 py-1.5 text-[10px] font-bold text-white shadow-md">
               {product.discountType === "percentage"
-                ? `${product.discountValue}% OFF`
-                : `${product.discountValue} EGP OFF`}
+                ? `${product.discountValue}% ${locale === "ar" ? "خصم" : "OFF"}`
+                : `${locale === "ar" ? "وفر" : "Save"} ${product.discountValue} ${locale === "ar" ? "ج.م" : "LE"}`}
             </div>
           )}
           {Array.isArray(product.popupGallery) && product.popupGallery.length > 0 && (
@@ -147,10 +153,16 @@ export default function ProductCard({ product, priority = false }) {
           <button
             type="button"
             onClick={handleAddToCart}
-            className="w-full py-2.5 rounded-xl bg-white dark:bg-black text-black dark:text-white text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-soft hover:bg-brand-mint hover:text-white transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+            disabled={product.inStock === false}
+            className={`w-full py-2.5 rounded-xl text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-soft transition-all duration-200 ${product.inStock === false
+                ? "bg-slate-300 dark:bg-neutral-800 text-slate-500 cursor-not-allowed opacity-80"
+                : "bg-white dark:bg-black text-black dark:text-white hover:bg-brand-mint hover:text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+              }`}
           >
             <ShoppingCart className="w-3.5 h-3.5" />
-            {t("ProductDetails.addToCart")}
+            {product.inStock === false
+              ? t("ProductDetails.outOfStock") || "غير متاح"
+              : t("ProductDetails.addToCart")}
           </button>
         </div>
       </div>

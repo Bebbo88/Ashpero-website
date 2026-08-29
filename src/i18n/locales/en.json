@@ -237,7 +237,16 @@
       "moisturizerDesc": "Lightweight rose-infused milk that provides 24-hour hydration and a soft, velvety finish.",
       "foamCleanserDesc": "An ultra-soft foaming cleanser that purifies pores while soothing sensitive skin with botanical extracts."
     },
-    "selectSize": "Select Size",
+    "selectSize": "Choose Size",
+    "selectQuantity": "Select Quantity",
+    "buyNow": "Buy Now",
+    "stock": "Stock",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "officialBadge": "ASHPEROO OFFICIAL",
+    "total": "Total",
+    "videoReviewsTitle": "Ashperoo Customers Trusted In",
+    "videoReviewsDesc": "Watch real customer feedback and experiences",
     "ingredientsData": {
       "retinolIngredients": "Water (Aqua), Glycerin, Retinol, Hyaluronic Acid, Vitamin E, Green Tea Extract, Botanical Peptides.",
       "hyaluronicIngredients": "Sodium Hyaluronate, Snow Mushroom Extract, Panthenol, Rosewater, Aloe Barbadensis Leaf Juice.",
@@ -369,6 +378,7 @@
     "checkout": "CHECKOUT",
     "subtotal": "Subtotal",
     "shippingTaxes": "Shipping & taxes calculated at checkout.",
+    "returnPolicyNotice": "14-Day Return & Exchange Policy",
     "emptyTitle": "Your Cart is Empty",
     "emptyDesc": "You haven't added any items yet. Discover our collection and treat yourself."
   },
@@ -424,8 +434,13 @@
     "address2Holder": "Area or nearby landmark",
     "city": "City",
     "cityHolder": "Enter your city",
-    "state": "State / Province",
-    "stateHolder": "Enter your Country",
+    "state": "State / Governorate",
+    "stateHolder": "Select Governorate",
+    "selectGovernorate": "Select Governorate",
+    "selectGovernoratePlaceholder": "-- Select Governorate --",
+    "selectGovernorateNotice": "Select governorate",
+    "freeShippingApplied": "Free shipping for this governorate",
+    "freeShippingOption": "(Free Shipping)",
     "postal": "Postal Code",
     "postalHolder": "Enter postal code",
     "specialInstructions": "Special Instructions",
@@ -435,10 +450,16 @@
     "promoPlaceholder": "Enter promo code",
     "apply": "Apply",
     "subtotal": "Subtotal",
+    "discount": "Discount",
     "shipping": "Shipping",
     "free": "Free",
     "total": "Total",
+    "returnPolicyNotice": "14-Day Return & Exchange Policy",
     "continue": "Continue Checkout →",
+    "confirmOrder": "Confirm Order",
+    "completePayment": "Complete Payment",
+    "placingOrder": "Placing order...",
+    "redirectingPayment": "Redirecting to payment...",
     "secureCheckout": "Secure checkout with 256-bit SSL encryption",
     "paymentMethod": "Payment Method",
     "creditCard": "Credit / Debit Card",
@@ -513,5 +534,11 @@
   "EmptyState": {
     "title": "No Data Available",
     "description": "We couldn't find anything here. Please check back later or try exploring other areas."
+  },
+  "RelatedProducts": {
+    "title": "You May Also Like",
+    "subtitle": "Carefully selected products to complete your beauty care routine",
+    "save": "Save",
+    "viewProduct": "View Product"
   }
 }

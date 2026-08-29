@@ -15,7 +15,7 @@ function getVideoPoster(url) {
 }
 
 export default function CustomerVideoReviews({ customerReviewVideos }) {
-  const { locale } = useLanguage();
+  const { t, locale } = useLanguage();
   const isArabic = locale === "ar";
   const [activeVideo, setActiveVideo] = useState(null);
 
@@ -55,12 +55,10 @@ export default function CustomerVideoReviews({ customerReviewVideos }) {
           </div>
           <div>
             <h2 className="text-2xl md:text-3xl font-playfair font-bold text-text-primary">
-              {isArabic ? "تجارب ومراجعات العملاء" : "Customer Video Reviews"}
+              {t("ProductDetails.videoReviewsTitle")}
             </h2>
             <p className="text-xs sm:text-sm text-text-secondary mt-1">
-              {isArabic
-                ? "شاهد آراء وتجارب عميلاتنا الحقيقية مع هذا المنتج"
-                : "Watch real customer feedback and experiences"}
+              {t("ProductDetails.videoReviewsDesc")}
             </p>
           </div>
         </div>

@@ -139,6 +139,21 @@ export function mapAllProducts(products = [], locale = "en", offers = []) {
         ? normalizedProduct.bundleIncludes
         : [],
 
+      badgeText_en:
+        normalizedProduct?.badgeText_en ||
+        normalizedProduct?.badgeText ||
+        "",
+      badgeText_ar: normalizedProduct?.badgeText_ar || "",
+      badgeText:
+        getLocalizedValue(
+          normalizedProduct,
+          locale,
+          "badgeText_en",
+          "badgeText_ar",
+          "badgeText",
+        ) || "",
+      inStock: normalizedProduct?.inStock !== false,
+
       createdAt: normalizedProduct?.createdAt || "",
     };
   });
@@ -206,6 +221,21 @@ export function mapProductDetails(product, locale = "en", offers = []) {
     priceValue: finalPrice,
 
     variants,
+
+    badgeText_en:
+      normalizedProduct?.badgeText_en ||
+      normalizedProduct?.badgeText ||
+      "",
+    badgeText_ar: normalizedProduct?.badgeText_ar || "",
+    badgeText:
+      getLocalizedValue(
+        normalizedProduct,
+        locale,
+        "badgeText_en",
+        "badgeText_ar",
+        "badgeText",
+      ) || "",
+    inStock: normalizedProduct?.inStock !== false,
 
     ingredients: getLocalizedValue(
       normalizedProduct,

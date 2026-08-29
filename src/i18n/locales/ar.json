@@ -238,6 +238,15 @@
       "foamCleanserDesc": "منظف رغوي فائق النعومة ينقي المسام بينما يهدئ البشرة الحساسة بالمستخلصات النباتية."
     },
     "selectSize": "اختر الحجم",
+    "selectQuantity": "حدد الكمية",
+    "buyNow": "شراء مباشر",
+    "stock": "المتوفر",
+    "inStock": "متاح في المخزن",
+    "outOfStock": "غير متاح",
+    "officialBadge": "أشفيرو رسمي",
+    "total": "الإجمالي",
+    "videoReviewsTitle": "عملاء Ashperoo وثقوا في",
+    "videoReviewsDesc": "شاهد آراء وتجارب عميلاتنا الحقيقية مع هذا المنتج",
     "ingredientsData": {
       "retinolIngredients": "ماء، جليسرين، ريتينول، حمض الهيالورونيك، فيتامين هـ، مستخلص الشاي الأخضر، ببتيدات نباتية.",
       "hyaluronicIngredients": "هيالورونات الصوديوم، مستخلص فطر الثلج، بانثينول، ماء ورد، عصير أوراق الصبار.",
@@ -259,7 +268,7 @@
       "foamCleanserHowToUse": "يرغى بين الكفين ويدلك بلطف على الوجه. يشطف جيداً."
     },
     "reviews": {
-      "title": "آراء العملاء",
+      "title": "عملاء Ashperoo وثقوا في",
       "reviewCount": "تقييمات",
       "addReview": "أضف تقييمك",
       "yourName": "اسمك",
@@ -369,6 +378,7 @@
     "checkout": "الدفع",
     "subtotal": "المجموع الفرعي",
     "shippingTaxes": "يُحسب الشحن والضرائب عند الدفع.",
+    "returnPolicyNotice": "سياسة الاسترجاع والاستبدال خلال 14 يوم",
     "emptyTitle": "سلة المشتريات فارغة",
     "emptyDesc": "لم تضيفي أي منتجات بعد. استكشفي مجموعتنا ودلليّ نفسك."
   },
@@ -425,7 +435,12 @@
     "city": "المدينة",
     "cityHolder": "أدخل المدينة",
     "state": "المحافظة",
-    "stateHolder": "أدخل الدولة",
+    "stateHolder": "اختر المحافظة",
+    "selectGovernorate": "اختر المحافظة",
+    "selectGovernoratePlaceholder": "-- اختر المحافظة --",
+    "selectGovernorateNotice": "حدد المحافظة",
+    "freeShippingApplied": "شحن مجاني لهذه المحافظة",
+    "freeShippingOption": "(شحن مجاني)",
     "postal": "الرمز البريدي",
     "postalHolder": "أدخل الرمز البريدي",
     "specialInstructions": "تعليمات خاصة",
@@ -435,10 +450,16 @@
     "promoPlaceholder": "أدخل كود الخصم",
     "apply": "تطبيق",
     "subtotal": "المجموع الفرعي",
+    "discount": "الخصم",
     "shipping": "الشحن",
     "free": "مجاني",
     "total": "المجموع",
+    "returnPolicyNotice": "سياسة الاسترجاع والاستبدال خلال 14 يوم",
     "continue": "متابعة الشراء ←",
+    "confirmOrder": "تأكيد الطلب",
+    "completePayment": "إتمام الدفع",
+    "placingOrder": "جاري تأكيد الطلب...",
+    "redirectingPayment": "جاري تحويلك لصفحة الدفع...",
     "secureCheckout": "دفع آمن بتقنية تشفير 256-bit SSL",
     "paymentMethod": "طريقة الدفع",
     "creditCard": "بطاقة ائتمانية / خصم",
@@ -513,5 +534,11 @@
   "EmptyState": {
     "title": "لا توجد بيانات",
     "description": "لم نتمكن من العثور على أي شيء هنا. يرجى المحاولة مرة أخرى لاحقًا أو التحقق من الأقسام الأخرى."
+  },
+  "RelatedProducts": {
+    "title": "قد يعجبك أيضاً",
+    "subtitle": "منتجات مختارة بعناية لتكمل روتين العناية بجمالك",
+    "save": "وفر",
+    "viewProduct": "عرض المنتج"
   }
 }

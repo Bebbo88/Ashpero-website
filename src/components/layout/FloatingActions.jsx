@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { useCartDrawer } from "@/contexts/CartDrawerContext";
@@ -9,6 +10,8 @@ import { WhatsAppIcon, DoctorBotIcon } from "@/svgs/FloatingActions.svgs";
 import AIChatBox from "./AIChatBox";
 
 export default function FloatingActions() {
+  const pathname = usePathname() || "";
+  const isProductPage = pathname.startsWith("/product");
   const { openCart } = useCartDrawer();
   const cartItems = useAppSelector((state) => state.cart.items || []);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -42,7 +45,11 @@ export default function FloatingActions() {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="fixed bottom-4 inset-x-4 sm:bottom-6 sm:inset-x-6 md:bottom-10 md:inset-x-10 z-[150] flex items-end justify-between pointer-events-none"
+      className={`fixed ${
+        isProductPage
+          ? "bottom-[4.75rem] sm:bottom-6 md:bottom-10"
+          : "bottom-4 sm:bottom-6 md:bottom-10"
+      } inset-x-4 sm:inset-x-6 md:inset-x-10 z-[150] flex items-end justify-between pointer-events-none transition-all duration-300`}
     >
       <div className="flex flex-col gap-2 sm:gap-4 items-center pointer-events-auto">
         {/* WhatsApp Floating Button */}

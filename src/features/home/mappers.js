@@ -164,14 +164,22 @@ export function mapHomeOfferBannerImage(content = {}) {
 
 export function mapOffersPageBannerImage(content = {}) {
   const selectedBanner =
-    getLatestImagePath(content.spotlightImages) ||
-    getLatestImagePath(content.banners) ||
-    getLatestImagePath(content.heroImages) ||
+    content?.offersBannerImage ||
+    getLatestImagePath(content?.spotlightImages) ||
+    getLatestImagePath(content?.banners) ||
+    getLatestImagePath(content?.heroImages) ||
     "";
 
   const image = toAbsoluteAssetUrl(selectedBanner);
 
   return image || null;
+}
+
+export function mapProductsPageBannerImage(content = {}) {
+  const selectedBanner = content?.productsBannerImage || "";
+  const image = toAbsoluteAssetUrl(selectedBanner);
+
+  return image || "/assets/all_productss.jpg";
 }
 
 export function mapPrimaryBannerImage(content = {}) {

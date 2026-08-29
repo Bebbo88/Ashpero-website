@@ -136,7 +136,7 @@ export function NavbarUI({
                   className="cursor-pointer p-1.5 lg:p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors flex items-center font-bold text-xs lg:text-sm"
                 >
                   <Globe className="w-4 h-4 lg:w-5 lg:h-5 mr-1" />
-                  {locale.toUpperCase()}
+                  {/* {locale.toUpperCase()} */}
                 </button>
 
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 hidden sm:block" />
@@ -209,11 +209,10 @@ export function NavbarUI({
               <Link
                 key={link.href}
                 href={link.href}
-                className={`cursor-pointer transition-colors pb-1 whitespace-nowrap ${
-                  isActive(link.href)
+                className={`cursor-pointer transition-colors pb-1 whitespace-nowrap ${isActive(link.href)
                     ? "text-brand-orange border-b-2 border-brand-orange"
                     : "hover:text-brand-orange"
-                }`}
+                  }`}
               >
                 {t(link.labelKey)}
               </Link>
@@ -222,11 +221,10 @@ export function NavbarUI({
         </div>
 
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out bg-bg-secondary border-t ${
-            isMobileMenuOpen
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out bg-bg-secondary border-t ${isMobileMenuOpen
               ? "max-h-[500px] border-border-color border-opacity-100 opacity-100"
               : "max-h-0 border-opacity-0 opacity-0"
-          }`}
+            }`}
         >
           <div className="px-6 py-4 flex flex-col gap-4">
             {navLinks.map((link) => (
@@ -327,10 +325,9 @@ export function NavbarUI({
                     <button
                       key={provider.id}
                       onClick={() => loginWithProvider(provider.id)}
-                      className={`w-full py-3.5 px-4 rounded-xl border text-sm font-semibold transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer ${
-                        providerStyles[provider.id] ||
+                      className={`w-full py-3.5 px-4 rounded-xl border text-sm font-semibold transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer ${providerStyles[provider.id] ||
                         "bg-auth-modal-fallback-bg text-auth-modal-title border-auth-modal-fallback-border"
-                      }`}
+                        }`}
                     >
                       {ProviderIcon ? (
                         <ProviderIcon className="w-4 h-4" />

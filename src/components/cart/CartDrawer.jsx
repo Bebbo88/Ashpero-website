@@ -218,7 +218,7 @@ export default function CartDrawer() {
                       🎁 {t("ProductDetails.freeGiftBadge")}
                     </span>
                     <span className="text-xs font-bold text-text-primary">
-                      {t("ProductDetails.freeGuaSha")} + {t("ProductDetails.freeShipping")}
+                      {t("ProductDetails.freeGuaSha")}
                     </span>
                   </div>
                 </div>
@@ -232,9 +232,17 @@ export default function CartDrawer() {
                   {subtotalLabel}
                 </span>
               </div>
-              <p className="text-xs text-text-secondary mb-6 italic">
+              <p className="text-xs text-text-secondary mb-4 italic">
                 {t("CartDrawer.shippingTaxes")}
               </p>
+
+              <Link
+                href="/returns"
+                onClick={closeCart}
+                className="block text-center text-xs text-brand-orange hover:underline font-medium mb-3 transition-colors"
+              >
+                {t("CartDrawer.returnPolicyNotice")}
+              </Link>
 
               <Link
                 href="/checkout"
