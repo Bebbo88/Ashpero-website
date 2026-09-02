@@ -108,17 +108,52 @@ export default function SuccessPage() {
   );
   const orderTotal = currencyFormatter.format(numericOrderTotal);
 
-  const [trackedPurchase, setTrackedPurchase] = useState(false);
-
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.fbq && numericOrderTotal > 0 && !trackedPurchase) {
-      window.fbq('track', 'Purchase', {
-        value: numericOrderTotal,
-        currency: 'EGP'
-      });
-      setTrackedPurchase(true);
+    // 1. Don't fire while waiting for Paymob callback confirmation / redirect
+    if (hasDirectPaymobPayload || confirmStatus === "loading") {
+      return;
     }
-  }, [numericOrderTotal, trackedPurchase]);
+
+    // 2. If card payment, ensure it is verified/paid
+    if (summary?.paymentMethod === "card" && summary?.paymentStatus !== "paid") {
+      return;
+    }
+
+    // 3. Ensure we have a valid order identifier and positive amount
+    if (
+      typeof window !== "undefined" &&
+      window.fbq &&
+      numericOrderTotal > 0 &&
+      orderLabel &&
+      orderLabel !== "--"
+    ) {
+      const storageKey = `ashpero_meta_purchase_${orderLabel}`;
+      const isAlreadyTracked = sessionStorage.getItem(storageKey);
+
+      if (!isAlreadyTracked) {
+        // Meta standard deduplication requires matching event_name and eventID (as 4th argument)
+        window.fbq(
+          "track",
+          "Purchase",
+          {
+            value: numericOrderTotal,
+            currency: "EGP",
+            content_type: "product",
+            contents: Array.isArray(summary?.items)
+              ? summary.items.map((item) => ({
+                  id: item.productId?._id || item.productId || item._id,
+                  quantity: item.quantity || 1,
+                  item_price: item.priceAtPurchase || item.unitPrice || 0,
+                }))
+              : [],
+          },
+          { eventID: String(orderLabel) }
+        );
+
+        sessionStorage.setItem(storageKey, "1");
+      }
+    }
+  }, [hasDirectPaymobPayload, confirmStatus, summary, numericOrderTotal, orderLabel]);
   const statusLabel = getStatusLabel(summary, locale, t);
   const showPending =
     confirmStatus === "loading" ||
