@@ -545,6 +545,7 @@ export default function CheckoutPage() {
         nextOrder.paymentMethod === "wallet"
       ) {
         const redirectUrl =
+          nextPayment.checkoutUrl ||
           nextPayment.iframeUrl ||
           nextPayment.redirectionUrl ||
           nextPayment.paymentUrl ||
