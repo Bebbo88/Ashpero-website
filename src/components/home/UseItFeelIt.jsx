@@ -17,12 +17,17 @@ import Image from "../ui/AppImage";
 // stretch a browser does natively, restoring the original look.
 const CLOUDINARY_VIDEO_TRANSFORM = "c_scale,ar_9:16,w_720,q_auto:good,f_auto";
 
+// These four clips are the only media the site addresses by hand - everything
+// else carries a full URL from the database. That makes this the one place a
+// Cloudinary account change has to be applied manually.
+const CLOUDINARY_CLOUD_NAME = "nsria8zb";
+
 function buildOptimizedVideoUrl(publicId) {
-  return `https://res.cloudinary.com/doxa1kqur/video/upload/${CLOUDINARY_VIDEO_TRANSFORM}/Ashpero/Home/${publicId}.mp4`;
+  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/${CLOUDINARY_VIDEO_TRANSFORM}/Ashpero/Home/${publicId}.mp4`;
 }
 
 function buildVideoPosterUrl(publicId) {
-  return `https://res.cloudinary.com/doxa1kqur/video/upload/so_0,${CLOUDINARY_VIDEO_TRANSFORM}/Ashpero/Home/${publicId}.jpg`;
+  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/so_0,${CLOUDINARY_VIDEO_TRANSFORM}/Ashpero/Home/${publicId}.jpg`;
 }
 
 const products = [
