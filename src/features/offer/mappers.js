@@ -71,6 +71,11 @@ function calculateDiscountedPrice(basePrice, discountType, discountValue) {
 
 export function mapOfferProducts(offers = [], locale = "en") {
   const byProductId = new Map();
+  // Tracks each product's best (largest) savings across possibly multiple
+  // applicable offers, separately from the exposed `discountValue` field
+  // (which callers/ProductCard expect to be the offer's raw discount value,
+  // e.g. "20" for 20%, not a computed currency amount).
+  const bestSavingsById = new Map();
 
   for (const offer of offers) {
     const products = Array.isArray(offer?.productIds) ? offer.productIds : [];
@@ -108,7 +113,16 @@ export function mapOfferProducts(offers = [], locale = "en") {
         offer?.discountValue,
       );
 
-      const nextItem = {
+      const savings = basePrice - discountedPrice;
+      const bestSavingsSoFar = bestSavingsById.get(productId) ?? -Infinity;
+
+      if (savings <= bestSavingsSoFar) {
+        continue;
+      }
+
+      bestSavingsById.set(productId, savings);
+
+      byProductId.set(productId, {
         id: productId,
         title:
           getLocalizedValue(product, locale, "name_en", "name_ar", "name") ||
@@ -122,13 +136,21 @@ export function mapOfferProducts(offers = [], locale = "en") {
         oldPrice: formatCurrency(basePrice, locale),
         badge,
         isWishlisted: false,
-        discountValue: basePrice - discountedPrice,
-      };
-
-      const currentItem = byProductId.get(productId);
-      if (!currentItem || nextItem.discountValue > currentItem.discountValue) {
-        byProductId.set(productId, nextItem);
-      }
+        // Same fields ProductCard already uses on the all-products page to
+        // render the discount badge and the popup-gallery trigger.
+        hasOffer: true,
+        discountType: String(offer?.discountType || "").toLowerCase(),
+        discountValue: Number(offer?.discountValue) || 0,
+        popupGallery: Array.isArray(product?.popupGallery)
+          ? product.popupGallery
+          : [],
+        // ProductCard's "Add to Cart" needs these to actually work — without
+        // them it silently no-ops (no variant to add, stock check vacuously
+        // passes/fails).
+        variants: Array.isArray(product?.variants) ? product.variants : [],
+        inStock: product?.inStock !== false,
+        category: String(product?.category || "").trim(),
+      });
     }
   }
 

@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "@/components/ui/AppImage";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCartDrawer } from "@/contexts/CartDrawerContext";
@@ -20,9 +20,19 @@ export default function CartDrawer() {
   const isRtl = locale === "ar";
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items || []);
+  const drawerRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
+  const closeCartRef = useRef(closeCart);
 
   const handleIncrement = (item) => {
-    if (item.stock && item.quantity >= item.stock) {
+    // `item.stock` can legitimately be `0` (out of stock) — the previous
+    // `item.stock && ...` check was falsy for `0` and skipped the guard
+    // entirely, letting quantity climb unbounded on an out-of-stock item.
+    // `Number.isFinite` (true for 0, false for missing/unknown stock) keeps
+    // the original "unknown stock = no cap" behavior while still catching 0.
+    const knownStock = Number(item.stock);
+    if (Number.isFinite(knownStock) && item.quantity >= knownStock) {
       return;
     }
     dispatch(
@@ -73,6 +83,56 @@ export default function CartDrawer() {
     }
   };
 
+  useEffect(() => {
+    closeCartRef.current = closeCart;
+  }, [closeCart]);
+
+  // Depends only on `isCartOpen` — see the identical pattern (and the reason
+  // for it) in PopupGalleryModal.jsx: reading `closeCart` through a ref keeps
+  // this effect from re-running (and re-stealing focus) on every unrelated
+  // re-render while the drawer is open.
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        closeCartRef.current?.();
+        return;
+      }
+
+      if (event.key !== "Tab" || !drawerRef.current) {
+        return;
+      }
+
+      const focusable = drawerRef.current.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) {
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    if (isCartOpen) {
+      previouslyFocusedRef.current = document.activeElement;
+      window.addEventListener("keydown", handleKeyDown);
+      closeButtonRef.current?.focus();
+    } else if (previouslyFocusedRef.current) {
+      previouslyFocusedRef.current.focus?.();
+      previouslyFocusedRef.current = null;
+    }
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isCartOpen]);
+
   const subtotal = cartItems.reduce(
     (acc, item) =>
       acc + Number(item.priceValue || 0) * Number(item.quantity || 1),
@@ -101,6 +161,10 @@ export default function CartDrawer() {
           />
 
           <motion.div
+            ref={drawerRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("CartDrawer.title")}
             initial={{ x: isRtl ? "-100%" : "100%" }}
             animate={{ x: 0 }}
             exit={{ x: isRtl ? "-100%" : "100%" }}
@@ -117,7 +181,9 @@ export default function CartDrawer() {
                 </span>
               </h2>
               <button
+                ref={closeButtonRef}
                 onClick={closeCart}
+                aria-label={t("CartDrawer.close") || "Close"}
                 className="p-2 -mr-2 text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
               >
                 <X className="w-6 h-6" />
@@ -160,6 +226,7 @@ export default function CartDrawer() {
                           </h3>
                           <button
                             onClick={() => handleRemove(item)}
+                            aria-label={t("CartDrawer.removeItem")}
                             className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -180,6 +247,7 @@ export default function CartDrawer() {
                           <button
                             onClick={() => handleDecrement(item)}
                             disabled={item.quantity <= 1}
+                            aria-label={t("CartDrawer.decreaseQuantity")}
                             className="p-1 px-3 text-text-secondary hover:text-text-primary transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <Minus className="w-3 h-3" />
@@ -189,6 +257,7 @@ export default function CartDrawer() {
                           </span>
                           <button
                             onClick={() => handleIncrement(item)}
+                            aria-label={t("CartDrawer.increaseQuantity")}
                             className="p-1 px-3 text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
                           >
                             <Plus className="w-3 h-3" />

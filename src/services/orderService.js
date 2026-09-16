@@ -9,8 +9,10 @@ export async function createOrder(payload) {
   return unwrapApiResponse(response) || {};
 }
 
-export async function getPublicOrderSummary(orderId) {
-  const response = await apiClient.get(`/orders/${orderId}/summary`);
+export async function getPublicOrderSummary(orderId, merchantOrderId) {
+  const response = await apiClient.get(`/orders/${orderId}/summary`, {
+    params: { merchantOrderId },
+  });
   return unwrapApiResponse(response) || {};
 }
 

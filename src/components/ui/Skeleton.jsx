@@ -1,7 +1,4 @@
-"use client";
-
 import React from "react";
-import { motion } from "framer-motion";
 
 export default function Skeleton({
   className = "",
@@ -24,16 +21,7 @@ export default function Skeleton({
         height: normalizeSize(height),
       }}
     >
-      <motion.div
-        initial={{ x: "-100%" }}
-        animate={{ x: "100%" }}
-        transition={{
-          repeat: Infinity,
-          duration: 1.5,
-          ease: "linear",
-        }}
-        className="absolute inset-y-0 w-full bg-linear-to-r from-transparent via-white/30 to-transparent dark:via-white/5"
-      />
+      <div className="shimmer-sweep absolute inset-y-0 w-full bg-linear-to-r from-transparent via-white/30 to-transparent dark:via-white/5" />
     </div>
   );
 }

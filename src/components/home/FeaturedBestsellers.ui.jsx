@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Heart, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
@@ -192,11 +192,11 @@ export function FeaturedBestsellersUI({
           </Swiper>
 
           {/* Navigation */}
-          <button className="bs-prev absolute top-[35%] -translate-y-1/2 left-0 md:-left-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 border border-gray-200 dark:border-gray-700">
+          <button className="bs-prev absolute top-[35%] -translate-y-1/2 left-0 md:-left-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-100 md:opacity-0 md:group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 border border-gray-200 dark:border-gray-700">
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <button className="bs-next absolute top-[35%] -translate-y-1/2 right-0 md:-right-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 border border-gray-200 dark:border-gray-700">
+          <button className="bs-next absolute top-[35%] -translate-y-1/2 right-0 md:-right-6 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-900 shadow-soft-sm flex items-center justify-center text-gray-700 dark:text-gray-200 opacity-100 md:opacity-0 md:group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-brand-orange hover:text-white hover:scale-110 border border-gray-200 dark:border-gray-700">
             <ChevronRight className="w-5 h-5" />
           </button>
 

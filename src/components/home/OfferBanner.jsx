@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import Image from "@/components/ui/AppImage";
 import { useSiteContentQuery } from "@/features/home/queries";
 import { mapHomeOfferBannerImage } from "@/features/home/mappers";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 
 export default function OfferBanner() {
   const contentQuery = useSiteContentQuery();

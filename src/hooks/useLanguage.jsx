@@ -1,7 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { createContext, useContext, useCallback, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { localizePath } from '@/utils/localePath';
 
 const LangContext = createContext({
   locale: 'en',
@@ -10,58 +11,38 @@ const LangContext = createContext({
   t: () => ''
 });
 
-// Client-side dictionary loader (mirrors server-side getDictionary but works in the browser)
-const dictionaryLoaders = {
-  en: () => import('@/i18n/locales/en.json').then((m) => m.default),
-  ar: () => import('@/i18n/locales/ar.json').then((m) => m.default),
-};
-
+// Locale is now determined by the URL (see src/proxy.js and the
+// [locale] route segment), so the server always hands this provider the
+// correct `initialLocale`/`dictionary` for whatever page is being rendered
+// — no client-side cookie or dictionary-swap logic needed anymore.
 export const LangProvider = ({ children, initialLocale, dictionary }) => {
   const router = useRouter();
-  const [locale, setLocaleState] = useState(initialLocale);
-  const [dict, setDict] = useState(dictionary);
+  const pathname = usePathname();
 
   useEffect(() => {
-    document.documentElement.lang = locale;
-    document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
-  }, [locale]);
+    document.documentElement.lang = initialLocale;
+    document.documentElement.dir = initialLocale === 'ar' ? 'rtl' : 'ltr';
+  }, [initialLocale]);
 
-  const setLanguage = useCallback(async (newLocale) => {
-    if (newLocale === locale) return;
-    if (!dictionaryLoaders[newLocale]) return;
+  const setLanguage = useCallback((newLocale) => {
+    if (newLocale === initialLocale) return;
 
-    // 1. Set the cookie so the server layout picks it up on next navigation
-    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
-
-    // 2. Load the new dictionary client-side (dynamic import, will be cached)
-    try {
-      const newDict = await dictionaryLoaders[newLocale]();
-
-      // 3. Update state in-place — no full page reload needed
-      setLocaleState(newLocale);
-      setDict(newDict);
-
-      // 4. Tell Next.js to re-run server components with the new cookie
-      //    This refreshes the RSC payload without a full browser reload.
-      router.refresh();
-    } catch {
-      // Fallback: if dynamic import fails for some reason, do a hard reload
-      window.location.reload();
-    }
-  }, [locale, router]);
+    const search = typeof window !== 'undefined' ? window.location.search : '';
+    router.push(`${localizePath(pathname, newLocale)}${search}`);
+  }, [initialLocale, pathname, router]);
 
   const t = useCallback((key) => {
     const keys = key.split('.');
-    let value = dict;
+    let value = dictionary;
     for (const k of keys) {
       if (!value || value[k] === undefined) return key;
       value = value[k];
     }
     return value;
-  }, [dict]);
+  }, [dictionary]);
 
   return (
-    <LangContext.Provider value={{ locale, setLanguage, t, dictionary: dict }}>
+    <LangContext.Provider value={{ locale: initialLocale, setLanguage, t, dictionary }}>
       {children}
     </LangContext.Provider>
   );

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import Image from "@/components/ui/AppImage";
 import { useLanguage } from "@/hooks/useLanguage";
+import { sanitizeProductDescription } from "@/utils/sanitizeDescription";
 import {
   Minus,
   Plus,
@@ -114,7 +115,9 @@ export function ProductInfoUI({
       {typeof product?.description === "string" && (product.description.includes("<") || product.description.includes("&")) ? (
         <div
           className="text-sm text-text-secondary leading-relaxed [&_b]:font-bold [&_strong]:font-bold"
-          dangerouslySetInnerHTML={{ __html: product.description }}
+          dangerouslySetInnerHTML={{
+            __html: sanitizeProductDescription(product.description),
+          }}
         />
       ) : (
         <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-line">

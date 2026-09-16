@@ -21,6 +21,7 @@ import { useProductsQuery } from "@/features/product/queries";
 import { useOffersQuery } from "@/features/offer/queries";
 import { useSiteContentQuery } from "@/features/home/queries";
 import { mapProductsPageBannerImage } from "@/features/home/mappers";
+import { resolveCategoryLabel as resolveCategoryLabelShared } from "@/utils/categoryLabel";
 
 const SORT_OPTIONS = [
   { key: "featured", labelKey: "featured" },
@@ -64,32 +65,6 @@ const normalizeList = (values = []) =>
           (entry) => entry.toLowerCase() === value.toLowerCase(),
         ) === index,
     );
-
-function normalizeCategoryTranslationKey(category) {
-  const compact = String(category || "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ");
-
-  if (!compact) {
-    return "";
-  }
-
-  const tokens = compact.split(" ").filter(Boolean);
-  if (tokens.length === 0) {
-    return "";
-  }
-
-  if (tokens.join("") === "antiaging") {
-    return "antiAging";
-  }
-
-  return tokens
-    .map((token, index) =>
-      index === 0 ? token : `${token.charAt(0).toUpperCase()}${token.slice(1)}`,
-    )
-    .join("");
-}
 
 function formatTokenLabel(token) {
   return String(token || "")
@@ -199,20 +174,8 @@ export default function AllProductsPage() {
     [categoryOptions, productTypeOptions, skinTypeOptions],
   );
 
-  const resolveCategoryLabel = (categoryValue) => {
-    const normalizedKey = normalizeCategoryTranslationKey(categoryValue);
-
-    if (normalizedKey) {
-      const translationKey = `AllProducts.categories.${normalizedKey}`;
-      const translated = t(translationKey);
-
-      if (translated !== translationKey) {
-        return translated;
-      }
-    }
-
-    return categoryValue;
-  };
+  const resolveCategoryLabel = (categoryValue) =>
+    resolveCategoryLabelShared(categoryValue, t);
 
   const resolveFilterOptionLabel = (section, option) => {
     if (section.key === "category") {
@@ -307,6 +270,11 @@ export default function AllProductsPage() {
 
   return (
     <section className="w-full bg-bg-primary min-h-screen">
+      {/* Visually hidden — the page leads with a banner image by design
+          (AllProducts.title/description exist in translations but aren't
+          shown visually), but it still needs one real <h1> for search
+          engines and screen readers. */}
+      <h1 className="sr-only">{t("AllProducts.title")}</h1>
       <div className="w-full">
         {headerBannerImage && (
           <Image
@@ -343,7 +311,7 @@ export default function AllProductsPage() {
 
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
+              <Search className="w-4 h-4 absolute start-3 top-1/2 -translate-y-1/2 text-text-secondary" />
               <input
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}

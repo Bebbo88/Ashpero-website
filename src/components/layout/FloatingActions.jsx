@@ -2,12 +2,18 @@
 
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { useCartDrawer } from "@/contexts/CartDrawerContext";
 import { useAppSelector } from "@/store/hooks";
 import { WhatsAppIcon, DoctorBotIcon } from "@/svgs/FloatingActions.svgs";
-import AIChatBox from "./AIChatBox";
+
+// FloatingActions is mounted on every page via the root layout, so loading
+// AIChatBox eagerly would ship its code on every page load even though most
+// visitors never open it. next/dynamic defers it to its own chunk, fetched
+// only when the chat button is first clicked.
+const AIChatBox = dynamic(() => import("./AIChatBox"), { ssr: false });
 
 export default function FloatingActions() {
   const pathname = usePathname() || "";
@@ -72,13 +78,9 @@ export default function FloatingActions() {
             className="relative flex items-center cursor-pointer justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-brand-mint to-brand-dark text-white rounded-full shadow-brand-primary border-2 border-white/20 hover:shadow-brand-primary-strong transition-all hover:scale-110 active:scale-95"
             aria-label="Consult AI Skincare Doctor"
           >
-            <motion.div
-              animate={{ y: [-2, 2, -2] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="w-full h-full rounded-full flex items-center justify-center relative"
-            >
+            <div className="float-bob w-full h-full rounded-full flex items-center justify-center relative">
               <DoctorBotIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
-            </motion.div>
+            </div>
           </button>
 
           {/* Online Status Indicator */}

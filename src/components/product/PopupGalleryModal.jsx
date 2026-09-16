@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "@/components/ui/AppImage";
 import { X, ChevronLeft, ChevronRight, Images } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -44,22 +44,64 @@ export default function PopupGalleryModal({ popupGallery, isOpen, onClose }) {
   const { locale } = useLanguage();
   const isArabic = locale === "ar";
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const dialogRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
+  const onCloseRef = useRef(onClose);
 
   const images = Array.isArray(popupGallery)
     ? popupGallery.filter((img) => typeof img === "string" && img.trim() !== "")
     : [];
 
   useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  // Depends only on `isOpen` — every call site passes a fresh inline
+  // `onClose` function on every render, so depending on `onClose` directly
+  // here would re-run this effect (and re-steal focus back to the close
+  // button) on any unrelated re-render of the host component while the
+  // modal is open, not just on actual open/close transitions.
+  useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === "Escape") {
-        onClose?.();
+        onCloseRef.current?.();
+        return;
+      }
+
+      if (e.key !== "Tab" || !dialogRef.current) {
+        return;
+      }
+
+      const focusable = dialogRef.current.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) {
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     }
+
     if (isOpen) {
+      previouslyFocusedRef.current = document.activeElement;
       window.addEventListener("keydown", handleKeyDown);
+      closeButtonRef.current?.focus();
+    } else if (previouslyFocusedRef.current) {
+      previouslyFocusedRef.current.focus?.();
+      previouslyFocusedRef.current = null;
     }
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen || images.length === 0) {
     return null;
@@ -96,6 +138,10 @@ export default function PopupGalleryModal({ popupGallery, isOpen, onClose }) {
     >
       {/* Modal White Container */}
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={isArabic ? "معرض الصور الإضافي" : "Popup Gallery"}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -117,8 +163,10 @@ export default function PopupGalleryModal({ popupGallery, isOpen, onClose }) {
           </div>
 
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={handleClose}
+            aria-label={isArabic ? "إغلاق" : "Close"}
             className="w-8 h-8 rounded-full bg-slate-200/60 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-red-500 hover:text-white transition-all cursor-pointer flex items-center justify-center"
           >
             <X className="w-4 h-4" />
@@ -137,12 +185,13 @@ export default function PopupGalleryModal({ popupGallery, isOpen, onClose }) {
             />
           </div>
 
-          {/* Navigation Arrows */}
+          {/* Navigation Arrows (flipped for RTL so "next" always moves in reading direction) */}
           {images.length > 1 && (
             <>
               <button
                 type="button"
-                onClick={handlePrev}
+                onClick={isArabic ? handleNext : handlePrev}
+                aria-label={isArabic ? "التالي" : "Previous"}
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-white hover:bg-brand-mint hover:text-white border border-slate-200 dark:border-slate-700 shadow-md cursor-pointer flex items-center justify-center transition-all hover:scale-105 active:scale-95"
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -150,7 +199,8 @@ export default function PopupGalleryModal({ popupGallery, isOpen, onClose }) {
 
               <button
                 type="button"
-                onClick={handleNext}
+                onClick={isArabic ? handlePrev : handleNext}
+                aria-label={isArabic ? "السابق" : "Next"}
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-white hover:bg-brand-mint hover:text-white border border-slate-200 dark:border-slate-700 shadow-md cursor-pointer flex items-center justify-center transition-all hover:scale-105 active:scale-95"
               >
                 <ChevronRight className="w-5 h-5" />

@@ -78,7 +78,18 @@ const cartSlice = createSlice({
       );
 
       if (existingIndex >= 0) {
-        state.items[existingIndex].quantity += nextItem.quantity;
+        const combinedQuantity = state.items[existingIndex].quantity + nextItem.quantity;
+
+        // Refresh price/stock/title/image from this add-to-cart call (the
+        // freshest data, just read from the product page) instead of
+        // leaving a line item frozen at whatever it looked like the first
+        // time it was added — a cart can sit in localStorage for weeks.
+        // Cap the combined quantity at current stock so merging two adds
+        // can't silently exceed what's actually available.
+        state.items[existingIndex] = {
+          ...nextItem,
+          quantity: nextItem.stock > 0 ? Math.min(combinedQuantity, nextItem.stock) : combinedQuantity,
+        };
       } else {
         state.items.push(nextItem);
       }
@@ -119,6 +130,32 @@ const cartSlice = createSlice({
 
       persistToStorage(state.items);
     },
+    // Used by the checkout cart-revalidation pass to write back a
+    // freshly-fetched quantity/stock/price snapshot in one shot — unlike
+    // `updateCartItemQuantity` (quantity only), leaving `stock`/`priceValue`
+    // stale here would mean the next `reduxCartItems` sync in the checkout
+    // page silently overwrites the corrected local values right back to the
+    // outdated ones.
+    syncCartItemFromServer: (state, action) => {
+      const { productId, size = "", quantity, stock, priceValue } = action.payload || {};
+      const normalizedSize = String(size).trim().toLowerCase();
+      const targetId = String(productId || "").trim();
+
+      state.items = state.items.map((item) => {
+        if (item.productId !== targetId || item.size !== normalizedSize) {
+          return item;
+        }
+
+        return {
+          ...item,
+          ...(quantity !== undefined ? { quantity: Math.max(1, toNumber(quantity, item.quantity)) } : {}),
+          ...(stock !== undefined ? { stock: Math.max(0, toNumber(stock, item.stock)) } : {}),
+          ...(priceValue !== undefined ? { priceValue: Math.max(0, toNumber(priceValue, item.priceValue)) } : {}),
+        };
+      });
+
+      persistToStorage(state.items);
+    },
     removeFromCart: (state, action) => {
       const { productId, size = "" } = action.payload || {};
       const targetId = String(productId || "").trim();
@@ -143,6 +180,7 @@ export const {
   addToCart,
   setBuyNowItem,
   updateCartItemQuantity,
+  syncCartItemFromServer,
   removeFromCart,
   clearCart,
   hydrateCart,

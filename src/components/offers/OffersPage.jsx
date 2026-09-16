@@ -16,6 +16,7 @@ import { mapOfferProducts } from "@/features/offer/mappers";
 import { mapAllProducts } from "@/features/product/mappers";
 import { useOffersQuery } from "@/features/offer/queries";
 import { useProductsQuery } from "@/features/product/queries";
+import { resolveCategoryLabel } from "@/utils/categoryLabel";
 
 function matchSearch(item, searchTerm) {
   if (!searchTerm) {
@@ -42,8 +43,12 @@ export default function OffersPage() {
   const siteContentQuery = useSiteContentQuery();
 
   const products = useMemo(
-    () => mapOfferProducts(offersQuery.data, locale),
-    [offersQuery.data, locale],
+    () =>
+      mapOfferProducts(offersQuery.data, locale).map((product) => ({
+        ...product,
+        category: resolveCategoryLabel(product.category, t),
+      })),
+    [offersQuery.data, locale, t],
   );
 
   const bundlesQuery = useProductsQuery({
@@ -53,8 +58,13 @@ export default function OffersPage() {
 
   const bundles = useMemo(() => {
     if (!bundlesQuery.data) return [];
-    return mapAllProducts(bundlesQuery.data, locale, offersQuery.data || []);
-  }, [bundlesQuery.data, locale, offersQuery.data]);
+    return mapAllProducts(bundlesQuery.data, locale, offersQuery.data || []).map(
+      (product) => ({
+        ...product,
+        category: resolveCategoryLabel(product.categoryRaw, t),
+      }),
+    );
+  }, [bundlesQuery.data, locale, offersQuery.data, t]);
 
   const filteredProducts = useMemo(
     () => products.filter((item) => matchSearch(item, debouncedSearch)),
@@ -78,7 +88,7 @@ export default function OffersPage() {
         {headerImage && (
           <Image
             src={headerImage}
-            alt="Offers Header"
+            alt="Ashperoo skincare sale and special offers"
             width={1920}
             height={1080}
             className="w-full h-auto object-cover"
@@ -92,16 +102,16 @@ export default function OffersPage() {
       <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-2xl md:text-3xl font-serif text-text-primary mb-1">
+            <h1 className="text-2xl md:text-3xl font-serif text-text-primary mb-1">
               {t("Offers.sectionTitle")}
-            </h2>
+            </h1>
             <p className="text-gray-500 dark:text-gray-400 text-sm font-light">
               {t("Offers.sectionDesc")}
             </p>
           </div>
 
           <div className="relative w-full md:w-[300px]">
-            <Search className="w-4 h-4 text-text-secondary absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-text-secondary absolute start-3 top-1/2 -translate-y-1/2" />
             <input
               value={searchValue}
               onChange={(event) => setSearchValue(event.target.value)}
@@ -136,11 +146,10 @@ export default function OffersPage() {
         {offersQuery.isError ? (
           <div className="rounded-2xl border border-red-200 bg-red-50/80 p-8 text-center">
             <p className="text-sm font-semibold text-red-700">
-              Failed to load offers.
+              {t("Offers.loadError")}
             </p>
             <p className="mt-2 text-xs text-red-600">
-              {offersQuery.error?.message ||
-                "Please check backend status and try again."}
+              {offersQuery.error?.message || t("Offers.loadErrorDesc")}
             </p>
           </div>
         ) : null}

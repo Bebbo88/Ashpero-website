@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "@/components/ui/AppImage";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 import {
   Heart,
   Sun,
@@ -61,10 +61,19 @@ export function NavbarUI({
 }) {
   const userLabel = session?.user?.name || session?.user?.email || "Account";
   const firstLetter = userLabel?.trim()?.charAt(0)?.toUpperCase() || "U";
-  const logoSrc = isDark ? "/assets/logo-white.svg" : "/assets/logo.svg";
-  const logoMobileSrc = isDark
-    ? "/assets/favicon-light.png"
-    : "/assets/favicon-dark.png";
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        closeAuthMenu?.();
+      }
+    }
+
+    if (!isAuthenticated && isAuthMenuOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isAuthenticated, isAuthMenuOpen, closeAuthMenu]);
 
   return (
     <>
@@ -81,11 +90,19 @@ export function NavbarUI({
 
               <div className="relative h-full w-full">
                 <Image
-                  src={logoMobileSrc}
+                  src="/assets/favicon-dark.png"
                   alt="Ashperoo Mobile Logo"
                   fill
-                  className="object-contain object-left rtl:object-right"
-                  priority
+                  className="object-contain object-left rtl:object-right dark:hidden"
+                  loading="eager"
+                  sizes="96px"
+                />
+                <Image
+                  src="/assets/favicon-light.png"
+                  alt="Ashperoo Mobile Logo"
+                  fill
+                  className="object-contain object-left rtl:object-right hidden dark:block"
+                  loading="eager"
                   sizes="96px"
                 />
               </div>
@@ -97,11 +114,19 @@ export function NavbarUI({
                 className="shrink-0 flex items-center relative h-12 w-32 lg:h-14 lg:w-40 bg-transparent cursor-pointer hover:opacity-80 transition-opacity"
               >
                 <Image
-                  src={logoSrc}
+                  src="/assets/logo.svg"
                   alt="Ashperoo Logo"
                   fill
-                  className="object-contain object-left rtl:object-right"
-                  priority
+                  className="object-contain object-left rtl:object-right dark:hidden"
+                  loading="eager"
+                  sizes="160px"
+                />
+                <Image
+                  src="/assets/logo-white.svg"
+                  alt="Ashperoo Logo"
+                  fill
+                  className="object-contain object-left rtl:object-right hidden dark:block"
+                  loading="eager"
                   sizes="160px"
                 />
               </Link>

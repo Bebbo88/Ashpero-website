@@ -4,6 +4,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart, setBuyNowItem } from "@/store/slices/cartSlice";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
+import { localizePath } from "@/utils/localePath";
 
 function parseBulletPoints(content) {
   if (!content || typeof content !== "string") {
@@ -33,7 +34,11 @@ export function useProductInfoLogic(product) {
   const [openAccordion, setOpenAccordion] = useState("ingredients");
 
   const decrementQty = () => setQuantity((prev) => Math.max(1, prev - 1));
-  const incrementQty = () => setQuantity((prev) => Math.min(10, prev + 1));
+  const incrementQty = () =>
+    setQuantity((prev) => {
+      const upperBound = availableStock > 0 ? Math.min(10, availableStock) : 10;
+      return Math.min(upperBound, prev + 1);
+    });
 
   const variants = useMemo(
     () => (Array.isArray(product.variants) ? product.variants : []),
@@ -85,6 +90,7 @@ export function useProductInfoLogic(product) {
     product.discountType,
     product.discountValue,
     product.price,
+    locale,
   ]);
   const resolvedPriceValue = useMemo(() => {
     const variantPrice = Number(resolvedVariant?.price) || 0;
@@ -113,6 +119,16 @@ export function useProductInfoLogic(product) {
     product.discountValue,
   ]);
   const availableStock = Number(resolvedVariant?.stock) || 0;
+
+  // If the customer bumped quantity up on a size with more stock, then
+  // switched to a size with less, silently keeping the old quantity would
+  // make Add to Cart/Buy Now no-op with zero feedback (they'd have no idea
+  // why the button "isn't working").
+  useEffect(() => {
+    if (availableStock > 0 && quantity > availableStock) {
+      setQuantity(availableStock);
+    }
+  }, [availableStock, quantity]);
 
   const toggleAccordion = (key) => {
     setOpenAccordion((prev) => (prev === key ? null : key));
@@ -177,6 +193,11 @@ export function useProductInfoLogic(product) {
     }
 
     if (quantity > availableStock) {
+      showShareToast(
+        locale === "ar"
+          ? "الكمية المطلوبة أكبر من المتاح في المخزون"
+          : "The selected quantity exceeds available stock",
+      );
       return;
     }
 
@@ -203,7 +224,16 @@ export function useProductInfoLogic(product) {
   };
 
   const handleBuyNow = () => {
-    if (!isProductAvailable || quantity > availableStock) {
+    if (!isProductAvailable) {
+      return;
+    }
+
+    if (quantity > availableStock) {
+      showShareToast(
+        locale === "ar"
+          ? "الكمية المطلوبة أكبر من المتاح في المخزون"
+          : "The selected quantity exceeds available stock",
+      );
       return;
     }
 
@@ -239,7 +269,7 @@ export function useProductInfoLogic(product) {
       });
     }
 
-    router.push("/checkout?buyNow=true");
+    router.push(localizePath("/checkout?buyNow=true", locale));
   };
 
   const handleToggleWishlist = () => {

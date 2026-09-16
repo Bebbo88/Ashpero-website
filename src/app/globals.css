@@ -294,6 +294,32 @@
   animation: heavyShake5s 5s ease-in-out infinite !important;
 }
 
+@keyframes floatBob {
+  0%, 100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+.float-bob {
+  animation: floatBob 3s ease-in-out infinite;
+}
+
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer-sweep {
+  animation: shimmerSweep 1.5s linear infinite;
+}
+
 .scrollbar-hide::-webkit-scrollbar,
 .no-scrollbar::-webkit-scrollbar {
   display: none !important;

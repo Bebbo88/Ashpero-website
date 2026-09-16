@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "@/components/ui/AppImage";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 import { useLanguage } from "../../hooks/useLanguage";
 import {
   InstagramIcon,
@@ -193,7 +193,6 @@ export default function Footer() {
               alt="Egyptian Drug Authority - هيئة الدواء المصرية"
               width={80}
               height={80}
-              unoptimized
               className="w-full h-full object-contain"
             />
           </div>
@@ -225,7 +224,6 @@ export default function Footer() {
                 alt="Visa"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
@@ -233,7 +231,6 @@ export default function Footer() {
                 alt="Mastercard"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
@@ -241,7 +238,6 @@ export default function Footer() {
                 alt="Meeza"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
@@ -249,7 +245,6 @@ export default function Footer() {
                 alt="Fawry"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
@@ -257,7 +252,6 @@ export default function Footer() {
                 alt="Aman"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform object-center"
               />
               <Image
@@ -265,7 +259,6 @@ export default function Footer() {
                 alt="Vodafone Cash"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
@@ -273,7 +266,6 @@ export default function Footer() {
                 alt="Orange Cash"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
@@ -281,7 +273,6 @@ export default function Footer() {
                 alt="E& Money"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
               <Image
@@ -289,7 +280,6 @@ export default function Footer() {
                 alt="WE Pay"
                 width={80}
                 height={48}
-                unoptimized
                 className="object-contain h-8 md:h-11 w-auto bg-white rounded-md shadow p-1 hover:scale-105 transition-transform"
               />
             </div>

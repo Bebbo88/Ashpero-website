@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useMode } from "@/hooks/useMode";
+import { stripLocalePrefix } from "@/utils/localePath";
 
 const NAV_LINKS = [
   { href: "/", labelKey: "Navbar.home" },
@@ -42,8 +43,10 @@ export function useNavbarLogic() {
     };
   }, []);
 
-  const isActive = (href) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href) => {
+    const barePathname = stripLocalePrefix(pathname);
+    return href === "/" ? barePathname === "/" : barePathname.startsWith(href);
+  };
 
   const toggleLang = () => {
     setLanguage(locale === "en" ? "ar" : "en");

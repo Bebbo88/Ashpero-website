@@ -1,0 +1,270 @@
+"use client";
+
+import React, { Suspense, useEffect, useMemo, useState } from "react";
+import Link from "@/components/ui/AppLink";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Check, LoaderCircle } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useCheckoutSummary } from "@/hooks/useCheckoutSummary";
+import { useAppDispatch } from "@/store/hooks";
+import { clearCart } from "@/store/slices/cartSlice";
+import { clearPendingCheckout } from "@/utils/checkoutSession";
+import { confirmPaymobCallback } from "@/services/paymentService";
+import { localizePath } from "@/utils/localePath";
+
+function getStatusLabel(summary, locale, t) {
+  if (summary?.paymentMethod === "cash_on_delivery") {
+    return locale === "ar" ? "قيد التأكيد عند الاستلام" : "Cash on delivery";
+  }
+
+  if (summary?.paymentStatus === "paid") {
+    return t("Status.success.processing");
+  }
+
+  return locale === "ar" ? "جاري تأكيد الدفع" : "Payment confirmation in progress";
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={null}>
+      <SuccessPageContent />
+    </Suspense>
+  );
+}
+
+function SuccessPageContent() {
+  const { t, locale } = useLanguage();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [confirmStatus, setConfirmStatus] = useState("idle");
+  const { summary, status } = useCheckoutSummary(searchParams, { poll: true });
+
+  const hasDirectPaymobPayload =
+    searchParams.has("hmac") &&
+    !searchParams.has("orderId") &&
+    Boolean(searchParams.get("merchant_order_id") || searchParams.get("order"));
+
+  useEffect(() => {
+    if (!hasDirectPaymobPayload) {
+      return undefined;
+    }
+
+    let isCancelled = false;
+
+    async function confirmResponse() {
+      try {
+        setConfirmStatus("loading");
+        const result = await confirmPaymobCallback(searchParams);
+
+        if (isCancelled) {
+          return;
+        }
+
+        const targetPath = result.paymentStatus === "paid" ? "/success" : "/failed";
+        router.replace(localizePath(`${targetPath}?orderId=${result.orderId}&merchantOrderId=${result.merchantOrderId || ""}&paymob=1`, locale));
+      } catch (_error) {
+        if (isCancelled) {
+          return;
+        }
+
+        setConfirmStatus("error");
+      }
+    }
+
+    confirmResponse();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [hasDirectPaymobPayload, router, searchParams, locale]);
+
+  useEffect(() => {
+    if (!summary) {
+      return;
+    }
+
+    if (summary.paymentMethod === "cash_on_delivery" || summary.paymentStatus === "paid") {
+      const isBuyNow = typeof window !== "undefined" && sessionStorage.getItem("buy_now_checkout_item");
+      if (isBuyNow) {
+        sessionStorage.removeItem("buy_now_checkout_item");
+      } else {
+        dispatch(clearCart());
+      }
+      clearPendingCheckout();
+    }
+  }, [dispatch, summary]);
+
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US", {
+        style: "currency",
+        currency: "EGP",
+        maximumFractionDigits: 0,
+      }),
+    [locale],
+  );
+
+  const fallbackAmount = Number(searchParams.get("amount_cents") || 0) / 100;
+  const orderLabel =
+    summary?.merchantOrderId ||
+    searchParams.get("merchant_order_id") ||
+    summary?._id ||
+    searchParams.get("orderId") ||
+    "--";
+  const numericOrderTotal = Number(
+    summary?.finalPrice || summary?.totalPrice || fallbackAmount || 0,
+  );
+  const orderTotal = currencyFormatter.format(numericOrderTotal);
+
+  useEffect(() => {
+    // 1. Don't fire while waiting for Paymob callback confirmation / redirect
+    if (hasDirectPaymobPayload || confirmStatus === "loading") {
+      return;
+    }
+
+    // 2. If card payment, ensure it is verified/paid
+    if (summary?.paymentMethod === "card" && summary?.paymentStatus !== "paid") {
+      return;
+    }
+
+    // 3. Ensure we have a valid order identifier and positive amount
+    if (
+      typeof window !== "undefined" &&
+      window.fbq &&
+      numericOrderTotal > 0 &&
+      orderLabel &&
+      orderLabel !== "--"
+    ) {
+      const storageKey = `ashpero_meta_purchase_${orderLabel}`;
+      const isAlreadyTracked = sessionStorage.getItem(storageKey);
+
+      if (!isAlreadyTracked) {
+        // Meta standard deduplication requires matching event_name and eventID (as 4th argument)
+        window.fbq(
+          "track",
+          "Purchase",
+          {
+            value: numericOrderTotal,
+            currency: "EGP",
+            content_type: "product",
+            contents: Array.isArray(summary?.items)
+              ? summary.items.map((item) => ({
+                  id: item.productId?._id || item.productId || item._id,
+                  quantity: item.quantity || 1,
+                  item_price: item.priceAtPurchase || item.unitPrice || 0,
+                }))
+              : [],
+          },
+          { eventID: String(orderLabel) }
+        );
+
+        sessionStorage.setItem(storageKey, "1");
+      }
+    }
+  }, [hasDirectPaymobPayload, confirmStatus, summary, numericOrderTotal, orderLabel]);
+  const statusLabel = getStatusLabel(summary, locale, t);
+  const showPending =
+    confirmStatus === "loading" ||
+    hasDirectPaymobPayload ||
+    (summary?.paymentMethod === "card" && summary?.paymentStatus !== "paid");
+
+  return (
+    <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-center px-4 py-20 relative overflow-hidden">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-mint/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="max-w-[480px] w-full flex flex-col items-center text-center relative z-10 transition-transform mt-[-5%]">
+        <div className="w-24 h-24 bg-brand-mint/10 rounded-3xl flex items-center justify-center mb-6 shadow-sm border border-brand-mint/20">
+          <div className="w-12 h-12 rounded-full border-2 border-brand-mint flex items-center justify-center bg-transparent">
+            {showPending ? (
+              <LoaderCircle className="w-6 h-6 text-brand-mint animate-spin" strokeWidth={2.5} />
+            ) : (
+              <Check className="w-6 h-6 text-brand-mint" strokeWidth={3} />
+            )}
+          </div>
+        </div>
+
+        <h1 className="font-playfair text-4xl md:text-5xl font-bold text-brand-dark dark:text-brand-mint mb-4">
+          {t("Status.success.title")}
+        </h1>
+        <p className="text-text-secondary text-sm md:text-base leading-relaxed mb-8 max-w-sm">
+          {showPending
+            ? locale === "ar"
+              ? "رجعنا من بوابة الدفع، وبنراجع حالة العملية الآن."
+              : "We received your checkout return and are confirming the payment now."
+            : t("Status.success.subtitle")}
+        </p>
+
+        <div className="w-full text-left bg-bg-secondary p-8 rounded-2xl border border-border-color shadow-sm mb-6">
+          <div className="flex flex-col gap-6 text-sm font-montserrat">
+            <div className="flex justify-between items-center text-text-secondary gap-3">
+              <span className="uppercase text-[10px] tracking-widest font-bold">
+                {t("Status.success.orderNumber")}
+              </span>
+              <span className="font-bold text-text-primary text-right break-all">{orderLabel}</span>
+            </div>
+
+            <div className="h-px w-full bg-border-color line-dashed opacity-50" />
+
+            <div className="flex justify-between items-center text-text-secondary gap-3">
+              <span className="uppercase text-[10px] tracking-widest font-bold">
+                {t("Checkout.total")}
+              </span>
+              <span className="font-semibold text-text-primary">{orderTotal}</span>
+            </div>
+
+            <div className="h-px w-full bg-border-color line-dashed opacity-50" />
+
+            <div className="flex justify-between items-center text-text-secondary gap-3">
+              <span className="uppercase text-[10px] tracking-widest font-bold">
+                {t("Status.success.status")}
+              </span>
+              <span className="font-bold text-brand-mint flex items-center gap-1.5 text-right">
+                <span className="w-2 h-2 rounded-full bg-brand-mint animate-pulse" />
+                {statusLabel}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {status === "loading" || confirmStatus === "loading" ? (
+          <p className="mb-6 text-xs text-text-secondary">
+            {locale === "ar" ? "جاري تحديث حالة الطلب..." : "Refreshing order status..."}
+          </p>
+        ) : null}
+
+        {confirmStatus === "error" ? (
+          <p className="mb-6 text-xs text-status-error">
+            {locale === "ar"
+              ? "تعذر تأكيد حالة الدفع تلقائيًا. حدّث الصفحة بعد لحظات."
+              : "We could not confirm the payment automatically. Please refresh in a moment."}
+          </p>
+        ) : null}
+
+        <div className="w-full flex flex-col gap-3 mb-10">
+          <Link
+            href="/all-products"
+            className="w-full py-4 bg-brand-mint text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-brand-dark transition-all shadow-lg shadow-brand-mint/20 hover:scale-[1.02]"
+          >
+            {t("Status.success.continueShoppingBtn")}
+          </Link>
+        </div>
+
+        <p className="text-xs text-text-secondary flex flex-col items-center gap-1">
+          <span>
+            {t("Status.success.questionsLine").replace(
+              t("Status.success.supportEmail"),
+              "",
+            )}
+          </span>
+          <a
+            href="mailto:support@ashpero.com"
+            className="text-brand-mint font-semibold hover:underline decoration-brand-mint underline-offset-2"
+          >
+            {t("Status.success.supportEmail")}
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}

@@ -6,7 +6,15 @@ import Loader from "@/components/loader/loader";
 import { useSiteContentQuery, useBestSellersQuery } from "@/features/home/queries";
 import { mapHeroBackgroundSlides } from "@/features/home/mappers";
 
+const SESSION_FLAG = "home_dropper_shown";
+
 export default function HomeDropperLoader() {
+  // Must start identical on server and client (server has no window/
+  // sessionStorage) — checking sessionStorage here directly, even guarded by
+  // typeof window, previously made the client's first render disagree with
+  // the server-rendered HTML and threw a hydration-mismatch error. The
+  // session check now happens inside the effect below instead, which only
+  // ever runs on the client after hydration.
   const [isReady, setIsReady] = useState(false);
   const contentQuery = useSiteContentQuery();
   const bestSellersQuery = useBestSellersQuery(12);
@@ -16,8 +24,24 @@ export default function HomeDropperLoader() {
 
   useEffect(() => {
     let isCancelled = false;
+
+    let alreadyShownThisSession = false;
+    try {
+      alreadyShownThisSession = Boolean(sessionStorage.getItem(SESSION_FLAG));
+    } catch (_error) {
+      alreadyShownThisSession = false;
+    }
+
+    if (alreadyShownThisSession) {
+      setIsReady(true);
+      return undefined;
+    }
+
     const startTime = Date.now();
-    const MIN_LOADER_DURATION = 600;
+    // Just enough to avoid a jarring instant flash on a fast/cached load —
+    // not an artificial delay. Real loading time (image/query fetch) still
+    // determines how long this actually shows.
+    const MIN_LOADER_DURATION = 150;
 
     const finish = () => {
       const elapsed = Date.now() - startTime;
@@ -25,6 +49,12 @@ export default function HomeDropperLoader() {
       setTimeout(() => {
         if (!isCancelled) {
           setIsReady(true);
+
+          try {
+            sessionStorage.setItem(SESSION_FLAG, "1");
+          } catch (_error) {
+            // ignore (private mode / storage disabled)
+          }
         }
       }, remaining);
     };

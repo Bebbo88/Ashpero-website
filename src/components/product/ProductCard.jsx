@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "@/components/ui/AppImage";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 import { Heart, ShoppingCart, Images } from "lucide-react";
 import PopupGalleryModal, { PopupGalleryTrigger } from "./PopupGalleryModal";
 import { buildProductPath } from "@/utils/productUrl";

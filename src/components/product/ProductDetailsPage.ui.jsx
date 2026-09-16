@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 import { useLanguage } from "@/hooks/useLanguage";
 import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";

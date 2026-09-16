@@ -16,6 +16,9 @@ export function HeroSectionUI({ backgroundSlides, isArabic }) {
 
   return (
     <section className={`${styles.root} relative w-full overflow-hidden select-none`}>
+      {/* Visually hidden — the hero is a pure image carousel by design, but
+          the page still needs one real <h1> for search engines. */}
+      <h1 className="sr-only">Ashperoo Luxury Skincare — Every Drop Has a Story</h1>
       <div className="w-full relative">
         {backgroundSlides.length > 0 ? (
           <Swiper
@@ -49,7 +52,7 @@ export function HeroSectionUI({ backgroundSlides, isArabic }) {
                   <div className="relative w-full overflow-hidden">
                     <Image
                       src={slide.image}
-                      alt="Ashperoo Offer Banner"
+                      alt="Ashperoo luxury skincare promotional banner"
                       width={1920}
                       height={1080}
                       sizes="100vw"

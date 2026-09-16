@@ -3,10 +3,13 @@ import { motion } from "framer-motion";
 import { X, Send, Bot, User, Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { DoctorBotIcon } from "@/svgs/FloatingActions.svgs";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const CHAT_STORAGE_KEY = "ashpero_ai_chat_history";
 
 export default function AIChatBox({ onClose, alignment = "end" }) {
+  const { t, locale } = useLanguage();
+  const isArabic = locale === "ar";
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef(null);
@@ -26,11 +29,12 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
         {
           id: "sys-1",
           role: "model",
-          text: "أهلاً بك! أنا Dr. ASH، مساعدك الذكي للعناية بالبشرة. كيف يمكنني مساعدتك اليوم؟",
+          text: t("AIChat.greeting"),
           timestamp: Date.now(),
         },
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Save to localStorage whenever messages change
@@ -70,15 +74,14 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
       ]);
     },
     onError: (error) => {
-      let friendlyError = "Oops, something went wrong. Please try again.";
+      let friendlyError = t("AIChat.genericError");
       const errStr = error.message?.toLowerCase() || "";
       if (
         errStr.includes("503") ||
         errStr.includes("demand") ||
         errStr.includes("quota")
       ) {
-        friendlyError =
-          "I'm currently assisting many customers and my system is very busy. Please try again in a few minutes!";
+        friendlyError = t("AIChat.busyError");
       }
 
       setMessages((prev) => [
@@ -146,7 +149,7 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
         <button
           onClick={onClose}
           className="p-1 rounded-full hover:bg-white/20 transition-colors"
-          aria-label="Close Chat"
+          aria-label={t("AIChat.closeChat")}
         >
           <X className="w-5 h-5" />
         </button>
@@ -198,7 +201,7 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
             <div className="px-4 py-3 bg-bg-primary border border-border-color rounded-2xl font-montserrat rounded-tl-sm flex items-center gap-2 shadow-sm">
               <Loader2 className="w-4 h-4 animate-spin text-brand-mint" />
               <span className="text-xs text-text-secondary">
-                Ash is thinking...
+                {t("AIChat.thinking")}
               </span>
             </div>
           </div>
@@ -215,22 +218,22 @@ export default function AIChatBox({ onClose, alignment = "end" }) {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             disabled={chatMutation.isPending}
-            placeholder="Ask about skincare..."
-            className="w-full pl-4 pr-12 py-3 bg-bg-secondary border border-border-color rounded-full text-sm font-montserrat text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-brand-mint/50 transition-colors disabled:opacity-50"
+            placeholder={t("AIChat.placeholder")}
+            className="w-full ps-4 pe-12 py-3 bg-bg-secondary border border-border-color rounded-full text-sm font-montserrat text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-brand-mint/50 transition-colors disabled:opacity-50"
           />
 
           <button
             type="submit"
             disabled={!inputValue.trim() || chatMutation.isPending}
-            className="absolute right-1 w-10 h-10 flex items-center justify-center rounded-full bg-brand-mint text-white hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute end-1 w-10 h-10 flex items-center justify-center rounded-full bg-brand-mint text-white hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Send className="w-4 h-4 ml-0.5" />
+            <Send className={`w-4 h-4 ${isArabic ? "-scale-x-100 -ml-0.5" : "ml-0.5"}`} />
           </button>
         </form>
 
         <div className="text-center mt-2">
           <span className="text-[10px] text-text-secondary">
-            Powered by Ashperoo
+            {t("AIChat.poweredBy")}
           </span>
         </div>
       </div>

@@ -78,10 +78,6 @@ export default function HomePopup() {
   }
 
   useEffect(() => {
-    preloadPopupImage(popupImageSrc);
-  }, [popupImageSrc]);
-
-  useEffect(() => {
     if (sessionStorage.getItem("home_popup_shown") || isContentLoading) {
       return;
     }

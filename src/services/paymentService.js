@@ -4,8 +4,11 @@ function unwrapApiResponse(response) {
   return response?.data?.data ?? null;
 }
 
-export async function initializePaymobPayment(orderId) {
-  const response = await apiClient.post("/payment/paymob", { orderId });
+export async function initializePaymobPayment(orderId, merchantOrderId) {
+  const response = await apiClient.post("/payment/paymob", {
+    orderId,
+    merchantOrderId,
+  });
   return unwrapApiResponse(response) || {};
 }
 

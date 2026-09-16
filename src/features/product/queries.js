@@ -7,8 +7,19 @@ import {
 } from "@/services/productService";
 import { productQueryKeys } from "./queryKeys";
 
-export function useProductsQuery(params = {}) {
-  const paramsKey = JSON.stringify(params);
+function stableStringify(params) {
+  return JSON.stringify(
+    Object.keys(params)
+      .sort()
+      .reduce((sorted, key) => {
+        sorted[key] = params[key];
+        return sorted;
+      }, {}),
+  );
+}
+
+export function useProductsQuery(params = {}, options = {}) {
+  const paramsKey = stableStringify(params);
 
   return useQuery({
     queryKey: productQueryKeys.list(paramsKey),
@@ -16,6 +27,7 @@ export function useProductsQuery(params = {}) {
     staleTime: 1000 * 60 * 10, // 10 minutes
     gcTime: 1000 * 60 * 60, // 1 hour
     refetchOnWindowFocus: false,
+    ...options,
   });
 }
 

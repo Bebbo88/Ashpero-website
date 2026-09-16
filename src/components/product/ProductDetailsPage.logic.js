@@ -19,11 +19,14 @@ export function useProductDetailsPageLogic(productId) {
     productId,
     product,
 
-    isLoading: productQuery.isLoading || offersQuery.isLoading,
+    // Offers are a secondary enhancement (discount badge/price) — mapProductDetails
+    // already degrades gracefully when offers data isn't ready yet (defaults to
+    // no discount), so the core product page must not be blocked behind a
+    // full-screen loader/error just because that secondary fetch is slow or fails.
+    isLoading: productQuery.isLoading,
 
-    isError: productQuery.isError || offersQuery.isError,
+    isError: productQuery.isError,
 
-    errorMessage:
-      productQuery.error?.message || offersQuery.error?.message || "",
+    errorMessage: productQuery.error?.message || "",
   };
 }

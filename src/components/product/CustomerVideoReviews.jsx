@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Play, Video, X, Maximize2 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -12,6 +12,70 @@ function getVideoPoster(url) {
     return `${prefix}/video/upload/so_0,f_auto,q_auto:eco,w_600/${cleanSuffix}`;
   }
   return undefined;
+}
+
+// Only mounts the <video> element (and its metadata request) once the card
+// actually scrolls near the viewport — mirrors the pattern already used
+// correctly in UseItFeelIt.jsx and tips/Video.jsx, instead of every review
+// video firing a request the instant the page renders.
+function LazyReviewVideoCard({ videoUrl, posterUrl, onExpand, expandLabel }) {
+  const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px 0px", threshold: 0.1 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="group relative rounded-xl md:rounded-2xl overflow-hidden bg-slate-950 border border-border-color shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
+    >
+      <div className="relative aspect-[9/16] w-full max-h-[280px] sm:max-h-[360px] md:max-h-[440px] bg-slate-950 overflow-hidden flex items-center justify-center">
+        {isVisible ? (
+          <video
+            src={videoUrl}
+            poster={posterUrl}
+            preload="metadata"
+            playsInline
+            controls
+            className="w-full h-full object-contain bg-black"
+          />
+        ) : posterUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={posterUrl}
+            alt=""
+            className="w-full h-full object-contain bg-black"
+          />
+        ) : null}
+
+        <button
+          type="button"
+          onClick={onExpand}
+          title={expandLabel}
+          aria-label={expandLabel}
+          className="absolute top-2.5 right-2.5 rtl:right-auto rtl:left-2.5 z-20 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-brand-mint transition-all duration-300 cursor-pointer shadow-md"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default function CustomerVideoReviews({ customerReviewVideos }) {
@@ -65,37 +129,15 @@ export default function CustomerVideoReviews({ customerReviewVideos }) {
 
         {/* Video Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-          {videos.map((videoUrl, index) => {
-            const posterUrl = getVideoPoster(videoUrl);
-            return (
-              <div
-                key={index}
-                className="group relative rounded-xl md:rounded-2xl overflow-hidden bg-slate-950 border border-border-color shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
-              >
-                <div className="relative aspect-[9/16] w-full max-h-[280px] sm:max-h-[360px] md:max-h-[440px] bg-slate-950 overflow-hidden flex items-center justify-center">
-                  <video
-                    src={videoUrl}
-                    poster={posterUrl}
-                    preload="metadata"
-                    playsInline
-                    controls
-                    className="w-full h-full object-contain bg-black"
-                  />
-
-                  {/* Expand / Watch in Fullscreen Button */}
-                  <button
-                    type="button"
-                    onClick={() => setActiveVideo(videoUrl)}
-                    title={isArabic ? "تكبير الفيديو" : "Expand Video"}
-                    aria-label={isArabic ? "تكبير الفيديو" : "Expand Video"}
-                    className="absolute top-2.5 right-2.5 rtl:right-auto rtl:left-2.5 z-20 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-brand-mint transition-all duration-300 cursor-pointer shadow-md"
-                  >
-                    <Maximize2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+          {videos.map((videoUrl, index) => (
+            <LazyReviewVideoCard
+              key={index}
+              videoUrl={videoUrl}
+              posterUrl={getVideoPoster(videoUrl)}
+              onExpand={() => setActiveVideo(videoUrl)}
+              expandLabel={isArabic ? "تكبير الفيديو" : "Expand Video"}
+            />
+          ))}
         </div>
       </div>
 

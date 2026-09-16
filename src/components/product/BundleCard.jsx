@@ -2,13 +2,14 @@
 
 import React, { useState } from "react";
 import Image from "@/components/ui/AppImage";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 import { Heart, ShoppingCart, Check } from "lucide-react";
 import { buildProductPath } from "@/utils/productUrl";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cartSlice";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
+import { sanitizeProductDescription } from "@/utils/sanitizeDescription";
 
 export default function BundleCard({ product, priority = false }) {
   const { t, locale } = useLanguage();
@@ -185,7 +186,11 @@ export default function BundleCard({ product, priority = false }) {
           {product.description && (
             <div className="text-xs text-text-secondary line-clamp-2 mb-4 leading-relaxed [&_b]:font-bold [&_strong]:font-bold">
               {typeof product.description === "string" && (product.description.includes("<") || product.description.includes("&")) ? (
-                <span dangerouslySetInnerHTML={{ __html: product.description }} />
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeProductDescription(product.description),
+                  }}
+                />
               ) : (
                 <span>{product.description}</span>
               )}

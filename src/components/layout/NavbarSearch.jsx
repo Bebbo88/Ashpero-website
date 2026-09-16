@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/ui/AppLink";
 import Image from "@/components/ui/AppImage";
 import { useProductsQuery } from "@/features/product/queries";
 import { mapAllProducts } from "@/features/product/mappers";
@@ -31,6 +31,7 @@ export default function NavbarSearch() {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false); // Desktop dropdown open
   const [isMobileExpanded, setIsMobileExpanded] = useState(false); // Mobile input expanded
+  const [hasInteracted, setHasInteracted] = useState(false); // Search actually used
 
   const debouncedQuery = useDebouncedValue(query, 300);
 
@@ -38,8 +39,12 @@ export default function NavbarSearch() {
   const inputRef = useRef(null);
   const mobileInputRef = useRef(null);
 
-  // Fetch all products once (cached by react-query)
-  const { data: rawProducts = [] } = useProductsQuery();
+  // Fetch all products only once the user actually opens/uses search —
+  // avoids an unconditional product fetch on every single page mount.
+  const { data: rawProducts = [] } = useProductsQuery(
+    {},
+    { enabled: hasInteracted }
+  );
 
   const allProducts = useMemo(
     () => mapAllProducts(rawProducts, locale),
@@ -149,7 +154,10 @@ export default function NavbarSearch() {
               setQuery(e.target.value);
               setIsOpen(true);
             }}
-            onFocus={() => setIsOpen(true)}
+            onFocus={() => {
+              setIsOpen(true);
+              setHasInteracted(true);
+            }}
             placeholder={placeholder}
             aria-label={isArabic ? "بحث" : "Search"}
             className="bg-transparent text-xs text-text-primary placeholder:text-text-secondary outline-none w-full min-w-0"
@@ -203,7 +211,10 @@ export default function NavbarSearch() {
         <motion.button
           initial={false}
           whileTap={{ scale: 0.9 }}
-          onClick={() => setIsMobileExpanded(true)}
+          onClick={() => {
+            setIsMobileExpanded(true);
+            setHasInteracted(true);
+          }}
           aria-label={isArabic ? "فتح البحث" : "Open search"}
           className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-text-primary cursor-pointer"
         >

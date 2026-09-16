@@ -1,6 +1,13 @@
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const { version } = require("./package.json");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: false,
+  env: {
+    NEXT_PUBLIC_APP_VERSION: version,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
@@ -32,10 +39,6 @@ const nextConfig = {
         protocol: "https",
         hostname: "platform-lookaside.fbsbx.com",
         pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "**",
       },
     ],
   },

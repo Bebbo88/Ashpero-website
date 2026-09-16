@@ -286,6 +286,21 @@
     "digit4": "4",
     "digit0": "0"
   },
+  "ErrorPage": {
+    "title": "Something Went Wrong",
+    "description": "An unexpected error occurred. Please try again, or head back to the homepage.",
+    "tryAgain": "Try Again",
+    "returnHome": "Return to Home"
+  },
+  "AIChat": {
+    "greeting": "Hi! I'm Dr. ASH, your smart skincare assistant. How can I help you today?",
+    "closeChat": "Close Chat",
+    "placeholder": "Ask about skincare...",
+    "thinking": "Ash is thinking...",
+    "poweredBy": "Powered by Ashperoo",
+    "busyError": "I'm currently assisting many customers and my system is very busy. Please try again in a few minutes!",
+    "genericError": "Oops, something went wrong. Please try again."
+  },
   "ContactUs": {
     "title": "Contact Us",
     "subtitle": "Get In Touch",
@@ -380,7 +395,11 @@
     "shippingTaxes": "Shipping & taxes calculated at checkout.",
     "returnPolicyNotice": "14-Day Return & Exchange Policy",
     "emptyTitle": "Your Cart is Empty",
-    "emptyDesc": "You haven't added any items yet. Discover our collection and treat yourself."
+    "emptyDesc": "You haven't added any items yet. Discover our collection and treat yourself.",
+    "close": "Close cart",
+    "removeItem": "Remove item",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity"
   },
   "TipsAndTricks": {
     "subtitle": "THE JOURNAL",
@@ -508,6 +527,8 @@
     "filterBtn": "Filter +",
     "viewAll": "VIEW ALL OFFERS",
     "showingText": "Showing 4 of 24 products",
+    "loadError": "Failed to load offers.",
+    "loadErrorDesc": "Please check backend status and try again.",
     "products": {
       "prod1": {
         "title": "Luminous Face Oil",

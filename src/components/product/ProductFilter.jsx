@@ -25,7 +25,8 @@ export default function ProductFilter({
   filterSections = DEFAULT_FILTER_SECTIONS,
   resolveOptionLabel,
 }) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const isRtl = locale === "ar";
   const [expandedSections, setExpandedSections] = useState({
     category: true,
     productType: true,
@@ -116,10 +117,10 @@ export default function ProductFilter({
                   return (
                     <label
                       key={option}
-                      className="flex items-center gap-3 cursor-pointer group/item"
+                      className="flex items-center gap-3 py-1.5 cursor-pointer group/item"
                     >
                       <div
-                        className={`w-4 h-4 rounded-[4px] border-2 flex items-center justify-center transition-all duration-200
+                        className={`w-5 h-5 rounded-[4px] border-2 flex items-center justify-center transition-all duration-200 shrink-0
                           ${
                             isChecked
                               ? "bg-brand-dark dark:bg-brand-mint border-brand-dark dark:border-brand-mint"
@@ -127,7 +128,7 @@ export default function ProductFilter({
                           }`}
                       >
                         {isChecked && (
-                          <CheckIcon className="w-2.5 h-2.5 text-white" />
+                          <CheckIcon className="w-3 h-3 text-white" />
                         )}
                       </div>
                       <input
@@ -171,7 +172,9 @@ export default function ProductFilter({
           />
           {/* Slide Panel */}
           <div
-            className={`absolute left-0 top-0 bottom-0 w-[300px] max-w-[85vw] bg-bg-primary shadow-2xl p-6 overflow-y-auto ${animationStyles.animateSlideInLeft}`}
+            className={`absolute top-0 bottom-0 w-[300px] max-w-[85vw] bg-bg-primary shadow-2xl p-6 overflow-y-auto ${
+              isRtl ? "right-0" : "left-0"
+            } ${isRtl ? animationStyles.animateSlideInRight : animationStyles.animateSlideInLeft}`}
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-sans text-sm font-bold tracking-[0.2em] uppercase text-text-primary">
@@ -217,10 +220,10 @@ export default function ProductFilter({
                         return (
                           <label
                             key={option}
-                            className="flex items-center gap-3 cursor-pointer group/item"
+                            className="flex items-center gap-3 py-1.5 cursor-pointer group/item"
                           >
                             <div
-                              className={`w-4 h-4 rounded-[4px] border-2 flex items-center justify-center transition-all duration-200
+                              className={`w-5 h-5 rounded-[4px] border-2 flex items-center justify-center transition-all duration-200 shrink-0
                                 ${
                                   isChecked
                                     ? "bg-brand-dark dark:bg-brand-mint border-brand-dark dark:border-brand-mint"
@@ -228,7 +231,7 @@ export default function ProductFilter({
                                 }`}
                             >
                               {isChecked && (
-                                <CheckIcon className="w-2.5 h-2.5 text-white" />
+                                <CheckIcon className="w-3 h-3 text-white" />
                               )}
                             </div>
                             <input

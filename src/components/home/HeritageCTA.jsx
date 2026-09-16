@@ -23,7 +23,7 @@ export default function HeritageCTA() {
             <div className="w-full rounded-2xl overflow-hidden">
               <Image
                 src="/assets/heritage.png"
-                alt="Ashperoo Heritage"
+                alt="Ashperoo natural skincare heritage and handcrafted luxury cosmetics"
                 width={800}
                 height={1000}
                 loading="lazy"

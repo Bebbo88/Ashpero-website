@@ -3,26 +3,51 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../hooks/useLanguage";
 import ScrollAnimationWrapper from "../ui/ScrollAnimationWrapper";
+import Image from "../ui/AppImage";
+
+// These used to be raw local MP4s (2.8-5.1 MB each, ~14.6 MB total) served
+// with no compression/format negotiation. The files are stored as a
+// 1280x720 pixel grid but carry a 9:16 Display Aspect Ratio override — the
+// raw pixels are landscape, but every video player (correctly) stretches
+// them to portrait on playback, which is why the original <video> tag (no
+// Cloudinary involved) displayed them correctly. Cloudinary's transform
+// pipeline doesn't honor that DAR override — treating the raw 1280x720 as
+// literally landscape, plain resizing distorted it and c_fill cropped it
+// wrong. c_scale (not crop) forced back to ar_9:16 reproduces the same
+// stretch a browser does natively, restoring the original look.
+const CLOUDINARY_VIDEO_TRANSFORM = "c_scale,ar_9:16,w_720,q_auto:good,f_auto";
+
+function buildOptimizedVideoUrl(publicId) {
+  return `https://res.cloudinary.com/doxa1kqur/video/upload/${CLOUDINARY_VIDEO_TRANSFORM}/Ashpero/Home/${publicId}.mp4`;
+}
+
+function buildVideoPosterUrl(publicId) {
+  return `https://res.cloudinary.com/doxa1kqur/video/upload/so_0,${CLOUDINARY_VIDEO_TRANSFORM}/Ashpero/Home/${publicId}.jpg`;
+}
 
 const products = [
   {
     id: 1,
-    video: "/assets/hyaluronic-video.mp4",
+    video: buildOptimizedVideoUrl("hyaluronic-video"),
+    poster: buildVideoPosterUrl("hyaluronic-video"),
     nameKey: "product2",
   },
   {
     id: 2,
-    video: "/assets/collagen-video.mp4",
+    video: buildOptimizedVideoUrl("collagen-video"),
+    poster: buildVideoPosterUrl("collagen-video"),
     nameKey: "product3",
   },
   {
     id: 3,
-    video: "/assets/vitamin-c-video.mp4",
+    video: buildOptimizedVideoUrl("vitamin-c-video"),
+    poster: buildVideoPosterUrl("vitamin-c-video"),
     nameKey: "product1",
   },
   {
     id: 4,
-    video: "/assets/retinol-video.mp4",
+    video: buildOptimizedVideoUrl("retinol-video"),
+    poster: buildVideoPosterUrl("retinol-video"),
     nameKey: "product4",
   },
 ];
@@ -49,7 +74,10 @@ function LazyVideoCard({ product, t }) {
           }
         }
       },
-      { rootMargin: "150px 0px", threshold: 0.1 }
+      // Generous lead margin so the video has time to buffer before it's
+      // actually scrolled into view, instead of only starting to load the
+      // instant it appears (which is what showed a black box briefly).
+      { rootMargin: "600px 0px", threshold: 0.1 }
     );
 
     observer.observe(element);
@@ -96,16 +124,32 @@ function LazyVideoCard({ product, t }) {
           className="relative w-full aspect-[9/16] rounded-2xl overflow-hidden video-card-shadow"
           style={{ transform: "translateZ(0px)" }}
         >
-          <video
-            ref={videoRef}
-            src={product.video}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          {/* object-cover, same as the original — fills the card, cropping
+              the 16:9 source the same way it always did. */}
+          {/* Poster stays mounted underneath the whole time — the video is
+              layered on top only once visible, so there's never a frame with
+              neither one painted (which is what showed as a black box). */}
+          <Image
+            src={product.poster}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 240px, (max-width: 1024px) 300px, 340px"
+            className="object-cover"
           />
+
+          {isVisible && (
+            <video
+              ref={videoRef}
+              src={product.video}
+              poster={product.poster}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          )}
 
           <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none rounded-2xl" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
