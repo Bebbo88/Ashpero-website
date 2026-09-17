@@ -56,24 +56,29 @@ export default function ProductCard({ product, priority = false }) {
     if (!firstVariant || product.inStock === false) {
       return;
     }
+
+    // variants[] carries the undiscounted catalogue price. The card shows the
+    // offer price, so charging the variant price here billed the customer the
+    // full amount for something displayed as discounted. The mappers already
+    // resolve the offer - as priceValue on the all-products/offers/wishlist
+    // shape and priceNum on the bestsellers one.
+    const itemPrice = Number(product.priceValue ?? product.priceNum ?? firstVariant.price);
+
     dispatch(
       addToCart({
         id: product.id,
         title: product.title,
         image: product.image,
         category: product.category,
-        price: `EGP ${firstVariant.price}`,
+        price: product.price || `EGP ${itemPrice}`,
 
-        priceValue: firstVariant.price,
+        priceValue: itemPrice,
 
         size: firstVariant.size,
 
         stock: firstVariant.stock,
         quantity: 1,
       }),
-    );
-    const itemPrice = Number(
-      firstVariant?.price ?? product?.priceValue ?? product?.priceNum ?? (typeof product?.price === "number" ? product.price : parseFloat(product?.price))
     );
 
     if (typeof window !== 'undefined' && window.fbq) {

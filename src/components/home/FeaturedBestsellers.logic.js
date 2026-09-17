@@ -65,6 +65,11 @@ export function useFeaturedBestsellersLogic() {
       return;
     }
 
+    // firstVariant.price is the undiscounted catalogue price, while the card
+    // displays product.price/priceNum with the active offer already applied -
+    // adding the variant price charged the customer more than the shown price.
+    const itemPrice = Number(product.priceNum ?? firstVariant.price) || 0;
+
     dispatch(
       addToCart({
         id: product.id,
@@ -72,9 +77,9 @@ export function useFeaturedBestsellersLogic() {
         image: product.image,
         category: product.category,
 
-        price: firstVariant.priceLabel,
+        price: product.price || firstVariant.priceLabel,
 
-        priceValue: firstVariant.price,
+        priceValue: itemPrice,
 
         quantity: 1,
 
@@ -86,7 +91,7 @@ export function useFeaturedBestsellersLogic() {
 
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "AddToCart", {
-        value: Number(firstVariant.price || 0),
+        value: itemPrice,
         currency: "EGP",
       });
     }
