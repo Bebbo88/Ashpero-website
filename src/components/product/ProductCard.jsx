@@ -13,7 +13,7 @@ import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 
 export default function ProductCard({ product, priority = false }) {
   const { t } = useLanguage();
-  const { locale } = useLanguage()
+  const { locale } = useLanguage();
   const dispatch = useAppDispatch();
   const [isGalleryOpen, setIsGalleryOpen] = React.useState(false);
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
@@ -62,7 +62,9 @@ export default function ProductCard({ product, priority = false }) {
     // full amount for something displayed as discounted. The mappers already
     // resolve the offer - as priceValue on the all-products/offers/wishlist
     // shape and priceNum on the bestsellers one.
-    const itemPrice = Number(product.priceValue ?? product.priceNum ?? firstVariant.price);
+    const itemPrice = Number(
+      product.priceValue ?? product.priceNum ?? firstVariant.price,
+    );
 
     dispatch(
       addToCart({
@@ -81,14 +83,13 @@ export default function ProductCard({ product, priority = false }) {
       }),
     );
 
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'AddToCart', {
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "AddToCart", {
         value: itemPrice,
-        currency: 'EGP'
+        currency: "EGP",
       });
     }
   };
-
 
   return (
     <Link
@@ -96,7 +97,7 @@ export default function ProductCard({ product, priority = false }) {
       className="flex flex-col group cursor-pointer"
     >
       {/* Image Card */}
-      <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-muted dark:bg-white/5">
+      <div className="relative w-full aspect-4/5 rounded-2xl overflow-hidden mb-4 bg-surface-muted dark:bg-white/5">
         {/* Top Left Indicators: Badge, Offer & Popup Gallery */}
         <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-30 flex flex-col sm:flex-row gap-1.5 sm:gap-2 items-start flex-wrap">
           {/* {(product.badgeText || product.badge) && (
@@ -116,12 +117,13 @@ export default function ProductCard({ product, priority = false }) {
                 : `${locale === "ar" ? "وفر" : "Save"} ${product.discountValue} ${locale === "ar" ? "ج.م" : "LE"}`}
             </div>
           )}
-          {Array.isArray(product.popupGallery) && product.popupGallery.length > 0 && (
-            <PopupGalleryTrigger
-              popupGallery={product.popupGallery}
-              onOpen={() => setIsGalleryOpen(true)}
-            />
-          )}
+          {Array.isArray(product.popupGallery) &&
+            product.popupGallery.length > 0 && (
+              <PopupGalleryTrigger
+                popupGallery={product.popupGallery}
+                onOpen={() => setIsGalleryOpen(true)}
+              />
+            )}
         </div>
 
         {/* Wishlist Button */}
@@ -131,10 +133,11 @@ export default function ProductCard({ product, priority = false }) {
           className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 cursor-pointer shadow-sm bg-white/90 dark:bg-black/40 backdrop-blur-sm hover:scale-110 hover:bg-white dark:hover:bg-black/60"
         >
           <Heart
-            className={`w-4 h-4 transition-colors duration-300 ${isWishlisted
-              ? "fill-red-500 text-red-500"
-              : "text-gray-400 dark:text-gray-300 hover:text-red-400 dark:hover:text-red-400"
-              }`}
+            className={`w-4 h-4 transition-colors duration-300 ${
+              isWishlisted
+                ? "fill-red-500 text-red-500"
+                : "text-gray-400 dark:text-gray-300 hover:text-red-400 dark:hover:text-red-400"
+            }`}
           />
         </button>
 
@@ -150,8 +153,6 @@ export default function ProductCard({ product, priority = false }) {
           />
         </div>
 
-
-
         {/* Hover Overlay with Add to Cart */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 z-10" />
         <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-400 ease-out z-20">
@@ -159,10 +160,11 @@ export default function ProductCard({ product, priority = false }) {
             type="button"
             onClick={handleAddToCart}
             disabled={product.inStock === false}
-            className={`w-full py-2.5 rounded-xl text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-soft transition-all duration-200 ${product.inStock === false
+            className={`w-full py-2.5 rounded-xl text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-soft transition-all duration-200 ${
+              product.inStock === false
                 ? "bg-slate-300 dark:bg-neutral-800 text-slate-500 cursor-not-allowed opacity-80"
                 : "bg-white dark:bg-black text-black dark:text-white hover:bg-brand-mint hover:text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-              }`}
+            }`}
           >
             <ShoppingCart className="w-3.5 h-3.5" />
             {product.inStock === false
