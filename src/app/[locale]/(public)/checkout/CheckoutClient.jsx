@@ -20,6 +20,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearCart, removeFromCart, syncCartItemFromServer } from "@/store/slices/cartSlice";
 import { createOrder } from "@/services/orderService";
 import { fetchProductById } from "@/services/productService";
+import { fetchOffers } from "@/services/offerService";
+import { applyOfferToProduct, calculateDiscountedPrice } from "@/utils/applyOffer";
 import { applyCoupon } from "@/services/couponService";
 import { fetchShippingSettings } from "@/services/shippingService";
 import EmptyState from "@/components/ui/EmptyState";
@@ -284,6 +286,19 @@ export default function CheckoutPage() {
         return;
       }
 
+      // /products/:id returns the raw catalogue price with no offer applied,
+      // so the live offers have to come along too - otherwise revalidating a
+      // discounted line item silently restores it to full price.
+      let activeOffers = [];
+      let offersAreKnown = false;
+      try {
+        activeOffers = (await fetchOffers()) || [];
+        offersAreKnown = true;
+      } catch (_error) {
+        // Leave prices alone rather than repricing without knowing the offers.
+        offersAreKnown = false;
+      }
+
       const freshById = new Map();
       await Promise.all(
         uniqueIds.map(async (id) => {
@@ -331,13 +346,29 @@ export default function CheckoutPage() {
               )
             : null;
           const freshStock = Number(freshVariant?.stock ?? item.stock) || 0;
-          // `|| item.priceValue` would wrongly discard a legitimate price of
-          // 0 (e.g. a free promo item) since 0 is falsy — fall back only
-          // when the value isn't actually a usable number.
-          const numericFreshPrice = Number(freshVariant?.price ?? item.priceValue);
-          const freshPriceValue = Number.isFinite(numericFreshPrice)
-            ? numericFreshPrice
-            : item.priceValue;
+
+          // The catalogue price has to go through the active offer before it
+          // can replace what's in the cart - the card and product page both
+          // stored the discounted figure, so comparing against the raw one
+          // would reprice every discounted item back up to full price. Without
+          // trustworthy offer data, keep the price the cart already holds.
+          let freshPriceValue = item.priceValue;
+          if (offersAreKnown) {
+            const offerState = applyOfferToProduct(fresh, activeOffers);
+            // `|| item.priceValue` would wrongly discard a legitimate price of
+            // 0 (e.g. a free promo item) since 0 is falsy — fall back only
+            // when the value isn't actually a usable number.
+            const numericFreshPrice = Number(freshVariant?.price ?? item.priceValue);
+            if (Number.isFinite(numericFreshPrice)) {
+              freshPriceValue = offerState?.hasOffer
+                ? calculateDiscountedPrice(
+                    numericFreshPrice,
+                    offerState.discountType,
+                    offerState.discountValue,
+                  )
+                : numericFreshPrice;
+            }
+          }
 
           if (freshStock <= 0) {
             removedTitles.push(item.title);

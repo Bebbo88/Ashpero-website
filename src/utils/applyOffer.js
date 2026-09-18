@@ -1,4 +1,4 @@
-function calculateDiscountedPrice(basePrice, discountType, discountValue) {
+export function calculateDiscountedPrice(basePrice, discountType, discountValue) {
   const price = Number(basePrice);
   const value = Number(discountValue);
 
