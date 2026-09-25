@@ -142,7 +142,7 @@ export function FeaturedBestsellersUI({
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 z-10" />
 
                         {/* Add to cart */}
-                        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-400 ease-out z-20">
+                        <div className="absolute bottom-0 left-0 right-0 p-4 transition-all duration-400 ease-out z-20 md:translate-y-full md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
                           <button
                             type="button"
                             onClick={(e) => {

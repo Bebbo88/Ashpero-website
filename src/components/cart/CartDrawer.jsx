@@ -174,8 +174,8 @@ export default function CartDrawer() {
               isRtl ? "left-0" : "right-0"
             }`}
           >
-            <div className="flex items-center justify-between p-6 border-b border-border-color">
-              <h2 className="font-playfair text-2xl text-text-primary tracking-wide">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border-color">
+              <h2 className="font-playfair text-xl text-text-primary tracking-wide">
                 {t("CartDrawer.title")}{" "}
                 <span className="text-sm font-montserrat text-text-secondary ml-1">
                   ({cartItems.length})
@@ -191,9 +191,8 @@ export default function CartDrawer() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
             <div
-              className={`p-6 ${cartItems.length === 0 ? "flex h-full" : "space-y-6"}`}
+              className={`flex-1 overflow-y-auto px-5 ${cartItems.length === 0 ? "flex h-full p-6" : "divide-y divide-border-color/60"}`}
             >
               {cartItems.length === 0 ? (
                 <EmptyState
@@ -208,61 +207,64 @@ export default function CartDrawer() {
                 cartItems.map((item) => (
                   <div
                     key={`${item.productId}-${item.size || "default"}`}
-                    className="flex gap-4"
+                    className="flex items-center gap-3 py-3"
                   >
-                    <div className="w-20 h-24 bg-gray-100 dark:bg-gray-800 relative rounded overflow-hidden flex-shrink-0">
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                       <Image
                         src={item.image}
                         alt={item.title}
                         fill
-                        sizes="80px"
+                        sizes="64px"
                         className="object-cover"
                       />
                     </div>
 
-                    <div className="flex flex-col flex-1 justify-between">
-                      <div>
-                        <div className="flex justify-between items-start">
-                          <h3 className="font-playfair text-text-primary text-base leading-tight pr-4">
-                            {item.title}
-                          </h3>
-                          <button
-                            onClick={() => handleRemove(item)}
-                            aria-label={t("CartDrawer.removeItem")}
-                            className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <p className="font-montserrat font-bold text-text-primary mt-2">
-                          {item.priceLabel || item.price || ""}
-                        </p>
-                        {item.size ? (
-                          <p className="text-xs text-text-secondary mt-1">
-                            {item.size}
-                          </p>
-                        ) : null}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="line-clamp-1 font-playfair text-sm leading-snug text-text-primary">
+                          {item.title}
+                        </h3>
+                        <button
+                          onClick={() => handleRemove(item)}
+                          aria-label={t("CartDrawer.removeItem")}
+                          className="-mt-0.5 shrink-0 cursor-pointer text-gray-400 transition-colors hover:text-red-500"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       </div>
 
-                      <div className="flex items-center gap-4 mt-3">
-                        <div className="flex items-center border border-border-color rounded-full">
+                      {item.size ? (
+                        <p className="mt-0.5 text-[10px] uppercase tracking-wider text-text-secondary">
+                          {item.size}
+                        </p>
+                      ) : null}
+
+                      {/* Price and stepper share the last line so a row stays
+                          short enough for several items to fit without the
+                          list turning into a cramped inner scroller. */}
+                      <div className="mt-1.5 flex items-center justify-between gap-2">
+                        <span className="font-montserrat text-sm font-bold text-text-primary">
+                          {item.priceLabel || item.price || ""}
+                        </span>
+
+                        <div className="flex items-center rounded-full border border-border-color">
                           <button
                             onClick={() => handleDecrement(item)}
                             disabled={item.quantity <= 1}
                             aria-label={t("CartDrawer.decreaseQuantity")}
-                            className="p-1 px-3 text-text-secondary hover:text-text-primary transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="cursor-pointer px-2 py-0.5 text-text-secondary transition-colors hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-40"
                           >
-                            <Minus className="w-3 h-3" />
+                            <Minus className="h-3 w-3" />
                           </button>
-                          <span className="font-montserrat text-sm font-semibold text-text-primary w-4 text-center select-none">
+                          <span className="w-4 select-none text-center font-montserrat text-xs font-semibold text-text-primary">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => handleIncrement(item)}
                             aria-label={t("CartDrawer.increaseQuantity")}
-                            className="p-1 px-3 text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+                            className="cursor-pointer px-2 py-0.5 text-text-secondary transition-colors hover:text-text-primary"
                           >
-                            <Plus className="w-3 h-3" />
+                            <Plus className="h-3 w-3" />
                           </button>
                         </div>
                       </div>
@@ -273,40 +275,44 @@ export default function CartDrawer() {
             </div>
 
             <CartRelatedProducts />
-            </div>
 
-            <div className="p-6 border-t border-border-color bg-bg-secondary/50">
-              {cartItems.length > 0 && (
-                <div className="mb-4 p-2.5 rounded-xl bg-gradient-to-r from-brand-orange/10 via-amber-500/10 to-brand-mint/10 border border-brand-orange/30 flex items-center gap-2.5 shadow-sm">
-                  <div className="relative w-8 h-8 rounded-lg bg-white dark:bg-neutral-800 p-0.5 shrink-0 border border-amber-500/30 overflow-hidden">
-                    <Image
-                      src="/assets/guasha.jpg"
-                      alt="Free Gua Sha"
-                      width={32}
-                      height={32}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-extrabold text-brand-orange uppercase tracking-wider">
+            <div className="px-5 py-4 border-t border-border-color bg-bg-secondary/50">
+              {/* Gift badge and total share one row so the footer stays short
+                  and the cart itself keeps the height. */}
+              <div className="flex items-center justify-between gap-3 mb-2">
+                {cartItems.length > 0 ? (
+                  <div
+                    title={t("ProductDetails.freeGuaSha")}
+                    className="flex min-w-0 items-center gap-2 rounded-lg border border-brand-orange/30 bg-brand-orange/10 py-1 ps-1 pe-2.5"
+                  >
+                    <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-md border border-amber-500/30 bg-white dark:bg-neutral-800">
+                      <Image
+                        src="/assets/guasha.jpg"
+                        alt={t("ProductDetails.freeGuaSha")}
+                        width={28}
+                        height={28}
+                        className="h-full w-full object-contain"
+                      />
+                    </div>
+                    <span className="truncate text-[10px] font-extrabold uppercase tracking-wider text-brand-orange">
                       🎁 {t("ProductDetails.freeGiftBadge")}
                     </span>
-                    <span className="text-xs font-bold text-text-primary">
-                      {t("ProductDetails.freeGuaSha")}
-                    </span>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <span />
+                )}
 
-              <div className="flex justify-between items-center mb-4">
-                <span className="font-montserrat text-text-secondary uppercase text-sm tracking-wider">
-                  {t("CartDrawer.subtotal")}
-                </span>
-                <span className="font-playfair text-xl text-text-primary">
-                  {subtotalLabel}
-                </span>
+                <div className="flex shrink-0 items-baseline gap-2">
+                  <span className="font-montserrat text-xs uppercase tracking-wider text-text-secondary">
+                    {t("CartDrawer.subtotal")}
+                  </span>
+                  <span className="font-playfair text-xl text-text-primary">
+                    {subtotalLabel}
+                  </span>
+                </div>
               </div>
-              <p className="text-xs text-text-secondary mb-4 italic">
+
+              <p className="text-[11px] text-text-secondary mb-3 italic">
                 {t("CartDrawer.shippingTaxes")}
               </p>
 

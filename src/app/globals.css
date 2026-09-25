@@ -320,32 +320,6 @@
   animation: shimmerSweep 1.5s linear infinite;
 }
 
-/* The track holds the same products twice, so translating it exactly half its
-   width lands on an identical frame and the loop reads as continuous. */
-@keyframes cartMarquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.cart-marquee {
-  animation: cartMarquee 28s linear infinite;
-}
-
-.cart-marquee:hover,
-.cart-marquee:focus-within {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cart-marquee {
-    animation: none;
-  }
-}
-
 .scrollbar-hide::-webkit-scrollbar,
 .no-scrollbar::-webkit-scrollbar {
   display: none !important;
