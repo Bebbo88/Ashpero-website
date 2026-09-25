@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
 }
 
 // ISR: Revalidate cached tips daily
-export const revalidate = 86400;
+export const revalidate = 300;
 
 export default async function TipsAndTricksPage() {
   const queryClient = new QueryClient();

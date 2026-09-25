@@ -2,11 +2,18 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const { version } = require("./package.json");
 
+// This value busts the persisted React Query cache in visitors' browsers. The
+// package version alone never changes between deploys, so a catalogue cached
+// before a product was removed kept being restored for up to its seven-day
+// lifetime; the commit SHA moves every deploy. Falls back to the version
+// locally, where a stable key is what you want.
+const appVersion = process.env.VERCEL_GIT_COMMIT_SHA || version;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: false,
   env: {
-    NEXT_PUBLIC_APP_VERSION: version,
+    NEXT_PUBLIC_APP_VERSION: appVersion,
   },
   images: {
     formats: ["image/avif", "image/webp"],

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
 }
 
 // ISR: Revalidate every hour since products may change
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function AllProducts() {
   const queryClient = new QueryClient();

@@ -13,7 +13,7 @@ import { offerQueryKeys } from "@/features/offer/queryKeys";
 import { homeQueryKeys } from "@/features/home/queryKeys";
 
 // ISR: Offers generated statically but refreshed daily
-export const revalidate = 86400;
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
