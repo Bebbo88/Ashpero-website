@@ -9,12 +9,14 @@ import { buildProductPath } from "@/utils/productUrl";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cartSlice";
+import { useCartDrawer } from "@/contexts/CartDrawerContext";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 
 export default function ProductCard({ product, priority = false }) {
   const { t } = useLanguage();
   const { locale } = useLanguage();
   const dispatch = useAppDispatch();
+  const { openCart } = useCartDrawer();
   const [isGalleryOpen, setIsGalleryOpen] = React.useState(false);
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
   const isWishlisted = wishlistItems.some(
@@ -89,6 +91,8 @@ export default function ProductCard({ product, priority = false }) {
         currency: "EGP",
       });
     }
+
+    openCart();
   };
 
   return (

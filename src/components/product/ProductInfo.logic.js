@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart, setBuyNowItem } from "@/store/slices/cartSlice";
+import { useCartDrawer } from "@/contexts/CartDrawerContext";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 import { localizePath } from "@/utils/localePath";
 
@@ -21,6 +22,7 @@ export function useProductInfoLogic(product) {
   const { t, locale } = useLanguage();
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { openCart } = useCartDrawer();
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
 
   const [productShareUrl, setProductShareUrl] = useState("");
@@ -221,6 +223,8 @@ export function useProductInfoLogic(product) {
         currency: 'EGP'
       });
     }
+
+    openCart();
   };
 
   const handleBuyNow = () => {

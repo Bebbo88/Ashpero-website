@@ -79,14 +79,14 @@ export function ProductDetailsPageUI({
         {/* Full-Width Always Visible Ingredients, How to Use, and Share Section */}
         <ProductFullWidthDetails product={product} />
 
-        {/* Before / After Comparison Section */}
-        <BeforeAfterSection beforeAfterImages={product.beforeAfterImages} />
-
         {/* Customer Video Reviews Section */}
         <CustomerVideoReviews customerReviewVideos={product.customerReviewVideos} />
 
         {/* Written Product Reviews */}
         <ProductReviews productId={product.id || productId} />
+
+        {/* Before / After Comparison Section */}
+        <BeforeAfterSection beforeAfterImages={product.beforeAfterImages} />
 
         {/* You May Also Like / Related Products Section */}
         <RelatedProducts currentProduct={product} />

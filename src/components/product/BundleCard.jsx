@@ -8,12 +8,14 @@ import { buildProductPath } from "@/utils/productUrl";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cartSlice";
+import { useCartDrawer } from "@/contexts/CartDrawerContext";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 import { sanitizeProductDescription } from "@/utils/sanitizeDescription";
 
 export default function BundleCard({ product, priority = false }) {
   const { t, locale } = useLanguage();
   const dispatch = useAppDispatch();
+  const { openCart } = useCartDrawer();
   const isArabic = locale === "ar";
 
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
@@ -73,6 +75,8 @@ export default function BundleCard({ product, priority = false }) {
         currency: "EGP",
       });
     }
+
+    openCart();
   };
 
   // Compile 4 images for the collage display

@@ -8,6 +8,7 @@ import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCartDrawer } from "@/contexts/CartDrawerContext";
 import { useLanguage } from "@/hooks/useLanguage";
 import EmptyState from "@/components/ui/EmptyState";
+import CartRelatedProducts from "./CartRelatedProducts";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   removeFromCart,
@@ -269,6 +270,8 @@ export default function CartDrawer() {
                 ))
               )}
             </div>
+
+            <CartRelatedProducts />
 
             <div className="p-6 border-t border-border-color bg-bg-secondary/50">
               {cartItems.length > 0 && (

@@ -6,11 +6,13 @@ import { mapBestSellerProducts } from "@/features/home/mappers";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toggleWishlistItem } from "@/store/slices/wishlistSlice";
 import { addToCart } from "@/store/slices/cartSlice";
+import { useCartDrawer } from "@/contexts/CartDrawerContext";
 
 export function useFeaturedBestsellersLogic() {
   const { t, locale } = useLanguage();
 
   const dispatch = useAppDispatch();
+  const { openCart } = useCartDrawer();
 
   const wishlistItems = useAppSelector((state) => state.wishlist.items || []);
 
@@ -95,6 +97,8 @@ export function useFeaturedBestsellersLogic() {
         currency: "EGP",
       });
     }
+
+    openCart();
   };
 
   return {
