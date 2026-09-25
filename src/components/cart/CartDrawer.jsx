@@ -191,8 +191,9 @@ export default function CartDrawer() {
               </button>
             </div>
 
+            <div className="flex-1 overflow-y-auto">
             <div
-              className={`flex-1 overflow-y-auto p-6 ${cartItems.length === 0 ? "flex h-full" : "space-y-6"}`}
+              className={`p-6 ${cartItems.length === 0 ? "flex h-full" : "space-y-6"}`}
             >
               {cartItems.length === 0 ? (
                 <EmptyState
@@ -272,6 +273,7 @@ export default function CartDrawer() {
             </div>
 
             <CartRelatedProducts />
+            </div>
 
             <div className="p-6 border-t border-border-color bg-bg-secondary/50">
               {cartItems.length > 0 && (
